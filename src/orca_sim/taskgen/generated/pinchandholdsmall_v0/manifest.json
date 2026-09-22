@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "env_id": "PinchAndHoldSmall-v0",
+  "family": "pinch_and_hold",
+  "files": [
+    "manifest.json",
+    "scene.xml",
+    "task_spec.yaml",
+    "validation_report.json"
+  ],
+  "generated_at_utc": "2026-09-22T06:50:58.881763+00:00",
+  "hand_version": "v1",
+  "manifest_version": 1,
+  "source_commit": "02571cf7fbec1e57de615e61949d504440e2646a",
+  "spec_sha256": "ed1cfde22ed3c32f88e78bc23c2fe576554e084afc1af4399074aaf591afee44",
+  "validation": "pass",
+  "validation_report": "validation_report.json"
+}

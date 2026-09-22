@@ -1,115 +1,116 @@
-<p align="center">
-  <img src="https://huggingface.co/datasets/fracapuano/blogs/resolve/main/orca_sim.png" alt="orca_sim header" width="600"/>
-</p>
+# ORCA Agent Task Generation
 
+A constrained Agent pipeline that turns structured YAML TaskSpecs into usable,
+validated, and trainable MuJoCo/Gymnasium environments for the ORCA v1 hand.
 
-`orca_sim` provides simulation environments for the ORCA hand.
-You can start building your ORCA hand today at [orcahand.com](https://www.orcahand.com/).
+Built from [`LynnUoE/orca_sim`](https://github.com/LynnUoE/orca_sim) commit
+`02571cf7fbec1e57de615e61949d504440e2646a`.
 
-## Install
+## What was completed
 
-We recommend using python 3.11 inside of a virtual environment.
-You can create a virtual environment using `uv` ([how to install uv](https://docs.astral.sh/uv/getting-started/installation/)):
+- Versioned JSON schemas for task and gesture specifications.
+- Safe YAML validation: rejects unknown fields, NaN/Inf, unsupported hand
+  versions, absolute paths, and path traversal.
+- Deterministic TaskSpec-to-MuJoCo generation with SHA-256 manifests.
+- Two registered ORCA v1 environments:
+  - `PinchAndHold-v0`
+  - `PinchAndHoldSmall-v0`, generated from a parameter variant.
+- Physical success contract requiring thumb contact, index contact, object in
+  bounds, no drop, and 10 consecutive valid simulation steps.
+- Automated static, Gymnasium, physics, behavior, reward-hacking, and packaging
+  checks.
+- PPO/VecNormalize training and fixed-seed evaluation over three seeds.
+- Clean-wheel installation and runtime verification outside the source tree.
 
-```bash
-uv venv orca --python 3.11
-source orca/bin/activate
-uv pip install orca_sim
+```text
+TaskSpec YAML -> Schema Validator -> MuJoCo Generator -> Gym Registration
+              -> Behavior/Physics Gates -> PPO Training -> Acceptance Report
 ```
 
-Alternatively, you can use `conda` ([how to install conda](https://www.anaconda.com/docs/getting-started/miniconda/install)):
-```bash
-conda create -n orca python=3.11 -y
-conda activate orca
-python -m pip install orca_sim
-```
-As we are continuously iterating on `orca_sim`, you can fetch the latest `main` building this package from source, so to be in the loop with the latest developments.
+## Use the Agent pipeline
 
-```bash
-git clone https://github.com/orcahand/orca_sim
-cd orca_sim && uv pip install -e .
+### 1. Install
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[rl,dev]"
 ```
 
-> [!WARNING] 
-We are still iterating (a lot!) on this package. If you need stability, consider sticking to the Pypi package (`pip install orca_sim`).
+### 2. Define and generate a task
 
-## Getting started
+Copy or edit a spec under `src/orca_sim/taskgen/specs/`, then run:
 
-`orca_sim` follows the [Gymnasium](https://gymnasium.farama.org/) API, and uses [Mujoco](https://mujoco.readthedocs.io/en/stable/overview.html) for physics simulation and rendering.
-You can instantiate an environment with one hand (or both) via:
+```powershell
+.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli validate src/orca_sim/taskgen/specs/pinch_and_hold_v0.yaml
+.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli generate src/orca_sim/taskgen/specs/pinch_and_hold_v0.yaml
+.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli accept src/orca_sim/taskgen/generated/pinchandhold_v0 --artifacts artifacts/pinch_and_hold
+```
+
+The durable Agent output is the validated TaskSpec. The generator creates
+portable XML, a normalized spec, a manifest, and a validation report.
+
+### 3. Use the generated environment
 
 ```python
-from orca_sim import OrcaHandRight  # or OrcaHandLeft, OrcaHandCombined
+import gymnasium as gym
+from orca_sim import register_envs
 
-env = OrcaHandRight()
-obs, info = env.reset()
-obs, reward, terminated, truncated, info = env.step(env.action_space.sample())
+register_envs()
+env = gym.make("PinchAndHold-v0")
+observation, info = env.reset(seed=0)
+observation, reward, terminated, truncated, info = env.step(
+    env.action_space.sample()
+)
 env.close()
 ```
-The 'extended' version of different hands contain additional bodies (incl. inertial properties) such as the camera mount, the U2D2 board and fans.
 
-### Hands versioning
+### 4. Train and evaluate
 
-By default, any environment defaults to the latest fully-supported embodiment files.
-
-```python
-from orca_sim import OrcaHandRight, OrcaHandRightExtended
-
-env = OrcaHandRight()  # latest version of the standard right hand
-extended_env = OrcaHandRightExtended()  # latest version of the extended right hand
+```powershell
+.\.venv\Scripts\python.exe -m orca_sim.taskgen.train --env-id PinchAndHold-v0 --name ppo_seed0 --seed 0 --timesteps 1000000 --n-envs 8 --no-subproc
+.\.venv\Scripts\python.exe -m orca_sim.taskgen.evaluate --env-id PinchAndHold-v0 --model taskgen_runs/ppo_seed0/final_model.zip --vecnormalize taskgen_runs/ppo_seed0/vecnormalize.pkl --episodes 100 --seed 20000 --out taskgen_runs/ppo_seed0/eval_nominal.json
 ```
 
-`orca_sim` stored different hand versions under versioned `scenes/` and `models/` directories. You can still pin an older version explicitly when needed:
+Evaluation requires the matching `vecnormalize.pkl`. See [`PLAN.md`](PLAN.md)
+for all acceptance thresholds and
+[`artifacts/acceptance_report.md`](artifacts/acceptance_report.md) for the full
+evidence trail.
 
-```python
-from orca_sim import OrcaHandCombinedExtended
+## Results
 
-env = OrcaHandCombinedExtended(version="v1")  # loads the v1 hand
-```
+| Check | Result |
+|---|---:|
+| Full test suite | 59 passed |
+| Zero policy success | 0% |
+| Random policy success | 3% |
+| Scripted policy success | 100% |
+| PPO success, seeds 0/1/2 | 100% / 100% / 100% |
+| PPO success with mild randomization | 100% / 100% / 95% |
+| Random runtime stress | 10,000 steps, finite and shape-stable |
+| Clean wheel smoke test | PASS |
 
-See our [`random_policy.py`](random_policy.py) example to see how to instantiate and interface an ORCA hand.
+### Trained PPO policy
 
-## Sample task: in-hand cube orientation
+![Trained PPO pinch success](artifacts/pinch_and_hold/trained_policy_success.gif)
 
-`orca_sim` now also ships a task-level example that augments the right hand with a free-floating cube whose one target face is colored red:
+[MP4](artifacts/pinch_and_hold/trained_policy_success.mp4) ·
+[PPO metrics](artifacts/pinch_and_hold/ppo_acceptance.json)
 
-```python
-from orca_sim import OrcaHandRightCubeOrientation
+### Random policy failure
 
-env = OrcaHandRightCubeOrientation(version="v2", render_mode="human")
-obs, info = env.reset(seed=0)
-```
+![Random policy failure](artifacts/pinch_and_hold/random_failure.gif)
 
-By default, the task resets to a palm-up open-hand pose with the cube resting on the palm and the red face pointing downward. You can also randomize the initial cube orientation while keeping it unsolved:
+[MP4](artifacts/pinch_and_hold/random_failure.mp4) ·
+[Behavior metrics](artifacts/pinch_and_hold/behavior_acceptance.json)
 
-```python
-env = OrcaHandRightCubeOrientation(
-    version="v2",
-    initial_red_face="random",
-    cube_pos_xy_jitter=0.01,
-)
-obs, info = env.reset(seed=0)
-```
+## Scope and provenance
 
-If you want to keep the environment completely deterministic while you are still building it, you can use the nominal reset directly and add randomization later:
+This is an RL-environment generation MVP, not a complete assembly system. It
+does not include robot-arm integration, screw threads, vision policies,
+hardware deployment, or sim-to-real transfer.
 
-```python
-env = OrcaHandRightCubeOrientation(version="v2")
-
-nominal = env.nominal_reset_options()
-obs, info = env.reset(options=nominal)
-
-randomized = env.sample_randomized_reset_options(
-    seed=0,
-    initial_red_face="random",
-    cube_pos_xy_jitter=0.01,
-)
-obs, info = env.reset(options=randomized)
-```
-
-The implementation is intentionally split so it doubles as a porting template:
-
-- The task scene lives in [`src/orca_sim/scenes/v2/scene_right_cube_orientation.xml`](src/orca_sim/scenes/v2/scene_right_cube_orientation.xml) and composes the existing hand MJCF with a single task cube.
-- The nominal palm-up hand pose and in-palm cube spawn are now authored into the task-specific scene/model files, so opening the XML directly in MuJoCo shows the intended setup.
-- The task logic lives in [`src/orca_sim/task_envs.py`](src/orca_sim/task_envs.py), including reset-time cube randomization and optional hand-pose overrides for custom MJCF layouts.
-
+Cheng Su's
+[`orcahand-retarget-experiments`](https://github.com/back2-thebasic/orcahand-retarget-experiments)
+commit `032b5fd424cb67d9e6203388d9de0edc7453eff6` is used only as ORCA v1 pose and
+retargeting-configuration provenance. The included gesture fixture is explicitly
+marked synthetic and is not presented as recorded physical grasp data.

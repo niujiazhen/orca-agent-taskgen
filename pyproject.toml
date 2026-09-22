@@ -13,13 +13,20 @@ authors = [
 ]
 dependencies = [
   "gymnasium>=0.29",
+  "jsonschema>=4.18",
   "mujoco>=3.1",
   "numpy>=1.26",
+  "PyYAML>=6",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8",
+]
+rl = [
+  "stable-baselines3>=2.3",
+  "tensorboard>=2.16",
+  "imageio[ffmpeg]>=2.34",
 ]
 
 [tool.pytest.ini_options]
@@ -36,6 +43,12 @@ where = ["src"]
 [tool.setuptools.package-data]
 orca_sim = [
   "*.xml",
+  "taskgen/schemas/*.json",
+  "taskgen/specs/*.yaml",
+  "taskgen/gestures/*.yaml",
+  "taskgen/generated/**/*.xml",
+  "taskgen/generated/**/*.yaml",
+  "taskgen/generated/**/*.json",
   "scenes/*/*.xml",
   "assets/mjcf/*.xml",
   "assets/mjcf/*/*.xml",

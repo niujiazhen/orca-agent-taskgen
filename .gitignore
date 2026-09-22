@@ -218,8 +218,12 @@ __marimo__/
 *.lock
 *.DS_Storeruns/
 checkpoints/
+taskgen_runs/
 *.zip
 *.mp4
+!artifacts/pinch_and_hold/scripted_success.mp4
+!artifacts/pinch_and_hold/random_failure.mp4
+!artifacts/pinch_and_hold/trained_policy_success.mp4
 *.pkl
 wandb/
 __pycache__/

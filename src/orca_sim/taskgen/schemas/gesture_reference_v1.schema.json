@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orcahand.com/schemas/gesture-reference-v1.json",
+  "title": "ORCA GestureReference v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "source", "hand_version", "side", "control_space",
+    "configuration", "provenance", "samples"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "source": {"enum": ["synthetic", "recorded"]},
+    "hand_version": {"enum": ["v1", "v2"]},
+    "side": {"const": "right"},
+    "control_space": {"const": "normalized"},
+    "configuration": {"type": "string", "minLength": 1, "maxLength": 120},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "notes"],
+      "properties": {
+        "repository": {"type": "string", "format": "uri", "maxLength": 300},
+        "commit": {"type": "string", "minLength": 7, "maxLength": 64},
+        "notes": {"type": "string", "maxLength": 1000}
+      }
+    },
+    "samples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["timestamp", "qpos", "ctrl"],
+        "properties": {
+          "timestamp": {"type": "number", "minimum": 0},
+          "qpos": {"$ref": "#/$defs/joint_vector"},
+          "ctrl": {"$ref": "#/$defs/control_vector"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "joint_vector": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 17,
+      "maxItems": 17
+    },
+    "control_vector": {
+      "type": "array",
+      "items": {"type": "number", "minimum": -1, "maximum": 1},
+      "minItems": 17,
+      "maxItems": 17
+    }
+  }
+}

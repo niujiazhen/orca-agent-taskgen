@@ -1,0 +1,70 @@
+schema_version: 1
+task:
+  control:
+    action_mode: relative
+    action_scale: 0.15
+  env_id: PinchAndHoldSmall-v0
+  failure:
+    drop_height: 0.12
+    terminate_on_drop: true
+  family: pinch_and_hold
+  hand_version: v1
+  object:
+    friction:
+    - 1.2
+    - 0.01
+    - 0.001
+    half_length: 0.01
+    mass: 0.01
+    radius: 0.005
+    rgba:
+    - 0.2
+    - 0.65
+    - 0.9
+    - 1.0
+    shape: cylinder
+  observation:
+    include_contact_flags: true
+    include_object_state: true
+  randomization:
+    mild_position_scale: 0.5
+    physics: false
+  reference_gesture:
+    configuration: configs/last.yaml
+    path: gestures/pinch_v1_synthetic.yaml
+    repository: https://github.com/back2-thebasic/orcahand-retarget-experiments
+    source: synthetic
+  reset:
+    hand_closure_fraction: 0.65
+    hand_pose: half_close
+    object_position:
+    - 0.02206646
+    - 0.06849445
+    - 0.23324466
+    position_jitter:
+    - 0.001
+    - 0.001
+    - 0.001
+  reward:
+    action_rate_penalty: 0.002
+    contact_progress: 1.0
+    distance_progress: 2.0
+    drop_penalty: 5.0
+    success_bonus: 10.0
+  safety:
+    max_action_delta: 0.15
+    max_episode_steps: 200
+  side: right
+  success:
+    hold_steps: 10
+    require_index_contact: true
+    require_thumb_contact: true
+    workspace:
+      max:
+      - 0.07
+      - 0.1
+      - 0.27
+      min:
+      - 0.005
+      - 0.025
+      - 0.145

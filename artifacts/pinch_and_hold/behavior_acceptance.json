@@ -1,0 +1,119 @@
+{
+  "criteria": {
+    "mild_scripted_success_ge_0_70": true,
+    "random_success_le_0_05": true,
+    "scripted_return_gt_random": true,
+    "scripted_return_gt_zero": true,
+    "scripted_success_ge_0_90": true,
+    "zero_success_eq_0": true
+  },
+  "env_id": "PinchAndHold-v0",
+  "policies": {
+    "mild_scripted": {
+      "drop_rate": 0.0,
+      "drops": 0,
+      "episodes": 100,
+      "mean_episode_length": 10.74,
+      "mean_max_hold": 10.0,
+      "mean_return": 11.326296065752581,
+      "policy": "scripted",
+      "randomization_scale": 0.5,
+      "std_return": 0.45434137673586134,
+      "success_rate": 1.0,
+      "successes": 100
+    },
+    "random": {
+      "drop_rate": 0.97,
+      "drops": 97,
+      "episodes": 100,
+      "mean_episode_length": 25.89,
+      "mean_max_hold": 1.57,
+      "mean_return": -5.870370220893059,
+      "policy": "random",
+      "randomization_scale": 0.0,
+      "std_return": 2.9693474123249075,
+      "success_rate": 0.03,
+      "successes": 3
+    },
+    "scripted": {
+      "drop_rate": 0.0,
+      "drops": 0,
+      "episodes": 100,
+      "mean_episode_length": 11.0,
+      "mean_max_hold": 10.0,
+      "mean_return": 11.034763603381602,
+      "policy": "scripted",
+      "randomization_scale": 0.0,
+      "std_return": 3.552713678800501e-15,
+      "success_rate": 1.0,
+      "successes": 100
+    },
+    "zero": {
+      "drop_rate": 1.0,
+      "drops": 100,
+      "episodes": 100,
+      "mean_episode_length": 21.0,
+      "mean_max_hold": 0.0,
+      "mean_return": -6.356427320007396,
+      "policy": "zero",
+      "randomization_scale": 0.0,
+      "std_return": 8.881784197001252e-16,
+      "success_rate": 0.0,
+      "successes": 0
+    }
+  },
+  "report_version": 1,
+  "resets": {
+    "resets": 100,
+    "seeded_reproducible": true,
+    "status": "pass"
+  },
+  "return_margins": {
+    "scripted_minus_random_return": 16.90513382427466,
+    "scripted_minus_zero_return": 17.391190923388997
+  },
+  "runtime": {
+    "action_shape": [
+      17
+    ],
+    "env_id": "PinchAndHold-v0",
+    "episodes_completed": 406,
+    "generated_dir": "pinchandhold_v0",
+    "observation_shape": [
+      55
+    ],
+    "reward_range": [
+      -5.066790658800482,
+      10.003735388978098
+    ],
+    "runtime": "pass",
+    "static": "pass",
+    "steps": 10000
+  },
+  "status": "pass",
+  "success_contract": {
+    "closed_without_contact": "rejected",
+    "dropped_dual_contact": "rejected",
+    "full_dual_contact_hold": "accepted",
+    "index_only": "rejected",
+    "short_dual_contact": "rejected",
+    "status": "pass",
+    "thumb_only": "rejected"
+  },
+  "videos": [
+    {
+      "dropped": false,
+      "file": "scripted_success.mp4",
+      "frames": 46,
+      "policy": "scripted",
+      "success": true
+    },
+    {
+      "dropped": true,
+      "file": "random_failure.mp4",
+      "frames": 62,
+      "policy": "random",
+      "success": false
+    }
+  ]
+}

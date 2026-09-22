@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<mujoco model="PinchAndHoldSmall-v0">
+  <include file="../../../scenes/v1/scene.xml" />
+  <include file="../../../models/v1/right.mjcf" />
+  <worldbody>
+    <body name="pinch_object" pos="0.02206646 0.06849445 0.23324466" quat="1 0 0 0">
+      <freejoint name="pinch_object_freejoint" />
+      <inertial pos="0 0 0" mass="0.01" diaginertia="3.95833333333e-07 3.95833333333e-07 1.25e-07" />
+      <geom name="pinch_object_geom" type="cylinder" size="0.005 0.01" rgba="0.2 0.65 0.9 1" friction="1.2 0.01 0.001" condim="4" />
+      <site name="pinch_object_center" type="sphere" size="0.0015" rgba="1 1 1 0" />
+    </body>
+  </worldbody>
+  <keyframe>
+    <key name="startup_pose" qpos="-0.15 -0.10815030551 -0.31311205117 -0.0897051828 -0.11687335151 -0.80491328371 0.923873416765 0.08799693877 0 0 0 0.17 0 0 0.52333 0 0 0.02206646 0.06849445 0.23324466 1 0 0 0" ctrl="-0.15 -0.10815030551 -0.31311205117 -0.0897051828 -0.11687335151 -0.80491328371 0.923873416765 0.08799693877 0 0 0 0.17 0 0 0.52333 0 0" />
+  </keyframe>
+</mujoco>

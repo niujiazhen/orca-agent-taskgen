@@ -40,3 +40,7 @@ def register_envs() -> None:
                     entry_point=entry_point,
                     kwargs={"version": version},
                 )
+
+    from orca_sim.taskgen.registry import register_generated_envs
+
+    register_generated_envs()

@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orcahand.com/schemas/task-spec-v1.json",
+  "title": "ORCA TaskSpec v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "env_id", "family", "hand_version", "side", "object", "reset",
+        "observation", "control", "reward", "success", "failure",
+        "randomization", "safety", "reference_gesture"
+      ],
+      "properties": {
+        "env_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*-v[0-9]+$",
+          "maxLength": 80
+        },
+        "family": {"const": "pinch_and_hold"},
+        "hand_version": {"enum": ["v1", "v2"]},
+        "side": {"const": "right"},
+        "object": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["shape", "radius", "half_length", "mass", "rgba", "friction"],
+          "properties": {
+            "shape": {"const": "cylinder"},
+            "radius": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.05},
+            "half_length": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.1},
+            "mass": {"type": "number", "exclusiveMinimum": 0, "maximum": 1.0},
+            "rgba": {"$ref": "#/$defs/rgba"},
+            "friction": {"$ref": "#/$defs/friction"}
+          }
+        },
+        "reset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hand_pose", "hand_closure_fraction", "object_position", "position_jitter"],
+          "properties": {
+            "hand_pose": {"enum": ["open", "half_close"]},
+            "hand_closure_fraction": {"type": "number", "minimum": 0, "maximum": 0.95},
+            "object_position": {"$ref": "#/$defs/vec3"},
+            "position_jitter": {"$ref": "#/$defs/nonnegative_vec3"}
+          }
+        },
+        "observation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["include_object_state", "include_contact_flags"],
+          "properties": {
+            "include_object_state": {"const": true},
+            "include_contact_flags": {"const": true}
+          }
+        },
+        "control": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action_mode", "action_scale"],
+          "properties": {
+            "action_mode": {"enum": ["relative", "absolute"]},
+            "action_scale": {"type": "number", "exclusiveMinimum": 0, "maximum": 1.0}
+          }
+        },
+        "reward": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "distance_progress", "contact_progress", "success_bonus",
+            "drop_penalty", "action_rate_penalty"
+          ],
+          "properties": {
+            "distance_progress": {"type": "number", "minimum": 0, "maximum": 100},
+            "contact_progress": {"type": "number", "minimum": 0, "maximum": 100},
+            "success_bonus": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000},
+            "drop_penalty": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000},
+            "action_rate_penalty": {"type": "number", "minimum": 0, "maximum": 10}
+          }
+        },
+        "success": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "require_thumb_contact", "require_index_contact", "hold_steps", "workspace"
+          ],
+          "properties": {
+            "require_thumb_contact": {"const": true},
+            "require_index_contact": {"const": true},
+            "hold_steps": {"type": "integer", "minimum": 10, "maximum": 200},
+            "workspace": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": {
+                "min": {"$ref": "#/$defs/vec3"},
+                "max": {"$ref": "#/$defs/vec3"}
+              }
+            }
+          }
+        },
+        "failure": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["drop_height", "terminate_on_drop"],
+          "properties": {
+            "drop_height": {"type": "number", "minimum": 0, "maximum": 1},
+            "terminate_on_drop": {"const": true}
+          }
+        },
+        "randomization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["physics", "mild_position_scale"],
+          "properties": {
+            "physics": {"type": "boolean"},
+            "mild_position_scale": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "safety": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_action_delta", "max_episode_steps"],
+          "properties": {
+            "max_action_delta": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "max_episode_steps": {"type": "integer", "minimum": 20, "maximum": 5000}
+          }
+        },
+        "reference_gesture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "source", "repository", "configuration"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1, "maxLength": 240},
+            "source": {"enum": ["synthetic", "recorded"]},
+            "repository": {"type": "string", "format": "uri", "maxLength": 300},
+            "configuration": {"type": "string", "minLength": 1, "maxLength": 120}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number"}, {"type": "number"}, {"type": "number"}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "nonnegative_vec3": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "rgba": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1}
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "friction": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from typing import Any
 
 import gymnasium as gym
@@ -20,13 +21,21 @@ class BaseOrcaHandEnv(gym.Env[np.ndarray, np.ndarray]):
         version: str | None = None,
         frame_skip: int = 5,
         render_mode: str | None = None,
+        *,
+        scene_path: str | Path | None = None,
     ) -> None:
         super().__init__()
         if render_mode not in {None, "human", "rgb_array"}:
             raise ValueError(f"Unsupported render_mode: {render_mode}")
 
-        self.scene_path = resolve_scene_path(scene_file, version=version)
-        self.version = self.scene_path.parent.name
+        if scene_path is None:
+            self.scene_path = resolve_scene_path(scene_file, version=version)
+            self.version = self.scene_path.parent.name
+        else:
+            self.scene_path = Path(scene_path).resolve()
+            if not self.scene_path.is_file():
+                raise FileNotFoundError(f"Generated scene file not found: {self.scene_path}")
+            self.version = version or "generated"
         self.frame_skip = frame_skip
         self.render_mode = render_mode
 

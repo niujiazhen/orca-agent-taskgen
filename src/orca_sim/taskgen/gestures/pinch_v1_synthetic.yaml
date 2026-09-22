@@ -1,0 +1,20 @@
+schema_version: 1
+source: synthetic
+hand_version: v1
+side: right
+control_space: normalized
+configuration: synthetic_kinematic_search_referencing_configs/last.yaml
+provenance:
+  repository: https://github.com/back2-thebasic/orcahand-retarget-experiments
+  commit: 032b5fd424cb67d9e6203388d9de0edc7453eff6
+  notes: >-
+    Synthetic fixture obtained from ORCA v1 MuJoCo kinematics. It references
+    Cheng Su's last.yaml as pose-design context but is not a recorded Cheng Su
+    trajectory and is not evidence of stable object grasping.
+samples:
+  - timestamp: 0.0
+    qpos: [-0.15, 0.0, -0.73304, -0.58496, -0.50477, -0.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17, 0.0, 0.0, 0.52333, 0.0, 0.0]
+    ctrl: [-0.3333333333, 0.0, -0.3548345362, -0.7930843707, -0.6969668033, 0.0, -0.6521700139, -0.6874974821, 0.0, -0.6396361985, -0.6850358888, 0.0078031119, -0.6396361985, -0.6850358888, 0.0, -0.6610131635, -0.6874974821]
+  - timestamp: 1.0
+    qpos: [-0.15, -0.1663850854, -0.0869970018, 0.1769704880, 0.0919940746, -1.0229435134, 1.4213437181, 0.1353799058, 0.0, 0.0, 0.0, 0.17, 0.0, 0.0, 0.52333, 0.0, 0.0]
+    ctrl: [-0.3333333333, -0.1906642740, 0.8392085799, -0.0403373957, -0.1789064565, -0.9646522963, 0.7641246139, -0.5662995521, 0.0, -0.6396361985, -0.6850358888, 0.0078031119, -0.6396361985, -0.6850358888, 0.0, -0.6610131635, -0.6874974821]
