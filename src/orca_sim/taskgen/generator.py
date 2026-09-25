@@ -294,6 +294,7 @@ def generate_task(
                 "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
                 "requires": {"orca_sim": ">=0.2.0", "mujoco": ">=3.1"},
                 "base_control": "kinematic_6dof",
+                "mount_visualization": "visible" if task["family"] == "gesture" else "hidden",
                 "assistive_grasp": bool(task["safety"]["assistive_grasp"]),
             }
         )

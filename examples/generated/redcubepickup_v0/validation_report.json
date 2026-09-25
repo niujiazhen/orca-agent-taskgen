@@ -8,8 +8,8 @@
   "policies": {
     "mild_scripted": {
       "episodes": 10,
-      "mean_return": 172.9607206568577,
-      "mean_steps": 44.9,
+      "mean_return": 164.6298951675406,
+      "mean_steps": 34.0,
       "policy": "scripted",
       "randomization_scale": 0.5,
       "success_rate": 1.0,
@@ -26,8 +26,8 @@
     },
     "scripted": {
       "episodes": 10,
-      "mean_return": 174.5551580267359,
-      "mean_steps": 46.0,
+      "mean_return": 162.63245843966115,
+      "mean_steps": 33.0,
       "policy": "scripted",
       "randomization_scale": 0.0,
       "success_rate": 1.0,
@@ -61,7 +61,7 @@
     ],
     "reward_range": [
       -0.026854376693725354,
-      2.1295314469998883
+      -0.0023954079408585642
     ],
     "runtime": "pass",
     "static": "pass",

@@ -23,12 +23,13 @@
     "task_spec.yaml",
     "validation_report.json"
   ],
-  "generated_at_utc": "2026-09-25T07:54:57.276647+00:00",
+  "generated_at_utc": "2026-09-25T08:06:29.608922+00:00",
   "hand_version": "v1",
   "manifest_version": 2,
+  "mount_visualization": "hidden",
   "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
   "preview": {
-    "frames": 85,
+    "frames": 77,
     "scripted_success": true
   },
   "requires": {
@@ -37,7 +38,7 @@
   },
   "schema_version": 2,
   "source_commit": "02571cf7fbec1e57de615e61949d504440e2646a",
-  "spec_sha256": "9655c6c5bb4aa5b99e69760b68fd849aeac80652aa75461752ef7d702aa4927f",
+  "spec_sha256": "8c8bbb0a9ccf846357a7a92e6b97ff1818b271b455aea28039528b5524db1dd2",
   "validation": "pass",
   "validation_report": "validation_report.json"
 }

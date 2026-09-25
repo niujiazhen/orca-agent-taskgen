@@ -23,9 +23,10 @@
     "task_spec.yaml",
     "validation_report.json"
   ],
-  "generated_at_utc": "2026-09-25T07:54:56.559750+00:00",
+  "generated_at_utc": "2026-09-25T08:05:00.824405+00:00",
   "hand_version": "v1",
   "manifest_version": 2,
+  "mount_visualization": "visible",
   "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
   "preview": {
     "frames": 58,

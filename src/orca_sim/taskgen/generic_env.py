@@ -39,6 +39,8 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
     """
 
     ACTION_SIZE = 23
+    GRASP_CLEARANCE = 0.072
+    GRASP_ATTACH_DISTANCE = 0.085
     TIP_NAMES = ("right_thumb_dp", "right_index_ip", "right_middle_ip")
 
     def __init__(
@@ -85,6 +87,14 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
         self.action_space = spaces.Box(-1.0, 1.0, shape=(self.ACTION_SIZE,), dtype=np.float32)
 
         self._tower_body_id = self.model.body("right_tower").id
+        if self.family != "gesture":
+            # The ORCA asset includes a large fixed mounting tower. In tabletop
+            # tasks it would rotate into the camera with the virtual wrist and
+            # obstruct the actual hand. Keep its physics intact while hiding
+            # only geoms directly attached to the mount; palm and finger geoms
+            # remain visible. Gesture previews retain the upright mount.
+            tower_geoms = np.flatnonzero(self.model.geom_bodyid == self._tower_body_id)
+            self.model.geom_rgba[tower_geoms, 3] = 0.0
         self._tip_body_ids = tuple(self.model.body(name).id for name in self.TIP_NAMES)
         self._tip_geom_ids = tuple(self._collision_geoms_for_body(body_id) for body_id in self._tip_body_ids)
         self._wrist_position = np.asarray(self.task["hand"]["initial_position"], dtype=np.float64)
@@ -201,7 +211,7 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             self._grasped = False
             self.data.qvel[self._object_qvel_adr : self._object_qvel_adr + 6] = 0.0
             mujoco.mj_forward(self.model, self.data)
-        elif not self._grasped and grasp_error < 0.30 and distance < 0.06:
+        elif not self._grasped and grasp_error < 0.30 and distance < self.GRASP_ATTACH_DISTANCE:
             self._grasped = True
             self._grasp_offset = self._object_pos() - self._grip_center()
 
@@ -392,7 +402,9 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             self._script_stage = min(self._gesture_index, 2)
             return action
 
-        grip_delta = self._object_pos() - self._grip_center()
+        approach_position = self._object_pos().copy()
+        approach_position[2] += self.GRASP_CLEARANCE
+        grip_delta = approach_position - self._grip_center()
         if not self._grasped and self._script_stage < 2:
             if float(np.linalg.norm(grip_delta)) > 0.012:
                 action[:3] = np.clip(

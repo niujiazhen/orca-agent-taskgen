@@ -36,11 +36,39 @@ def _generate(tmp_path: Path, family: str) -> Path:
     return generate_task(spec_path, output_root=output, allowed_output_root=output)
 
 
+def _minimum_visible_hand_z(env) -> float:
+    hand_bodies: set[int] = set()
+    for body_id in range(env.model.nbody):
+        ancestor = body_id
+        while ancestor > 0 and ancestor != env._tower_body_id:
+            ancestor = int(env.model.body_parentid[ancestor])
+        if ancestor == env._tower_body_id:
+            hand_bodies.add(body_id)
+
+    minimum = np.inf
+    for geom_id in range(env.model.ngeom):
+        if (
+            int(env.model.geom_bodyid[geom_id]) not in hand_bodies
+            or env.model.geom_rgba[geom_id, 3] <= 0
+        ):
+            continue
+        local_center = env.model.geom_aabb[geom_id, :3]
+        half_extent = env.model.geom_aabb[geom_id, 3:]
+        rotation = env.data.geom_xmat[geom_id].reshape(3, 3)
+        world_center = env.data.geom_xpos[geom_id] + rotation @ local_center
+        world_extent = np.abs(rotation) @ half_extent
+        minimum = min(minimum, float(world_center[2] - world_extent[2]))
+    return float(minimum)
+
+
 def test_text_parser_supports_three_families_and_both_languages() -> None:
     gesture = task_spec_from_text(REQUESTS["gesture"][0])
     assert gesture["task"]["family"] == "gesture"
     assert gesture["task"]["scene"] == {}
     assert task_spec_from_text(REQUESTS["pick_up"][0])["task"]["scene"]["object"]["shape"] == "box"
+    pickup_hand = task_spec_from_text(REQUESTS["pick_up"][0])["task"]["hand"]
+    assert pickup_hand["initial_position"][2] > 0.45
+    assert pickup_hand["initial_quaternion"] != [1.0, 0.0, 0.0, 0.0]
     place = task_spec_from_text("Pick up the blue sphere and place it on the right target")
     assert place["task"]["family"] == "pick_place"
     assert place["task"]["scene"]["object"]["shape"] == "sphere"
@@ -93,12 +121,21 @@ def test_v2_generation_runtime_and_scripted_success(tmp_path: Path, family: str)
         first, _ = env.reset(seed=123)
         second, _ = env.reset(seed=123)
         np.testing.assert_array_equal(first, second)
+        minimum_visible_hand_z = np.inf
         for _ in range(env.max_episode_steps):
             _, _, terminated, truncated, info = env.step(env.scripted_action())
+            if family != "gesture":
+                minimum_visible_hand_z = min(
+                    minimum_visible_hand_z, _minimum_visible_hand_z(env)
+                )
             if terminated or truncated:
                 break
         assert info["is_success"] is True
         assert info["assistive_grasp"] is True
+        if family != "gesture":
+            table = env.task["scene"]["table"]
+            surface_z = table["position"][2] + table["half_size"][2]
+            assert minimum_visible_hand_z >= surface_z
     finally:
         env.close()
 
@@ -165,5 +202,6 @@ def test_manifest_exposes_v2_contract(tmp_path: Path) -> None:
     assert manifest["schema_version"] == 2
     assert manifest["action_shape"] == [23]
     assert manifest["base_control"] == "kinematic_6dof"
+    assert manifest["mount_visualization"] == "hidden"
     assert manifest["assistive_grasp"] is True
     assert {"request.txt", "README.md", "validation_report.json"}.issubset(manifest["files"])

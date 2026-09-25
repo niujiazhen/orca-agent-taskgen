@@ -8,9 +8,9 @@ task:
     version: v1
     side: right
     base_control: kinematic_6dof
-    initial_position: [0.04, 0.0, 0.04575]
-    initial_quaternion: [1.0, 0.0, 0.0, 0.0]
-    workspace: {min: [-0.12, -0.18, -0.02], max: [0.2, 0.18, 0.24]}
+    initial_position: [0.013, 0.093, 0.486]
+    initial_quaternion: [0.0, 1.0, 0.0, 0.0]
+    workspace: {min: [-0.2, -0.3, 0.3], max: [0.3, 0.3, 0.7]}
   scene:
     table:
       position: [0.04, 0.04, 0.1]

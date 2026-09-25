@@ -135,6 +135,17 @@ def task_spec_from_text(text: str, *, env_id: str | None = None) -> dict[str, An
         task["gesture"] = {"name": gesture}
         return spec
 
+    # Tabletop manipulation uses a palm-down diagonal approach. This keeps the
+    # wrist and palm above the support plane while the fingertips reach the
+    # object. Gesture tasks retain the upright display pose from _base_task.
+    task["hand"].update(
+        {
+            "initial_position": [0.013, 0.093, 0.486],
+            "initial_quaternion": [0.0, 1.0, 0.0, 0.0],
+            "workspace": {"min": [-0.20, -0.30, 0.30], "max": [0.30, 0.30, 0.70]},
+        }
+    )
+
     shape_tokens = ("方块", "立方体", "box", "cube", "圆柱", "cylinder", "球", "sphere", "ball")
     if not any(token in lowered for token in shape_tokens):
         raise UnsupportedTaskError(
