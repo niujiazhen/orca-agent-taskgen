@@ -1,147 +1,59 @@
 # ORCA Text-to-MuJoCo Environment Agent
 
-This repository turns a plain-language hand task into a validated,
-visualizable MuJoCo/Gymnasium reinforcement-learning environment.
+This Codex plugin turns a Chinese or English task description into a validated,
+visualizable MuJoCo/Gymnasium reinforcement-learning environment for one ORCA
+v1 right hand.
 
-The user describes a task in Chinese or English. The Codex Agent checks that
-the request is supported, fills safe simulation defaults, creates a versioned
-TaskSpec, generates the MuJoCo scene, runs non-learning feasibility checks, and
-returns a ready-to-load task bundle with a screenshot and video.
+It supports hand gestures, picking up a box/cylinder/sphere, and placing one of
+those objects in a target region. It does not support stacking, insertion,
+tools, screws, external meshes, robot arms, or two-hand tasks.
 
-```text
-Natural-language request
-  -> TaskSpec v2
-  -> deterministic MuJoCo scene
-  -> Gymnasium environment
-  -> runtime and scripted feasibility checks
-  -> interactive viewer + PNG/MP4 preview
-```
+## 1. Install the Codex plugin
 
-The Agent generates environments only. It does not train PPO, create a policy,
-or claim that a scripted preview is a learned result.
-
-## Supported tasks
-
-Version 0.2 supports one ORCA v1 right hand with a bounded kinematic 6DoF
-wrist.
-
-| Task family | Examples |
-|---|---|
-| `gesture` | open/half-close/fist, thumb-index pinch/release, three-finger grasp/release |
-| `pick_up` | pick up a box, cylinder, or sphere |
-| `pick_place` | pick up a supported object and place it in a target region |
-
-The built-in object catalog contains boxes, cylinders, and spheres. Stacking,
-insertion, tools, screws, external meshes, robot arms, and two-hand tasks are
-rejected with a supported alternative instead of producing an unverified
-environment.
-
-Pickup and placement scenes use a zero-thickness support plane rather than a
-large visible table block. Their calibrated diagonal approach closes while
-descending, so the palm stays above the surface and only the distal fingers
-wrap around the object. The fixed mounting tower is hidden from manipulation
-previews. Gesture-only scenes do not add a support surface.
-
-The wrist is a bounded kinematic task abstraction, not a robot arm. The object
-is always a free MuJoCo body: after reset, neither the environment nor the
-preview controller writes its position or attaches it to the hand. A scripted
-pickup is accepted only when at least two real fingertip contacts lift and hold
-the object through MuJoCo contact dynamics.
-
-## Install and use with Codex
-
-Add the repository marketplace and install the plugin:
+Requirements: Codex, Git, and Python 3.10 or newer.
 
 ```powershell
 codex plugin marketplace add niujiazhen/orca-agent-taskgen
 codex plugin add orca-env-generator@orca-agent-taskgen
 ```
 
-Start a new Codex task, then describe the environment you want:
+Restart Codex and start a new task after installation. The plugin follows the
+standard [Codex marketplace workflow](https://developers.openai.com/plugins/build/plugins).
+No separate OpenAI API key is required by the Python package.
+
+## 2. Describe the environment
+
+Enter one sentence describing the hand action, object, and target when needed.
+You do not need to write YAML, MJCF, or reward code.
 
 ```text
-让灵巧手拿起桌上的红色方块
+Use $orca-env-generator:
+让灵巧手拿起桌上的红色方块。生成环境，完成检查并创建 preview。
 ```
 
-or:
+Other examples:
 
 ```text
-Pick up the blue cylinder and place it in the target region on the right.
+把蓝色圆柱拿起来，放到桌面右侧的绿色目标区域。
+Make the ORCA hand close into a fist and open again.
+Pick up the green sphere from the table.
 ```
 
-Codex generates the bundle under `generated_tasks/`, runs the required checks,
-creates the preview, and reports the exact directory and environment ID. Users
-do not need to write YAML or configure an OpenAI API key.
+Codex fills safe defaults for omitted size, mass, friction, reward, reset
+randomization, and success thresholds. It asks a question only when an
+ambiguity changes the task itself.
 
-When working from a clone, Codex also discovers the repository-level skill in
-`.agents/skills/orca-env-generator/`.
+## 3. Agent output
 
-## Python and CLI installation
+The Agent converts the request into a TaskSpec, generates the MuJoCo scene and
+Gymnasium environment, runs validation, and creates a preview. The final reply
+reports the task directory, environment ID, validation result, and preview
+paths.
 
-Python 3.10 or newer is required.
-
-```powershell
-git clone https://github.com/niujiazhen/orca-agent-taskgen.git
-cd orca-agent-taskgen
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[visualization,dev]"
-```
-
-Generate directly from bounded natural language:
-
-```powershell
-orca-task generate-text "让灵巧手拿起桌上的红色方块" --output generated_tasks
-orca-task check generated_tasks/<generated-directory>
-orca-task preview generated_tasks/<generated-directory>
-orca-task view generated_tasks/<generated-directory>
-```
-
-Or generate from a reviewed TaskSpec v2:
-
-```powershell
-orca-task validate src/orca_sim/taskgen/specs/v2_pick_place_cylinder.yaml
-orca-task generate src/orca_sim/taskgen/specs/v2_pick_place_cylinder.yaml --output generated_tasks
-```
-
-## Load a generated environment
-
-Load by bundle path:
-
-```python
-from orca_sim.taskgen import load_environment
-
-env = load_environment(
-    "generated_tasks/bluecylinderplace_v0",
-    render_mode="human",
-)
-observation, info = env.reset(seed=0)
-observation, reward, terminated, truncated, info = env.step(
-    env.action_space.sample()
-)
-env.close()
-```
-
-Or register the bundle and use the standard Gymnasium interface:
-
-```python
-import gymnasium as gym
-from orca_sim.taskgen import register_task_bundle
-
-env_id = register_task_bundle("generated_tasks/bluecylinderplace_v0")
-env = gym.make(env_id, render_mode="rgb_array")
-```
-
-The normalized action has 23 values: wrist translation `[3]`, wrist rotation
-`[3]`, and ORCA joint targets `[17]`. The observation contains the wrist pose,
-joint state, fingertip state, contact flags, object state, target, and task
-stage. Exact labels and package requirements are stored in `manifest.json`.
-
-## Generated task bundle
-
-An accepted task contains:
+Each generated task bundle contains:
 
 ```text
-<task>/
+generated_tasks/<task>/
 ├── request.txt
 ├── task_spec.yaml
 ├── scene.xml
@@ -152,34 +64,50 @@ An accepted task contains:
 └── README.md
 ```
 
-`orca-task check` verifies XML compilation, Gymnasium contracts, seeded reset
-reproducibility, finite random stepping, false-success resistance, and physical
-contact reachability. The deterministic preview controller uses only the public
-action space. It is a non-learning feasibility check—not PPO and not a trained
-policy.
+## 4. What the preview video means
 
-## Examples
+`preview.mp4` is a non-learning physical-feasibility check. A deterministic
+controller operates through the same public 23-dimensional action space that
+an RL policy would use. For manipulation tasks, the object remains a free
+MuJoCo body and is moved through simulated fingertip contacts.
 
-The repository includes three reviewed TaskSpec v2 examples:
+The preview is **not** PPO training, a trained policy, or evidence that RL has
+already converged. It only shows that the generated scene, actions, contacts,
+and success condition can complete the task without learning.
 
-- [`v2_gesture_fist.yaml`](src/orca_sim/taskgen/specs/v2_gesture_fist.yaml)
-- [`v2_pick_up_cube.yaml`](src/orca_sim/taskgen/specs/v2_pick_up_cube.yaml)
-- [`v2_pick_place_cylinder.yaml`](src/orca_sim/taskgen/specs/v2_pick_place_cylinder.yaml)
+[Gesture preview](examples/generated/handfist_v0/preview.mp4) ·
+[Pickup preview](examples/generated/redcubepickup_v0/preview.mp4) ·
+[Pick-and-place preview](examples/generated/bluecylinderplace_v0/preview.mp4)
 
-| Gesture | Pick up | Pick and place |
-|---|---|---|
-| ![Fist task](examples/generated/handfist_v0/preview.png) | ![Cube pickup](examples/generated/redcubepickup_v0/preview.png) | ![Cylinder placement](examples/generated/bluecylinderplace_v0/preview.png) |
+## 5. Use the generated RL environment
 
-[Gesture MP4](examples/generated/handfist_v0/preview.mp4) ·
-[Pickup MP4](examples/generated/redcubepickup_v0/preview.mp4) ·
-[Pick/place MP4](examples/generated/bluecylinderplace_v0/preview.mp4)
+Load a bundle directly:
 
-The legacy TaskSpec v1 PinchAndHold bundles remain loadable for compatibility,
-but all new natural-language generation uses TaskSpec v2.
+```python
+from orca_sim.taskgen import load_environment
 
-Gesture scenario definitions and retargeting configuration provenance come
-from Cheng Su's
-[`orcahand-retarget-experiments`](https://github.com/back2-thebasic/orcahand-retarget-experiments).
-That repository provides configuration files and comparison videos rather than
-joint trajectories, so the versioned joint targets here are calibrated and
-validated locally.
+env = load_environment(
+    "generated_tasks/redcubepickup_v0",
+    render_mode="human",  # or "rgb_array"
+)
+
+observation, info = env.reset(seed=0)
+
+for _ in range(1000):
+    action = env.action_space.sample()  # replace with your RL policy
+    observation, reward, terminated, truncated, info = env.step(action)
+    if terminated or truncated:
+        observation, info = env.reset()
+
+env.close()
+```
+
+The action contains wrist translation `[3]`, wrist rotation `[3]`, and ORCA
+joint targets `[17]`. The observation contains wrist and joint state,
+fingertips, contacts, object state, target, and task stage.
+
+To inspect the environment interactively:
+
+```powershell
+orca-task view generated_tasks/redcubepickup_v0
+```
