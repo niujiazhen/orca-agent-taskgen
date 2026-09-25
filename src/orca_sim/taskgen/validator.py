@@ -29,7 +29,13 @@ def _canonical_spec_hash(spec: dict) -> str:
 
 def validate_generated_directory(path: str | Path) -> dict:
     path = Path(path).resolve()
+    manifest_path = path / "manifest.json"
+    if not manifest_path.is_file():
+        raise ContractError("generated directory missing files: ['manifest.json']")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     required = {"task_spec.yaml", "scene.xml", "manifest.json"}
+    if int(manifest.get("schema_version", 1)) == 2:
+        required |= {"request.txt", "validation_report.json", "README.md"}
     names = {item.name for item in path.iterdir() if item.is_file()}
     missing = required - names
     if missing:
@@ -42,7 +48,6 @@ def validate_generated_directory(path: str | Path) -> dict:
 
     spec = yaml.safe_load((path / "task_spec.yaml").read_text(encoding="utf-8"))
     validate_task_spec(spec)
-    manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("env_id") != spec["task"]["env_id"]:
         raise ContractError("manifest env_id does not match TaskSpec")
     if manifest.get("spec_sha256") != _canonical_spec_hash(spec):
@@ -73,7 +78,10 @@ def validate_generated_directory(path: str | Path) -> dict:
     absent = [name for name in listed if not (path / name).is_file()]
     if absent:
         raise ContractError(f"manifest lists missing generated files: {sorted(absent)}")
-    text = "\n".join((path / name).read_text(encoding="utf-8") for name in sorted(listed))
+    text_names = [
+        name for name in sorted(listed) if Path(name).suffix.lower() in {".xml", ".yaml", ".yml", ".json", ".md", ".txt"}
+    ]
+    text = "\n".join((path / name).read_text(encoding="utf-8") for name in text_names)
     for pattern in ABSOLUTE_PATH_PATTERNS:
         if pattern.search(text):
             raise ContractError("generated artifacts contain an absolute development-machine path")

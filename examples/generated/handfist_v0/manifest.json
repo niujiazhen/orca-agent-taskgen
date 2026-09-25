@@ -1,0 +1,43 @@
+{
+  "action_fields": [
+    "wrist_translation_delta[3]",
+    "wrist_rotation_delta[3]",
+    "hand_targets[17]"
+  ],
+  "action_shape": [
+    23
+  ],
+  "assistive_grasp": true,
+  "attempt": 1,
+  "base_control": "kinematic_6dof",
+  "env_id": "HandFist-v0",
+  "environment_class": "orca_sim.taskgen.generic_env:GeneratedOrcaEnv",
+  "family": "gesture",
+  "files": [
+    "README.md",
+    "manifest.json",
+    "preview.mp4",
+    "preview.png",
+    "request.txt",
+    "scene.xml",
+    "task_spec.yaml",
+    "validation_report.json"
+  ],
+  "generated_at_utc": "2026-09-25T03:44:14.673049+00:00",
+  "hand_version": "v1",
+  "manifest_version": 2,
+  "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
+  "preview": {
+    "frames": 58,
+    "scripted_success": true
+  },
+  "requires": {
+    "mujoco": ">=3.1",
+    "orca_sim": ">=0.2.0"
+  },
+  "schema_version": 2,
+  "source_commit": "02571cf7fbec1e57de615e61949d504440e2646a",
+  "spec_sha256": "d9934c7b41e1034dc9dc338fab75b68e1f11005722b797540e512d145f7a520f",
+  "validation": "pass",
+  "validation_report": "validation_report.json"
+}

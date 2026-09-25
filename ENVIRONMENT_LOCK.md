@@ -1,6 +1,6 @@
 # Reproducible Environment Lock
 
-Recorded: 2026-09-21 (America/Los_Angeles)
+Updated: 2026-09-24 (America/Los_Angeles)
 
 ## Source
 
@@ -16,22 +16,21 @@ Recorded: 2026-09-21 (America/Los_Angeles)
 - gymnasium: 1.3.0
 - mujoco: 3.13.0
 - numpy: 2.4.6
-- stable-baselines3: 2.9.0
-- torch: 2.14.0+cpu
 - PyYAML: 6.0.3
 - jsonschema: 4.26.0
+- imageio: visualization extra only
 
 ## Bootstrap
 
 ```powershell
 py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -e . pytest stable-baselines3 "imageio[ffmpeg]" tensorboard pyyaml jsonschema build
+.\.venv\Scripts\python.exe -m pip install -e ".[visualization,dev]" build
 ```
 
-The editable install is for development only. P7 must additionally prove that
-a non-editable wheel contains all required Python, XML, TaskSpec, and model
-assets and works in a separate clean virtual environment.
+The text-to-environment Agent does not require PPO, PyTorch, Stable-Baselines3,
+or TensorBoard. The editable install is for development only; release checks
+also install the wheel in a separate clean virtual environment.
 
 ## External reference provenance
 

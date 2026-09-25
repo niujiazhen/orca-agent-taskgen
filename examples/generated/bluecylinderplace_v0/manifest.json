@@ -1,0 +1,43 @@
+{
+  "action_fields": [
+    "wrist_translation_delta[3]",
+    "wrist_rotation_delta[3]",
+    "hand_targets[17]"
+  ],
+  "action_shape": [
+    23
+  ],
+  "assistive_grasp": true,
+  "attempt": 1,
+  "base_control": "kinematic_6dof",
+  "env_id": "BlueCylinderPlace-v0",
+  "environment_class": "orca_sim.taskgen.generic_env:GeneratedOrcaEnv",
+  "family": "pick_place",
+  "files": [
+    "README.md",
+    "manifest.json",
+    "preview.mp4",
+    "preview.png",
+    "request.txt",
+    "scene.xml",
+    "task_spec.yaml",
+    "validation_report.json"
+  ],
+  "generated_at_utc": "2026-09-25T03:44:15.357606+00:00",
+  "hand_version": "v1",
+  "manifest_version": 2,
+  "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
+  "preview": {
+    "frames": 85,
+    "scripted_success": true
+  },
+  "requires": {
+    "mujoco": ">=3.1",
+    "orca_sim": ">=0.2.0"
+  },
+  "schema_version": 2,
+  "source_commit": "02571cf7fbec1e57de615e61949d504440e2646a",
+  "spec_sha256": "e29f5845dc1f3154114a3b303d4f86ada430b964b1834f41a2cd76c8da8ed34a",
+  "validation": "pass",
+  "validation_report": "validation_report.json"
+}

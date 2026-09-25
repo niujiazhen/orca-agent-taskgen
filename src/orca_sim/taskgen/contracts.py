@@ -22,7 +22,8 @@ def _schema(name: str) -> dict[str, Any]:
     return json.loads(schema_path.read_text(encoding="utf-8"))
 
 
-TASK_SPEC_VALIDATOR = Draft202012Validator(_schema("task_spec_v1.schema.json"))
+TASK_SPEC_V1_VALIDATOR = Draft202012Validator(_schema("task_spec_v1.schema.json"))
+TASK_SPEC_V2_VALIDATOR = Draft202012Validator(_schema("task_spec_v2.schema.json"))
 GESTURE_VALIDATOR = Draft202012Validator(_schema("gesture_reference_v1.schema.json"))
 
 
@@ -83,10 +84,21 @@ def _read_yaml(path: Path, *, allowed_root: Path | None, label: str) -> Any:
 
 
 def validate_task_spec(data: Any) -> dict[str, Any]:
-    """Validate and return a TaskSpec v1 mapping."""
+    """Validate and return a supported TaskSpec mapping."""
 
     _assert_finite(data, "TaskSpec")
-    _validate_schema(data, TASK_SPEC_VALIDATOR, "TaskSpec")
+    if not isinstance(data, Mapping):
+        raise ContractError("TaskSpec.<root>: must be a mapping")
+    version = data.get("schema_version")
+    if version == 1:
+        return _validate_task_spec_v1(data)
+    if version == 2:
+        return _validate_task_spec_v2(data)
+    raise ContractError(f"TaskSpec.schema_version: unsupported version {version!r}")
+
+
+def _validate_task_spec_v1(data: Mapping[str, Any]) -> dict[str, Any]:
+    _validate_schema(data, TASK_SPEC_V1_VALIDATOR, "TaskSpec")
     task = data["task"]
     _assert_safe_relative_path(task["reference_gesture"]["path"], "TaskSpec.task.reference_gesture.path")
 
@@ -104,6 +116,40 @@ def validate_task_spec(data: Any) -> dict[str, Any]:
         raise ContractError(
             "TaskSpec.task.reset.object_position: nominal position must lie inside success workspace"
         )
+    return dict(data)
+
+
+def _validate_task_spec_v2(data: Mapping[str, Any]) -> dict[str, Any]:
+    _validate_schema(data, TASK_SPEC_V2_VALIDATOR, "TaskSpec")
+    task = data["task"]
+    workspace = task["hand"]["workspace"]
+    for axis, (lower, upper) in enumerate(zip(workspace["min"], workspace["max"])):
+        if lower >= upper:
+            raise ContractError(
+                f"TaskSpec.task.hand.workspace axis {axis}: min must be less than max"
+            )
+    initial = task["hand"]["initial_position"]
+    if not all(
+        lower <= value <= upper
+        for value, lower, upper in zip(initial, workspace["min"], workspace["max"])
+    ):
+        raise ContractError("TaskSpec.task.hand.initial_position lies outside its workspace")
+    quaternion = task["hand"]["initial_quaternion"]
+    norm = math.sqrt(sum(float(value) ** 2 for value in quaternion))
+    if not 0.999 <= norm <= 1.001:
+        raise ContractError("TaskSpec.task.hand.initial_quaternion must be normalized")
+
+    table = task["scene"]["table"]
+    if any(float(value) <= 0 for value in table["half_size"]):
+        raise ContractError("TaskSpec.task.scene.table.half_size must be positive")
+    obj = task["scene"].get("object")
+    if obj is not None:
+        table_top = float(table["position"][2]) + float(table["half_size"][2])
+        if float(obj["initial_position"][2]) <= table_top:
+            raise ContractError("TaskSpec.task.scene.object.initial_position must be above the table")
+    target = task["scene"].get("target")
+    if target is not None and float(target["position"][2]) < 0:
+        raise ContractError("TaskSpec.task.scene.target.position must be above the floor")
     return dict(data)
 
 

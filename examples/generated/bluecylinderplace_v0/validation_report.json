@@ -1,0 +1,72 @@
+{
+  "criteria": {
+    "random_success_le_0_05": true,
+    "scripted_mild_ge_0_70": true,
+    "scripted_nominal_ge_0_90": true,
+    "zero_success_eq_0": true
+  },
+  "policies": {
+    "mild_scripted": {
+      "episodes": 10,
+      "mean_return": 172.45059414665812,
+      "mean_steps": 66.6,
+      "policy": "scripted",
+      "randomization_scale": 0.5,
+      "success_rate": 1.0,
+      "successes": 10
+    },
+    "random": {
+      "episodes": 10,
+      "mean_return": -3.8330174671234998,
+      "mean_steps": 500.0,
+      "policy": "random",
+      "randomization_scale": 0.0,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "scripted": {
+      "episodes": 10,
+      "mean_return": 174.81593477005976,
+      "mean_steps": 65.0,
+      "policy": "scripted",
+      "randomization_scale": 0.0,
+      "success_rate": 1.0,
+      "successes": 10
+    },
+    "zero": {
+      "episodes": 10,
+      "mean_return": 1.3857409507100904e-05,
+      "mean_steps": 500.0,
+      "policy": "zero",
+      "randomization_scale": 0.0,
+      "success_rate": 0.0,
+      "successes": 0
+    }
+  },
+  "report_version": 2,
+  "resets": {
+    "count": 100,
+    "seeded_reproducible": true,
+    "status": "pass"
+  },
+  "runtime": {
+    "action_shape": [
+      23
+    ],
+    "env_id": "BlueCylinderPlace-v0",
+    "episodes_completed": 20,
+    "generated_dir": "bluecylinderplace_v0",
+    "observation_shape": [
+      73
+    ],
+    "reward_range": [
+      -0.01360124259931878,
+      -0.002663549172847128
+    ],
+    "runtime": "pass",
+    "static": "pass",
+    "steps": 10000
+  },
+  "status": "pass",
+  "validation_kind": "non-learning scripted feasibility; no PPO or trained policy"
+}

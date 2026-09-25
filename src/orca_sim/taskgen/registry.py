@@ -7,7 +7,7 @@ from pathlib import Path
 
 import gymnasium as gym
 
-from orca_sim.taskgen.generator import GENERATED_ROOT
+GENERATED_ROOT = Path(__file__).resolve().parent / "generated"
 
 
 def discover_generated_tasks(root: str | Path = GENERATED_ROOT) -> dict[str, dict]:
@@ -32,13 +32,31 @@ def discover_generated_tasks(root: str | Path = GENERATED_ROOT) -> dict[str, dic
 def register_generated_envs(root: str | Path = GENERATED_ROOT) -> tuple[str, ...]:
     tasks = discover_generated_tasks(root)
     for env_id, record in tasks.items():
-        if env_id not in gym.registry:
-            gym.register(
-                id=env_id,
-                entry_point="orca_sim.taskgen.env:PinchAndHoldEnv",
-                kwargs={
-                    "spec_path": str(record["spec_path"]),
-                    "scene_path": str(record["scene_path"]),
-                },
-            )
+        schema_version = int(record["manifest"].get("schema_version", 1))
+        entry_point = (
+            "orca_sim.taskgen.generic_env:GeneratedOrcaEnv"
+            if schema_version == 2
+            else "orca_sim.taskgen.env:PinchAndHoldEnv"
+        )
+        kwargs = {
+            "spec_path": str(record["spec_path"]),
+            "scene_path": str(record["scene_path"]),
+        }
+        existing = gym.registry.get(env_id)
+        if existing is not None:
+            if not str(existing.entry_point).startswith("orca_sim.taskgen."):
+                raise ValueError(f"Environment ID is already registered by another package: {env_id}")
+            if existing.entry_point == entry_point and existing.kwargs == kwargs:
+                continue
+            del gym.registry[env_id]
+        gym.register(id=env_id, entry_point=entry_point, kwargs=kwargs)
     return tuple(tasks)
+
+
+def register_task_bundle(path: str | Path) -> str:
+    """Register one generated task bundle and return its Gymnasium ID."""
+
+    bundle = Path(path).resolve()
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    register_generated_envs(bundle.parent)
+    return str(manifest["env_id"])

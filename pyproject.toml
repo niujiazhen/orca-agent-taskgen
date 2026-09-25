@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "orca_sim"
-version = "0.1.0"
-description = "ORCA hand simulation environment using Gymnasium and Mujoco."
+version = "0.2.0"
+description = "Generate visualizable ORCA hand MuJoCo RL environments from bounded task descriptions."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
@@ -23,11 +23,12 @@ dependencies = [
 dev = [
   "pytest>=8",
 ]
-rl = [
-  "stable-baselines3>=2.3",
-  "tensorboard>=2.16",
+visualization = [
   "imageio[ffmpeg]>=2.34",
 ]
+
+[project.scripts]
+orca-task = "orca_sim.taskgen.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

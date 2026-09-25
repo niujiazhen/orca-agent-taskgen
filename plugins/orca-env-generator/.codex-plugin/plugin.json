@@ -1,0 +1,27 @@
+{
+  "name": "orca-env-generator",
+  "version": "0.2.0",
+  "description": "Generate validated and visualizable ORCA hand MuJoCo RL environments from natural language.",
+  "author": {
+    "name": "niujiazhen",
+    "url": "https://github.com/niujiazhen"
+  },
+  "homepage": "https://github.com/niujiazhen/orca-agent-taskgen",
+  "repository": "https://github.com/niujiazhen/orca-agent-taskgen",
+  "keywords": ["mujoco", "gymnasium", "robotics", "orca-hand"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ORCA Environment Generator",
+    "shortDescription": "Create ORCA hand MuJoCo RL environments from text",
+    "longDescription": "Turn bounded Chinese or English manipulation requests into validated, visualizable MuJoCo and Gymnasium task bundles.",
+    "developerName": "niujiazhen",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/niujiazhen/orca-agent-taskgen",
+    "defaultPrompt": [
+      "让灵巧手拿起桌上的红色方块",
+      "把蓝色圆柱放到右侧目标区",
+      "Make the ORCA hand close into a fist and open again"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+schema_version: 2
+task:
+  env_id: BlueCylinderPlace-v0
+  name: Pick up a blue cylinder and place it in the green target
+  family: pick_place
+  source_text: 把蓝色圆柱拿起来并放到桌面右侧的绿色区域
+  hand:
+    version: v1
+    side: right
+    base_control: kinematic_6dof
+    initial_position: [0.04, 0.0, 0.04575]
+    initial_quaternion: [1.0, 0.0, 0.0, 0.0]
+    workspace: {min: [-0.12, -0.18, -0.02], max: [0.2, 0.18, 0.24]}
+  scene:
+    table:
+      position: [0.04, 0.04, 0.1]
+      half_size: [0.24, 0.24, 0.1]
+      rgba: [0.48, 0.32, 0.2, 1.0]
+      friction: [1.2, 0.01, 0.001]
+    object:
+      name: task_object
+      shape: cylinder
+      size: [0.014, 0.022, 0.014]
+      mass: 0.04
+      rgba: [0.12, 0.35, 0.85, 1.0]
+      friction: [1.2, 0.01, 0.001]
+      initial_position: [0.02, 0.065, 0.224]
+    target:
+      position: [0.02, -0.075, 0.224]
+      radius: 0.03
+      rgba: [0.15, 0.75, 0.25, 0.35]
+  reset:
+    object_position_jitter: [0.005, 0.005, 0.0]
+    wrist_position_jitter: [0.002, 0.002, 0.002]
+  control: {frame_skip: 5, translation_step: 0.004, rotation_step: 0.04}
+  reward: {progress: 10.0, grasp: 2.0, success: 100.0, action_penalty: 0.001}
+  success:
+    hold_steps: 20
+    gesture_tolerance: 0.05
+    lift_height: 0.05
+    target_radius: 0.03
+    max_object_speed: 0.05
+  safety: {max_episode_steps: 500, drop_height: 0.17, assistive_grasp: true}
+  visualization: {width: 640, height: 480, fps: 30, camera: free}

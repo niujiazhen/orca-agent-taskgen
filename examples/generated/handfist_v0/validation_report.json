@@ -1,0 +1,72 @@
+{
+  "criteria": {
+    "random_success_le_0_05": true,
+    "scripted_mild_ge_0_70": true,
+    "scripted_nominal_ge_0_90": true,
+    "zero_success_eq_0": true
+  },
+  "policies": {
+    "mild_scripted": {
+      "episodes": 10,
+      "mean_return": 99.8203733498966,
+      "mean_steps": 38.0,
+      "policy": "scripted",
+      "randomization_scale": 0.5,
+      "success_rate": 1.0,
+      "successes": 10
+    },
+    "random": {
+      "episodes": 10,
+      "mean_return": -10.007375762694902,
+      "mean_steps": 500.0,
+      "policy": "random",
+      "randomization_scale": 0.0,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "scripted": {
+      "episodes": 10,
+      "mean_return": 99.8203733498966,
+      "mean_steps": 38.0,
+      "policy": "scripted",
+      "randomization_scale": 0.0,
+      "success_rate": 1.0,
+      "successes": 10
+    },
+    "zero": {
+      "episodes": 10,
+      "mean_return": -5.377935463121965,
+      "mean_steps": 500.0,
+      "policy": "zero",
+      "randomization_scale": 0.0,
+      "success_rate": 0.0,
+      "successes": 0
+    }
+  },
+  "report_version": 2,
+  "resets": {
+    "count": 100,
+    "seeded_reproducible": true,
+    "status": "pass"
+  },
+  "runtime": {
+    "action_shape": [
+      23
+    ],
+    "env_id": "HandFist-v0",
+    "episodes_completed": 20,
+    "generated_dir": "handfist_v0",
+    "observation_shape": [
+      73
+    ],
+    "reward_range": [
+      -2.9314930163314394,
+      1.7861361581842883
+    ],
+    "runtime": "pass",
+    "static": "pass",
+    "steps": 10000
+  },
+  "status": "pass",
+  "validation_kind": "non-learning scripted feasibility; no PPO or trained policy"
+}

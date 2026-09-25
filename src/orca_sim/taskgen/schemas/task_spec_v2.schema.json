@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orcahand.com/schemas/task-spec-v2.json",
+  "title": "ORCA TaskSpec v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "env_id", "name", "family", "source_text", "hand", "scene",
+        "reset", "control", "reward", "success", "safety", "visualization"
+      ],
+      "properties": {
+        "env_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*-v[0-9]+$",
+          "maxLength": 80
+        },
+        "name": {"type": "string", "minLength": 1, "maxLength": 120},
+        "family": {"enum": ["gesture", "pick_up", "pick_place"]},
+        "source_text": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "hand": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version", "side", "base_control", "initial_position",
+            "initial_quaternion", "workspace"
+          ],
+          "properties": {
+            "version": {"const": "v1"},
+            "side": {"const": "right"},
+            "base_control": {"const": "kinematic_6dof"},
+            "initial_position": {"$ref": "#/$defs/vec3"},
+            "initial_quaternion": {"$ref": "#/$defs/quat"},
+            "workspace": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": {
+                "min": {"$ref": "#/$defs/vec3"},
+                "max": {"$ref": "#/$defs/vec3"}
+              }
+            }
+          }
+        },
+        "scene": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["table"],
+          "properties": {
+            "table": {"$ref": "#/$defs/table"},
+            "object": {"$ref": "#/$defs/object"},
+            "target": {"$ref": "#/$defs/target"}
+          }
+        },
+        "gesture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name"],
+          "properties": {
+            "name": {
+              "enum": [
+                "open_half_close_fist_open",
+                "thumb_index_pinch_release",
+                "three_finger_grasp_release"
+              ]
+            }
+          }
+        },
+        "reset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["object_position_jitter", "wrist_position_jitter"],
+          "properties": {
+            "object_position_jitter": {"$ref": "#/$defs/nonnegative_vec3"},
+            "wrist_position_jitter": {"$ref": "#/$defs/nonnegative_vec3"}
+          }
+        },
+        "control": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["frame_skip", "translation_step", "rotation_step"],
+          "properties": {
+            "frame_skip": {"type": "integer", "minimum": 1, "maximum": 20},
+            "translation_step": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.02},
+            "rotation_step": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.2}
+          }
+        },
+        "reward": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["progress", "grasp", "success", "action_penalty"],
+          "properties": {
+            "progress": {"type": "number", "minimum": 0, "maximum": 100},
+            "grasp": {"type": "number", "minimum": 0, "maximum": 100},
+            "success": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000},
+            "action_penalty": {"type": "number", "minimum": 0, "maximum": 10}
+          }
+        },
+        "success": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "hold_steps", "gesture_tolerance", "lift_height",
+            "target_radius", "max_object_speed"
+          ],
+          "properties": {
+            "hold_steps": {"type": "integer", "minimum": 1, "maximum": 200},
+            "gesture_tolerance": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "lift_height": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.3},
+            "target_radius": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.2},
+            "max_object_speed": {"type": "number", "exclusiveMinimum": 0, "maximum": 2}
+          }
+        },
+        "safety": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_episode_steps", "drop_height", "assistive_grasp"],
+          "properties": {
+            "max_episode_steps": {"type": "integer", "minimum": 20, "maximum": 5000},
+            "drop_height": {"type": "number", "minimum": 0, "maximum": 1},
+            "assistive_grasp": {"type": "boolean"}
+          }
+        },
+        "visualization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height", "fps", "camera"],
+          "properties": {
+            "width": {"type": "integer", "minimum": 320, "maximum": 1920},
+            "height": {"type": "integer", "minimum": 240, "maximum": 1080},
+            "fps": {"type": "integer", "minimum": 1, "maximum": 120},
+            "camera": {"enum": ["free", "closeup"]}
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"family": {"const": "gesture"}}},
+          "then": {"required": ["gesture"]}
+        },
+        {
+          "if": {"properties": {"family": {"enum": ["pick_up", "pick_place"]}}},
+          "then": {
+            "properties": {"scene": {"required": ["table", "object"]}}
+          }
+        },
+        {
+          "if": {"properties": {"family": {"const": "pick_place"}}},
+          "then": {
+            "properties": {"scene": {"required": ["table", "object", "target"]}}
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "nonnegative_vec3": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "quat": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number"}, {"type": "number"},
+        {"type": "number"}, {"type": "number"}
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "rgba": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1}
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "friction": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0},
+        {"type": "number", "minimum": 0}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position", "half_size", "rgba", "friction"],
+      "properties": {
+        "position": {"$ref": "#/$defs/vec3"},
+        "half_size": {"$ref": "#/$defs/nonnegative_vec3"},
+        "rgba": {"$ref": "#/$defs/rgba"},
+        "friction": {"$ref": "#/$defs/friction"}
+      }
+    },
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "shape", "size", "mass", "rgba", "friction", "initial_position"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 40},
+        "shape": {"enum": ["box", "cylinder", "sphere"]},
+        "size": {
+          "type": "array",
+          "prefixItems": [
+            {"type": "number", "exclusiveMinimum": 0, "maximum": 0.1},
+            {"type": "number", "exclusiveMinimum": 0, "maximum": 0.1},
+            {"type": "number", "exclusiveMinimum": 0, "maximum": 0.1}
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "mass": {"type": "number", "exclusiveMinimum": 0, "maximum": 2},
+        "rgba": {"$ref": "#/$defs/rgba"},
+        "friction": {"$ref": "#/$defs/friction"},
+        "initial_position": {"$ref": "#/$defs/vec3"}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position", "radius", "rgba"],
+      "properties": {
+        "position": {"$ref": "#/$defs/vec3"},
+        "radius": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.2},
+        "rgba": {"$ref": "#/$defs/rgba"}
+      }
+    }
+  }
+}

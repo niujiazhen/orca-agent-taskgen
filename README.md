@@ -1,230 +1,177 @@
-# ORCA Agent Task Generation
+# ORCA Text-to-MuJoCo Environment Agent
 
-This project provides a constrained Agent pipeline for turning a structured
-robot-hand task specification into a usable, validated, and trainable
-MuJoCo/Gymnasium reinforcement-learning environment.
+This repository turns a plain-language hand task into a validated,
+visualizable MuJoCo/Gymnasium reinforcement-learning environment.
 
-It is built on [`LynnUoE/orca_sim`](https://github.com/LynnUoE/orca_sim) commit
-`02571cf7fbec1e57de615e61949d504440e2646a` and currently targets the ORCA v1
-right hand.
-
-## 1. What the Agent does
-
-### User input
-
-The executable input is a versioned YAML **TaskSpec**. It describes:
-
-- the environment ID and ORCA hand version;
-- object geometry, mass, friction, and initial position;
-- observation and action settings;
-- reward terms;
-- success, failure, randomization, and safety conditions;
-- a gesture-reference file and its provenance.
-
-A coding Agent such as Codex can translate a natural-language task request into
-this YAML, but the repository itself deliberately starts from the TaskSpec. The
-validated YAML is the durable and reproducible Agent output.
-
-### What happens next
-
-| Step | Agent action | Purpose |
-|---:|---|---|
-| 1 | Parse the TaskSpec | Load the requested task in a machine-readable form. |
-| 2 | Validate schema and semantics | Reject missing/unknown fields, NaN/Inf, unsupported versions, invalid geometry, absolute paths, and path traversal. |
-| 3 | Load the gesture reference | Check the 17-DoF pose/control format, timestamps, hand version, source label, and provenance. |
-| 4 | Generate MuJoCo artifacts | Deterministically create a portable `scene.xml` and normalized `task_spec.yaml`. |
-| 5 | Create a manifest | Record the TaskSpec SHA-256, source commit, generation attempt, file list, and validation status. |
-| 6 | Register the task | Expose the generated task as a normal Gymnasium environment. |
-| 7 | Run static and runtime checks | Check XML, packaged paths, Gymnasium API behavior, seeded resets, finite values, and stable shapes. |
-| 8 | Run behavior and anti-cheating checks | Compare zero, random, and scripted policies and reject false success from one-finger contact, transient collision, closed-hand pose, or a dropped object. |
-| 9 | Train and evaluate PPO | Optionally prove that the observation/action/reward design can actually be learned, using three seeds and matching VecNormalize statistics. |
-| 10 | Package the result | Produce reports, metrics, videos, and a wheel that is tested in a clean virtual environment. |
+The user describes a task in Chinese or English. The Codex Agent checks that
+the request is supported, fills safe simulation defaults, creates a versioned
+TaskSpec, generates the MuJoCo scene, runs non-learning feasibility checks, and
+returns a ready-to-load task bundle with a screenshot and video.
 
 ```text
-Task request
-    -> TaskSpec YAML
-    -> schema and safety validation
-    -> MuJoCo generation
-    -> Gymnasium registration
-    -> physics and behavior gates
-    -> optional PPO learnability test
-    -> reports, videos, and installable package
+Natural-language request
+  -> TaskSpec v2
+  -> deterministic MuJoCo scene
+  -> Gymnasium environment
+  -> runtime and scripted feasibility checks
+  -> interactive viewer + PNG/MP4 preview
 ```
 
-### Final output
+The Agent generates environments only. It does not train PPO, create a policy,
+or claim that a scripted preview is a learned result.
 
-For each accepted task, the pipeline produces:
+## Supported tasks
+
+Version 0.2 supports one ORCA v1 right hand with a bounded kinematic 6DoF
+wrist.
+
+| Task family | Examples |
+|---|---|
+| `gesture` | open/half-close/fist, thumb-index pinch/release, three-finger grasp/release |
+| `pick_up` | pick up a box, cylinder, or sphere |
+| `pick_place` | pick up a supported object and place it in a target region |
+
+The built-in object catalog contains boxes, cylinders, and spheres. Stacking,
+insertion, tools, screws, external meshes, robot arms, and two-hand tasks are
+rejected with a supported alternative instead of producing an unverified
+environment.
+
+The kinematic wrist and optional assistive-grasp transition are explicit
+environment abstractions. They make single-hand tabletop tasks stable enough
+for an RL environment, but they are not a robot-arm or sim-to-real dynamics
+model.
+
+## Install and use with Codex
+
+Add the repository marketplace and install the plugin:
+
+```powershell
+codex plugin marketplace add niujiazhen/orca-agent-taskgen
+codex plugin add orca-env-generator@orca-agent-taskgen
+```
+
+Start a new Codex task, then describe the environment you want:
 
 ```text
-src/orca_sim/taskgen/generated/<task>/
-├── scene.xml
-├── task_spec.yaml
-├── manifest.json
-└── validation_report.json
-
-artifacts/<task>/
-├── behavior_acceptance.json
-├── PPO evaluation metrics (when trained)
-└── success/failure videos
+让灵巧手拿起桌上的红色方块
 ```
 
-PPO is not used to generate the environment. It is an optional acceptance step
-that demonstrates the generated environment can be learned rather than only
-completed by a hand-written controller.
-
-## 2. Example: PinchAndHold
-
-The included example asks the ORCA v1 right hand to pinch a small cylinder with
-the thumb and index finger.
-
-The full input is
-[`pinch_and_hold_v0.yaml`](src/orca_sim/taskgen/specs/pinch_and_hold_v0.yaml).
-A shortened excerpt is shown below:
-
-```yaml
-schema_version: 1
-task:
-  env_id: PinchAndHold-v0
-  family: pinch_and_hold
-  hand_version: v1
-  side: right
-  object:
-    shape: cylinder
-    radius: 0.006
-    half_length: 0.012
-    mass: 0.015
-  control:
-    action_mode: relative
-    action_scale: 0.15
-  success:
-    require_thumb_contact: true
-    require_index_contact: true
-    hold_steps: 10
-  failure:
-    drop_height: 0.12
-    terminate_on_drop: true
-```
-
-Success requires all of the following for 10 consecutive simulation steps:
+or:
 
 ```text
-thumb-object contact
-AND index-object contact
-AND object inside the workspace
-AND object not dropped
+Pick up the blue cylinder and place it in the target region on the right.
 ```
 
-One-finger contact, a closed hand without contact, a short collision, or contact
-after dropping the object does not count as success.
+Codex generates the bundle under `generated_tasks/`, runs the required checks,
+creates the preview, and reports the exact directory and environment ID. Users
+do not need to write YAML or configure an OpenAI API key.
 
-Two environments are generated through the same generic environment class:
+When working from a clone, Codex also discovers the repository-level skill in
+`.agents/skills/orca-env-generator/`.
 
-- `PinchAndHold-v0`
-- `PinchAndHoldSmall-v0`, with different object/reset parameters
+## Python and CLI installation
 
-### Measured results
-
-| Evaluation | Result |
-|---|---:|
-| Full test suite | 59 passed |
-| Zero-policy success | 0% |
-| Random-policy success | 3% |
-| Scripted-policy success | 100% |
-| PPO success, seeds 0/1/2 | 100% / 100% / 100% |
-| PPO success with mild randomization | 100% / 100% / 95% |
-| Random runtime stress | 10,000 finite, shape-stable steps |
-| Clean-wheel installation | PASS |
-
-#### PPO-trained policy
-
-![PPO-trained pinch success](artifacts/pinch_and_hold/trained_policy_success.gif)
-
-[Success MP4](artifacts/pinch_and_hold/trained_policy_success.mp4) ·
-[PPO metrics](artifacts/pinch_and_hold/ppo_acceptance.json)
-
-#### Random-policy failure
-
-![Random-policy failure](artifacts/pinch_and_hold/random_failure.gif)
-
-[Failure MP4](artifacts/pinch_and_hold/random_failure.mp4) ·
-[Behavior metrics](artifacts/pinch_and_hold/behavior_acceptance.json)
-
-## 3. How to use it
-
-### Install
-
-Python 3.11 is recommended. The commands below use Windows PowerShell; on
-Linux/macOS, replace `.\.venv\Scripts\python.exe` with the virtual environment's
-`python` executable.
+Python 3.10 or newer is required.
 
 ```powershell
 git clone https://github.com/niujiazhen/orca-agent-taskgen.git
 cd orca-agent-taskgen
 py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[rl,dev]"
+.\.venv\Scripts\python.exe -m pip install -e ".[visualization,dev]"
 ```
 
-### Validate and generate the example
+Generate directly from bounded natural language:
 
 ```powershell
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli validate src/orca_sim/taskgen/specs/pinch_and_hold_v0.yaml
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli generate src/orca_sim/taskgen/specs/pinch_and_hold_v0.yaml
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli check-static src/orca_sim/taskgen/generated/pinchandhold_v0
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli check-runtime src/orca_sim/taskgen/generated/pinchandhold_v0 --steps 10000 --seed 0
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli accept src/orca_sim/taskgen/generated/pinchandhold_v0 --artifacts artifacts/pinch_and_hold
+orca-task generate-text "让灵巧手拿起桌上的红色方块" --output generated_tasks
+orca-task check generated_tasks/<generated-directory>
+orca-task preview generated_tasks/<generated-directory>
+orca-task view generated_tasks/<generated-directory>
 ```
 
-### Use the generated Gymnasium environment
+Or generate from a reviewed TaskSpec v2:
+
+```powershell
+orca-task validate src/orca_sim/taskgen/specs/v2_pick_place_cylinder.yaml
+orca-task generate src/orca_sim/taskgen/specs/v2_pick_place_cylinder.yaml --output generated_tasks
+```
+
+## Load a generated environment
+
+Load by bundle path:
 
 ```python
-import gymnasium as gym
-from orca_sim import register_envs
+from orca_sim.taskgen import load_environment
 
-register_envs()
-env = gym.make("PinchAndHold-v0")
-
+env = load_environment(
+    "generated_tasks/bluecylinderplace_v0",
+    render_mode="human",
+)
 observation, info = env.reset(seed=0)
 observation, reward, terminated, truncated, info = env.step(
     env.action_space.sample()
 )
-
 env.close()
 ```
 
-### Create a parameter variant
+Or register the bundle and use the standard Gymnasium interface:
 
-Copy an existing spec, choose a unique `env_id`, and change object/reset
-parameters. The same generator and generic environment class will produce a
-separately registered task:
+```python
+import gymnasium as gym
+from orca_sim.taskgen import register_task_bundle
 
-```powershell
-Copy-Item src/orca_sim/taskgen/specs/pinch_and_hold_v0.yaml src/orca_sim/taskgen/specs/my_pinch_task.yaml
-# Edit my_pinch_task.yaml, then validate and generate it.
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli validate src/orca_sim/taskgen/specs/my_pinch_task.yaml
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.cli generate src/orca_sim/taskgen/specs/my_pinch_task.yaml
+env_id = register_task_bundle("generated_tasks/bluecylinderplace_v0")
+env = gym.make(env_id, render_mode="rgb_array")
 ```
 
-The current MVP supports the `pinch_and_hold` task family. A genuinely new task
-family requires a new generic environment template and corresponding validation
-rules; it is not yet created automatically from unrestricted natural language.
+The normalized action has 23 values: wrist translation `[3]`, wrist rotation
+`[3]`, and ORCA joint targets `[17]`. The observation contains the wrist pose,
+joint state, fingertip state, contact flags, object state, target, and task
+stage. Exact labels and package requirements are stored in `manifest.json`.
 
-### Train and evaluate PPO
+## Generated task bundle
 
-```powershell
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.train --env-id PinchAndHold-v0 --name ppo_seed0 --seed 0 --timesteps 1000000 --n-envs 8 --no-subproc
+An accepted task contains:
 
-.\.venv\Scripts\python.exe -m orca_sim.taskgen.evaluate --env-id PinchAndHold-v0 --model taskgen_runs/ppo_seed0/final_model.zip --vecnormalize taskgen_runs/ppo_seed0/vecnormalize.pkl --episodes 100 --seed 20000 --randomization-scale 0.0 --out taskgen_runs/ppo_seed0/eval_nominal.json
+```text
+<task>/
+├── request.txt
+├── task_spec.yaml
+├── scene.xml
+├── manifest.json
+├── validation_report.json
+├── preview.png
+├── preview.mp4
+└── README.md
 ```
 
-Always evaluate with the `vecnormalize.pkl` saved by the same training run.
-Training checkpoints and normalization files are intentionally excluded from
-Git; the repository contains the reproducible commands, metrics, and videos.
+`orca-task check` verifies XML compilation, Gymnasium contracts, seeded reset
+reproducibility, finite random stepping, false-success resistance, and scripted
+reachability. The scripted controller uses only the public action space; it is
+not a trained policy.
 
-For the complete phase gates and evidence, see [`PLAN.md`](PLAN.md) and
-[`artifacts/acceptance_report.md`](artifacts/acceptance_report.md).
+## Examples
 
-This MVP does not include arm integration, screw threads, vision policies,
-hardware deployment, or sim-to-real transfer. The included gesture reference is
-explicitly marked synthetic; Cheng Su's
-[`orcahand-retarget-experiments`](https://github.com/back2-thebasic/orcahand-retarget-experiments)
-is used only as ORCA v1 pose and retargeting-configuration provenance.
+The repository includes three reviewed TaskSpec v2 examples:
+
+- [`v2_gesture_fist.yaml`](src/orca_sim/taskgen/specs/v2_gesture_fist.yaml)
+- [`v2_pick_up_cube.yaml`](src/orca_sim/taskgen/specs/v2_pick_up_cube.yaml)
+- [`v2_pick_place_cylinder.yaml`](src/orca_sim/taskgen/specs/v2_pick_place_cylinder.yaml)
+
+| Gesture | Pick up | Pick and place |
+|---|---|---|
+| ![Fist task](examples/generated/handfist_v0/preview.png) | ![Cube pickup](examples/generated/redcubepickup_v0/preview.png) | ![Cylinder placement](examples/generated/bluecylinderplace_v0/preview.png) |
+
+[Gesture MP4](examples/generated/handfist_v0/preview.mp4) ·
+[Pickup MP4](examples/generated/redcubepickup_v0/preview.mp4) ·
+[Pick/place MP4](examples/generated/bluecylinderplace_v0/preview.mp4)
+
+The legacy TaskSpec v1 PinchAndHold bundles remain loadable for compatibility,
+but all new natural-language generation uses TaskSpec v2.
+
+Gesture scenario definitions and retargeting configuration provenance come
+from Cheng Su's
+[`orcahand-retarget-experiments`](https://github.com/back2-thebasic/orcahand-retarget-experiments).
+That repository provides configuration files and comparison videos rather than
+joint trajectories, so the versioned joint targets here are calibrated and
+validated locally.

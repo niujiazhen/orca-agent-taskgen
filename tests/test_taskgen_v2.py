@@ -1,0 +1,161 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import mujoco
+import numpy as np
+import pytest
+import yaml
+
+from orca_sim.taskgen import load_environment
+from orca_sim.taskgen.catalog import GESTURE_SEQUENCES
+from orca_sim.taskgen.contracts import ContractError, validate_task_spec
+from orca_sim.taskgen.generator import generate_task
+from orca_sim.taskgen.text import UnsupportedTaskError, task_spec_from_text
+from orca_sim.taskgen.validator import validate_generated_directory, validate_runtime
+from orca_sim.versions import PACKAGE_ROOT
+
+
+REQUESTS = {
+    "gesture": ("让灵巧手从张开变成握拳，然后再次张开", "HandFist-v0"),
+    "pick_up": ("让灵巧手拿起桌上的红色方块", "RedCubePickup-v0"),
+    "pick_place": (
+        "把蓝色圆柱拿起来并放到桌面右侧的绿色区域",
+        "BlueCylinderPlace-v0",
+    ),
+}
+
+
+def _generate(tmp_path: Path, family: str) -> Path:
+    text, env_id = REQUESTS[family]
+    spec = task_spec_from_text(text, env_id=env_id)
+    spec_path = tmp_path / f"{family}.yaml"
+    spec_path.write_text(yaml.safe_dump(spec, sort_keys=True, allow_unicode=True), encoding="utf-8")
+    output = tmp_path / "generated"
+    return generate_task(spec_path, output_root=output, allowed_output_root=output)
+
+
+def test_text_parser_supports_three_families_and_both_languages() -> None:
+    assert task_spec_from_text(REQUESTS["gesture"][0])["task"]["family"] == "gesture"
+    assert task_spec_from_text(REQUESTS["pick_up"][0])["task"]["scene"]["object"]["shape"] == "box"
+    place = task_spec_from_text("Pick up the blue sphere and place it on the right target")
+    assert place["task"]["family"] == "pick_place"
+    assert place["task"]["scene"]["object"]["shape"] == "sphere"
+    assert "target" in place["task"]["scene"]
+    first = task_spec_from_text("让灵巧手拿起红色方块")["task"]["env_id"]
+    second = task_spec_from_text("让灵巧手拿起蓝色圆柱")["task"]["env_id"]
+    assert first != second
+    assert place["task"]["scene"]["target"]["rgba"] == [0.12, 0.35, 0.85, 0.35]
+
+
+@pytest.mark.parametrize("task_request", ["拧紧螺丝", "stack two cubes", "insert the cylinder"])
+def test_text_parser_rejects_unsupported_tasks(task_request: str) -> None:
+    with pytest.raises(UnsupportedTaskError, match="Supported tasks"):
+        task_spec_from_text(task_request)
+
+
+def test_text_parser_rejects_unknown_object() -> None:
+    with pytest.raises(UnsupportedTaskError, match="Object shape"):
+        task_spec_from_text("Pick up the banana")
+
+
+def test_v2_contract_rejects_unknown_shape_and_bad_workspace() -> None:
+    spec = task_spec_from_text(REQUESTS["pick_up"][0])
+    spec["task"]["scene"]["object"]["shape"] = "mesh"
+    with pytest.raises(ContractError, match="shape"):
+        validate_task_spec(spec)
+    spec = task_spec_from_text(REQUESTS["pick_up"][0])
+    spec["task"]["hand"]["workspace"]["min"][0] = 1.0
+    with pytest.raises(ContractError, match="workspace"):
+        validate_task_spec(spec)
+
+
+@pytest.mark.parametrize("family", ["gesture", "pick_up", "pick_place"])
+def test_v2_generation_runtime_and_scripted_success(tmp_path: Path, family: str) -> None:
+    bundle = _generate(tmp_path, family)
+    static = validate_generated_directory(bundle)
+    assert static["static"] == "pass"
+    runtime = validate_runtime(bundle, steps=25, seed=0)
+    assert runtime["action_shape"] == [23]
+    assert runtime["observation_shape"] == [73]
+
+    env = load_environment(bundle)
+    try:
+        first, _ = env.reset(seed=123)
+        second, _ = env.reset(seed=123)
+        np.testing.assert_array_equal(first, second)
+        for _ in range(env.max_episode_steps):
+            _, _, terminated, truncated, info = env.step(env.scripted_action())
+            if terminated or truncated:
+                break
+        assert info["is_success"] is True
+        assert info["assistive_grasp"] is True
+    finally:
+        env.close()
+
+
+def test_all_primitive_shapes_compile_and_succeed_for_pickup_and_place(tmp_path: Path) -> None:
+    requests = {
+        "box": "the red box",
+        "cylinder": "the blue cylinder",
+        "sphere": "the green sphere",
+    }
+    for index, (shape, object_text) in enumerate(requests.items()):
+        for family, request in (
+            ("pick_up", f"Pick up {object_text}"),
+            ("pick_place", f"Pick up {object_text} and place it on the right target"),
+        ):
+            family_label = family.replace("_", "").title()
+            spec = task_spec_from_text(request, env_id=f"Shape{index}{family_label}-v0")
+            assert spec["task"]["scene"]["object"]["shape"] == shape
+            spec_path = tmp_path / f"{shape}-{family}.yaml"
+            spec_path.write_text(yaml.safe_dump(spec, sort_keys=True), encoding="utf-8")
+            output = tmp_path / f"generated-{shape}-{family}"
+            bundle = generate_task(spec_path, output_root=output, allowed_output_root=output)
+            env = load_environment(bundle)
+            try:
+                env.reset(seed=0, options={"randomization_scale": 0.0})
+                for _ in range(env.max_episode_steps):
+                    _, _, terminated, truncated, info = env.step(env.scripted_action())
+                    if terminated or truncated:
+                        break
+                assert info["is_success"] is True
+            finally:
+                env.close()
+
+
+def test_wrist_actions_are_clipped_to_workspace(tmp_path: Path) -> None:
+    bundle = _generate(tmp_path, "pick_up")
+    env = load_environment(bundle)
+    try:
+        env.reset(seed=0)
+        action = np.zeros(23, dtype=np.float32)
+        action[:3] = 1.0
+        for _ in range(100):
+            env.step(action)
+        np.testing.assert_array_less(env._wrist_position, env._workspace_max + 1e-12)
+        np.testing.assert_array_less(env._workspace_min - 1e-12, env._wrist_position)
+    finally:
+        env.close()
+
+
+def test_all_gesture_targets_respect_orca_v1_joint_limits() -> None:
+    model = mujoco.MjModel.from_xml_path(str(PACKAGE_ROOT / "scenes" / "v1" / "scene_right.xml"))
+    joint_ids = model.actuator_trnid[:, 0].astype(int)
+    lower = model.jnt_range[joint_ids, 0]
+    upper = model.jnt_range[joint_ids, 1]
+    for sequence in GESTURE_SEQUENCES.values():
+        for pose in sequence:
+            assert np.all(pose >= lower)
+            assert np.all(pose <= upper)
+
+
+def test_manifest_exposes_v2_contract(tmp_path: Path) -> None:
+    bundle = _generate(tmp_path, "pick_up")
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == 2
+    assert manifest["action_shape"] == [23]
+    assert manifest["base_control"] == "kinematic_6dof"
+    assert manifest["assistive_grasp"] is True
+    assert {"request.txt", "README.md", "validation_report.json"}.issubset(manifest["files"])

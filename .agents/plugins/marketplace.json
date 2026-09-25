@@ -1,0 +1,20 @@
+{
+  "name": "orca-agent-taskgen",
+  "interface": {
+    "displayName": "ORCA Agent Task Generation"
+  },
+  "plugins": [
+    {
+      "name": "orca-env-generator",
+      "source": {
+        "source": "local",
+        "path": "./plugins/orca-env-generator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

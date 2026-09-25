@@ -223,7 +223,7 @@ taskgen_runs/
 *.mp4
 !artifacts/pinch_and_hold/scripted_success.mp4
 !artifacts/pinch_and_hold/random_failure.mp4
-!artifacts/pinch_and_hold/trained_policy_success.mp4
+!examples/generated/*/preview.mp4
 *.pkl
 wandb/
 __pycache__/

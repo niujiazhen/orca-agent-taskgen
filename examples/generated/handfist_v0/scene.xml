@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<mujoco model="HandFist-v0">
+  <include file="../../../src/orca_sim/scenes/v1/scene.xml" />
+  <include file="../../../src/orca_sim/models/v1/right.mjcf" />
+  <worldbody>
+    <geom name="task_table" type="box" pos="0.04 0.04 0.1" size="0.24 0.24 0.1" rgba="0.48 0.32 0.2 1" friction="1.2 0.01 0.001" condim="4" contype="2" conaffinity="2" />
+  </worldbody>
+</mujoco>
