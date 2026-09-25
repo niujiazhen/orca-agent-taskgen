@@ -50,7 +50,6 @@
         "scene": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["table"],
           "properties": {
             "table": {"$ref": "#/$defs/table"},
             "object": {"$ref": "#/$defs/object"},

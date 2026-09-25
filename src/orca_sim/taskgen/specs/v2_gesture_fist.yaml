@@ -12,12 +12,7 @@ task:
     initial_position: [0.04, 0.0, 0.04575]
     initial_quaternion: [1.0, 0.0, 0.0, 0.0]
     workspace: {min: [-0.12, -0.18, -0.02], max: [0.2, 0.18, 0.24]}
-  scene:
-    table:
-      position: [0.04, 0.04, 0.1]
-      half_size: [0.24, 0.24, 0.1]
-      rgba: [0.48, 0.32, 0.2, 1.0]
-      friction: [1.2, 0.01, 0.001]
+  scene: {}
   reset:
     object_position_jitter: [0.005, 0.005, 0.0]
     wrist_position_jitter: [0.002, 0.002, 0.002]

@@ -74,7 +74,7 @@ def _base_task(text: str, family: str, env_id: str) -> dict[str, Any]:
                 "table": {
                     "position": [0.04, 0.04, 0.10],
                     "half_size": [0.24, 0.24, 0.10],
-                    "rgba": [0.48, 0.32, 0.20, 1.0],
+                    "rgba": [0.20, 0.30, 0.40, 1.0],
                     "friction": [1.2, 0.01, 0.001],
                 }
             },
@@ -119,6 +119,8 @@ def task_spec_from_text(text: str, *, env_id: str | None = None) -> dict[str, An
     task = spec["task"]
 
     if family == "gesture":
+        # A free-space hand gesture does not require a support surface.
+        task["scene"].pop("table", None)
         if any(token in lowered for token in ("三指", "three-finger", "three finger")):
             gesture = "three_finger_grasp_release"
         elif any(token in lowered for token in ("捏", "pinch", "拇指", "thumb")):

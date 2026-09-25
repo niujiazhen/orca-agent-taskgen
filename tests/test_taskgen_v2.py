@@ -37,7 +37,9 @@ def _generate(tmp_path: Path, family: str) -> Path:
 
 
 def test_text_parser_supports_three_families_and_both_languages() -> None:
-    assert task_spec_from_text(REQUESTS["gesture"][0])["task"]["family"] == "gesture"
+    gesture = task_spec_from_text(REQUESTS["gesture"][0])
+    assert gesture["task"]["family"] == "gesture"
+    assert gesture["task"]["scene"] == {}
     assert task_spec_from_text(REQUESTS["pick_up"][0])["task"]["scene"]["object"]["shape"] == "box"
     place = task_spec_from_text("Pick up the blue sphere and place it on the right target")
     assert place["task"]["family"] == "pick_place"
@@ -74,6 +76,12 @@ def test_v2_contract_rejects_unknown_shape_and_bad_workspace() -> None:
 @pytest.mark.parametrize("family", ["gesture", "pick_up", "pick_place"])
 def test_v2_generation_runtime_and_scripted_success(tmp_path: Path, family: str) -> None:
     bundle = _generate(tmp_path, family)
+    scene_xml = (bundle / "scene.xml").read_text(encoding="utf-8")
+    assert "task_table" not in scene_xml
+    if family == "gesture":
+        assert "task_surface" not in scene_xml
+    else:
+        assert 'name="task_surface" type="plane"' in scene_xml
     static = validate_generated_directory(bundle)
     assert static["static"] == "pass"
     runtime = validate_runtime(bundle, steps=25, seed=0)

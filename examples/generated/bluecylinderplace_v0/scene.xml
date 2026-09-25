@@ -3,7 +3,7 @@
   <include file="../../../src/orca_sim/scenes/v1/scene.xml" />
   <include file="../../../src/orca_sim/models/v1/right.mjcf" />
   <worldbody>
-    <geom name="task_table" type="box" pos="0.04 0.04 0.1" size="0.24 0.24 0.1" rgba="0.48 0.32 0.2 1" friction="1.2 0.01 0.001" condim="4" contype="2" conaffinity="2" />
+    <geom name="task_surface" type="plane" pos="0.04 0.04 0.2" size="0 0 0.05" rgba="0.2 0.3 0.4 1" friction="1.2 0.01 0.001" condim="4" contype="2" conaffinity="2" />
     <body name="task_object" pos="0.02 0.065 0.224" quat="1 0 0 0">
       <freejoint name="task_object_freejoint" />
       <geom name="task_object_geom" type="cylinder" size="0.014 0.022" mass="0.04" rgba="0.12 0.35 0.85 1" friction="1.2 0.01 0.001" condim="4" contype="2" conaffinity="2" />

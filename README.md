@@ -36,6 +36,9 @@ insertion, tools, screws, external meshes, robot arms, and two-hand tasks are
 rejected with a supported alternative instead of producing an unverified
 environment.
 
+Pickup and placement scenes use a zero-thickness support plane rather than a
+large visible table block. Gesture-only scenes do not add a support surface.
+
 The kinematic wrist and optional assistive-grasp transition are explicit
 environment abstractions. They make single-hand tabletop tasks stable enough
 for an RL environment, but they are not a robot-arm or sim-to-real dynamics

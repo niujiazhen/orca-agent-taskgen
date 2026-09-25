@@ -139,11 +139,13 @@ def _validate_task_spec_v2(data: Mapping[str, Any]) -> dict[str, Any]:
     if not 0.999 <= norm <= 1.001:
         raise ContractError("TaskSpec.task.hand.initial_quaternion must be normalized")
 
-    table = task["scene"]["table"]
-    if any(float(value) <= 0 for value in table["half_size"]):
+    table = task["scene"].get("table")
+    if table is not None and any(float(value) <= 0 for value in table["half_size"]):
         raise ContractError("TaskSpec.task.scene.table.half_size must be positive")
     obj = task["scene"].get("object")
     if obj is not None:
+        if table is None:
+            raise ContractError("TaskSpec.task.scene.table is required when an object is present")
         table_top = float(table["position"][2]) + float(table["half_size"][2])
         if float(obj["initial_position"][2]) <= table_top:
             raise ContractError("TaskSpec.task.scene.object.initial_position must be above the table")

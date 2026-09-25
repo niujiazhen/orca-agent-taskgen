@@ -133,7 +133,7 @@ def _object_size(obj: dict) -> str:
 def _render_scene_v2(spec: dict, output_dir: Path) -> str:
     task = spec["task"]
     scene = task["scene"]
-    table = scene["table"]
+    table = scene.get("table")
     package_root = Path(__file__).resolve().parents[1]
 
     root = ET.Element("mujoco", {"model": task["env_id"]})
@@ -148,21 +148,27 @@ def _render_scene_v2(spec: dict, output_dir: Path) -> str:
         {"file": _relative_include(package_root / "models" / "v1" / "right.mjcf", output_dir)},
     )
     worldbody = ET.SubElement(root, "worldbody")
-    ET.SubElement(
-        worldbody,
-        "geom",
-        {
-            "name": "task_table",
-            "type": "box",
-            "pos": _numbers(table["position"]),
-            "size": _numbers(table["half_size"]),
-            "rgba": _numbers(table["rgba"]),
-            "friction": _numbers(table["friction"]),
-            "condim": "4",
-            "contype": "2",
-            "conaffinity": "2",
-        },
-    )
+    if table is not None and task["family"] != "gesture":
+        # A tabletop is a collision surface, not a thick visible cuboid. Keep
+        # the original top height so existing object/wrist coordinates remain
+        # valid, but render it as an infinite zero-thickness plane.
+        surface_position = list(table["position"])
+        surface_position[2] += float(table["half_size"][2])
+        ET.SubElement(
+            worldbody,
+            "geom",
+            {
+                "name": "task_surface",
+                "type": "plane",
+                "pos": _numbers(surface_position),
+                "size": "0 0 0.05",
+                "rgba": _numbers(table["rgba"]),
+                "friction": _numbers(table["friction"]),
+                "condim": "4",
+                "contype": "2",
+                "conaffinity": "2",
+            },
+        )
     obj = scene.get("object")
     if obj is not None:
         body = ET.SubElement(
