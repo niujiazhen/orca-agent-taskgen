@@ -13,6 +13,8 @@
 - Added repository and plugin copies of the `orca-env-generator` Skill plus the
   repository marketplace.
 - Replaced the README with the text-to-environment workflow.
+- Removed assistive object attachment from v2. Manipulation previews now use
+  contact-calibrated fingertip motion and free-body MuJoCo dynamics only.
 
 ## Acceptance evidence
 

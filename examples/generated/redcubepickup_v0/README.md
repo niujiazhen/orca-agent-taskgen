@@ -14,4 +14,5 @@ observation, info = env.reset(seed=0)
 ```
 
 This bundle contains an untrained RL environment. Any preview is produced by a
-non-learning scripted feasibility controller, not PPO or a trained policy.
+non-learning contact-feasibility controller through the public action space,
+not PPO or a trained policy. The object remains a free MuJoCo body.

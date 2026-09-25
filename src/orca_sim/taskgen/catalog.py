@@ -26,6 +26,11 @@ THREE_FINGER = np.asarray(
      1.20, 1.10, 0.17, 0.25, 0.25, 0.52333, 0.15, 0.20], dtype=np.float64
 )
 
+# Keep the ring and little fingers folded away from the support surface while
+# the thumb, index, and middle fingers perform the grasp.
+TABLETOP_THREE_FINGER = THREE_FINGER.copy()
+TABLETOP_THREE_FINGER[11:] = FIST[11:]
+
 GESTURE_SEQUENCES: dict[str, tuple[np.ndarray, ...]] = {
     "open_half_close_fist_open": (OPEN, HALF_CLOSE, FIST, OPEN),
     "thumb_index_pinch_release": (OPEN, PINCH, OPEN),
@@ -33,9 +38,26 @@ GESTURE_SEQUENCES: dict[str, tuple[np.ndarray, ...]] = {
 }
 
 GRASP_POSES = {
-    "box": THREE_FINGER,
-    "cylinder": PINCH,
-    "sphere": THREE_FINGER,
+    # The scripted feasibility controller closes three fingers around the
+    # object.  The object is then moved only by MuJoCo contacts; there is no
+    # simulator-state attachment or object teleportation.
+    "box": TABLETOP_THREE_FINGER,
+    "cylinder": TABLETOP_THREE_FINGER,
+    "sphere": FIST,
+}
+
+GRASP_CENTER_OFFSETS = {
+    "box": np.asarray([0.020, -0.005, 0.025], dtype=np.float64),
+    "cylinder": np.asarray([0.0, -0.005, 0.030], dtype=np.float64),
+    "sphere": np.asarray([0.0, -0.005, 0.030], dtype=np.float64),
+}
+
+# The open fingers start above the support surface and descend as they close.
+# Shape-specific clearances preserve contact feasibility for each primitive.
+PREGRASP_CLEARANCES = {
+    "box": 0.060,
+    "cylinder": 0.020,
+    "sphere": 0.035,
 }
 
 GESTURE_PROVENANCE = {

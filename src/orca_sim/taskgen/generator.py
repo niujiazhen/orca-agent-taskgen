@@ -188,8 +188,8 @@ def _render_scene_v2(spec: dict, output_dir: Path) -> str:
                 "rgba": _numbers(obj["rgba"]),
                 "friction": _numbers(obj["friction"]),
                 "condim": "4",
-                "contype": "2",
-                "conaffinity": "2",
+                "contype": "3",
+                "conaffinity": "3",
             },
         )
         ET.SubElement(
@@ -233,7 +233,8 @@ observation, info = env.reset(seed=0)
 ```
 
 This bundle contains an untrained RL environment. Any preview is produced by a
-non-learning scripted feasibility controller, not PPO or a trained policy.
+non-learning contact-feasibility controller through the public action space,
+not PPO or a trained policy. The object remains a free MuJoCo body.
 """
 
 
@@ -295,7 +296,8 @@ def generate_task(
                 "requires": {"orca_sim": ">=0.2.0", "mujoco": ">=3.1"},
                 "base_control": "kinematic_6dof",
                 "mount_visualization": "visible" if task["family"] == "gesture" else "hidden",
-                "assistive_grasp": bool(task["safety"]["assistive_grasp"]),
+                "object_dynamics": "free_body_contact_only",
+                "scripted_controller": "non_learning_contact_feasibility",
             }
         )
     (output_dir / "task_spec.yaml").write_text(canonical_yaml, encoding="utf-8", newline="\n")

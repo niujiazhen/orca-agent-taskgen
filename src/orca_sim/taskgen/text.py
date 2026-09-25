@@ -91,7 +91,7 @@ def _base_task(text: str, family: str, env_id: str) -> dict[str, Any]:
                 "target_radius": 0.03,
                 "max_object_speed": 0.05,
             },
-            "safety": {"max_episode_steps": 500, "drop_height": 0.17, "assistive_grasp": True},
+            "safety": {"max_episode_steps": 1000, "drop_height": 0.17},
             "visualization": {"width": 640, "height": 480, "fps": 30, "camera": "free"},
         },
     }
@@ -141,7 +141,7 @@ def task_spec_from_text(text: str, *, env_id: str | None = None) -> dict[str, An
     task["hand"].update(
         {
             "initial_position": [0.013, 0.093, 0.486],
-            "initial_quaternion": [0.0, 1.0, 0.0, 0.0],
+            "initial_quaternion": [0.087155743, 0.996194698, 0.0, 0.0],
             "workspace": {"min": [-0.20, -0.30, 0.30], "max": [0.30, 0.30, 0.70]},
         }
     )

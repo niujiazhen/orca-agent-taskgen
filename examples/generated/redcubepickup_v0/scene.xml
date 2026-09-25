@@ -6,7 +6,7 @@
     <geom name="task_surface" type="plane" pos="0.04 0.04 0.2" size="0 0 0.05" rgba="0.2 0.3 0.4 1" friction="1.2 0.01 0.001" condim="4" contype="2" conaffinity="2" />
     <body name="task_object" pos="0.02 0.065 0.218" quat="1 0 0 0">
       <freejoint name="task_object_freejoint" />
-      <geom name="task_object_geom" type="box" size="0.016 0.016 0.016" mass="0.04" rgba="0.85 0.15 0.12 1" friction="1.2 0.01 0.001" condim="4" contype="2" conaffinity="2" />
+      <geom name="task_object_geom" type="box" size="0.016 0.016 0.016" mass="0.04" rgba="0.85 0.15 0.12 1" friction="1.2 0.01 0.001" condim="4" contype="3" conaffinity="3" />
       <site name="task_object_center" type="sphere" size="0.002" rgba="1 1 1 0" />
     </body>
   </worldbody>

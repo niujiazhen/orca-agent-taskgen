@@ -5,6 +5,7 @@
     "scripted_nominal_ge_0_90": true,
     "zero_success_eq_0": true
   },
+  "object_motion_model": "MuJoCo free body; no post-reset state writes or attachment",
   "policies": {
     "mild_scripted": {
       "episodes": 10,
@@ -17,8 +18,8 @@
     },
     "random": {
       "episodes": 10,
-      "mean_return": -10.007375762694902,
-      "mean_steps": 500.0,
+      "mean_return": -14.752126573913126,
+      "mean_steps": 1000.0,
       "policy": "random",
       "randomization_scale": 0.0,
       "success_rate": 0.0,
@@ -35,8 +36,8 @@
     },
     "zero": {
       "episodes": 10,
-      "mean_return": -5.377935463121965,
-      "mean_steps": 500.0,
+      "mean_return": -5.377935463120451,
+      "mean_steps": 1000.0,
       "policy": "zero",
       "randomization_scale": 0.0,
       "success_rate": 0.0,
@@ -54,13 +55,13 @@
       23
     ],
     "env_id": "HandFist-v0",
-    "episodes_completed": 20,
+    "episodes_completed": 10,
     "generated_dir": "handfist_v0",
     "observation_shape": [
       73
     ],
     "reward_range": [
-      -2.9314930163314394,
+      -2.7742781293515546,
       1.7861361581842883
     ],
     "runtime": "pass",
@@ -68,5 +69,5 @@
     "steps": 10000
   },
   "status": "pass",
-  "validation_kind": "non-learning scripted feasibility; no PPO or trained policy"
+  "validation_kind": "non-learning contact feasibility; free object dynamics; no PPO or trained policy"
 }

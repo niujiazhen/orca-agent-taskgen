@@ -131,11 +131,14 @@ def test_v2_generation_runtime_and_scripted_success(tmp_path: Path, family: str)
             if terminated or truncated:
                 break
         assert info["is_success"] is True
-        assert info["assistive_grasp"] is True
+        assert "assistive_grasp" not in info
         if family != "gesture":
             table = env.task["scene"]["table"]
             surface_z = table["position"][2] + table["half_size"][2]
-            assert minimum_visible_hand_z >= surface_z
+            # The approach keeps the palm and most of the hand above the
+            # support. A distal fingertip may wrap by at most 5 cm around a
+            # tabletop object; the previous controller buried half the hand.
+            assert minimum_visible_hand_z >= surface_z - 0.05
     finally:
         env.close()
 
@@ -185,6 +188,20 @@ def test_wrist_actions_are_clipped_to_workspace(tmp_path: Path) -> None:
         env.close()
 
 
+def test_preview_controller_does_not_write_object_state(tmp_path: Path) -> None:
+    bundle = _generate(tmp_path, "pick_up")
+    env = load_environment(bundle)
+    try:
+        env.reset(seed=0, options={"randomization_scale": 0.0})
+        before = env.data.qpos[env._object_qpos_adr : env._object_qpos_adr + 7].copy()
+        env.scripted_action()
+        after = env.data.qpos[env._object_qpos_adr : env._object_qpos_adr + 7].copy()
+        np.testing.assert_array_equal(before, after)
+        assert not hasattr(env, "_update_assistive_grasp")
+    finally:
+        env.close()
+
+
 def test_all_gesture_targets_respect_orca_v1_joint_limits() -> None:
     model = mujoco.MjModel.from_xml_path(str(PACKAGE_ROOT / "scenes" / "v1" / "scene_right.xml"))
     joint_ids = model.actuator_trnid[:, 0].astype(int)
@@ -203,5 +220,6 @@ def test_manifest_exposes_v2_contract(tmp_path: Path) -> None:
     assert manifest["action_shape"] == [23]
     assert manifest["base_control"] == "kinematic_6dof"
     assert manifest["mount_visualization"] == "hidden"
-    assert manifest["assistive_grasp"] is True
+    assert manifest["object_dynamics"] == "free_body_contact_only"
+    assert manifest["scripted_controller"] == "non_learning_contact_feasibility"
     assert {"request.txt", "README.md", "validation_report.json"}.issubset(manifest["files"])

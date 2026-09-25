@@ -13,8 +13,8 @@ task:
     - 0.093
     - 0.486
     initial_quaternion:
-    - 0.0
-    - 1.0
+    - 0.087155743
+    - 0.996194698
     - 0.0
     - 0.0
     side: right
@@ -44,9 +44,8 @@ task:
     progress: 10.0
     success: 100.0
   safety:
-    assistive_grasp: true
     drop_height: 0.17
-    max_episode_steps: 500
+    max_episode_steps: 1000
   scene:
     object:
       friction:

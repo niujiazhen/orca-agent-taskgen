@@ -37,14 +37,16 @@ rejected with a supported alternative instead of producing an unverified
 environment.
 
 Pickup and placement scenes use a zero-thickness support plane rather than a
-large visible table block. Their calibrated palm-down approach keeps the hand
-above that plane, and hides the fixed mounting tower from manipulation previews.
-Gesture-only scenes do not add a support surface.
+large visible table block. Their calibrated diagonal approach closes while
+descending, so the palm stays above the surface and only the distal fingers
+wrap around the object. The fixed mounting tower is hidden from manipulation
+previews. Gesture-only scenes do not add a support surface.
 
-The kinematic wrist and optional assistive-grasp transition are explicit
-environment abstractions. They make single-hand tabletop tasks stable enough
-for an RL environment, but they are not a robot-arm or sim-to-real dynamics
-model.
+The wrist is a bounded kinematic task abstraction, not a robot arm. The object
+is always a free MuJoCo body: after reset, neither the environment nor the
+preview controller writes its position or attaches it to the hand. A scripted
+pickup is accepted only when at least two real fingertip contacts lift and hold
+the object through MuJoCo contact dynamics.
 
 ## Install and use with Codex
 
@@ -151,9 +153,10 @@ An accepted task contains:
 ```
 
 `orca-task check` verifies XML compilation, Gymnasium contracts, seeded reset
-reproducibility, finite random stepping, false-success resistance, and scripted
-reachability. The scripted controller uses only the public action space; it is
-not a trained policy.
+reproducibility, finite random stepping, false-success resistance, and physical
+contact reachability. The deterministic preview controller uses only the public
+action space. It is a non-learning feasibility check—not PPO and not a trained
+policy.
 
 ## Examples
 

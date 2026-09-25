@@ -7,7 +7,6 @@
   "action_shape": [
     23
   ],
-  "assistive_grasp": true,
   "attempt": 1,
   "base_control": "kinematic_6dof",
   "env_id": "HandFist-v0",
@@ -23,10 +22,11 @@
     "task_spec.yaml",
     "validation_report.json"
   ],
-  "generated_at_utc": "2026-09-25T08:05:00.824405+00:00",
+  "generated_at_utc": "2026-09-25T09:18:31.452584+00:00",
   "hand_version": "v1",
   "manifest_version": 2,
   "mount_visualization": "visible",
+  "object_dynamics": "free_body_contact_only",
   "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
   "preview": {
     "frames": 58,
@@ -37,8 +37,9 @@
     "orca_sim": ">=0.2.0"
   },
   "schema_version": 2,
+  "scripted_controller": "non_learning_contact_feasibility",
   "source_commit": "02571cf7fbec1e57de615e61949d504440e2646a",
-  "spec_sha256": "f99fa662e0c6077fc1b817874cc4e5f5c713e4fee1cc70790b70acf3c9612846",
+  "spec_sha256": "51a07681abb7dde2e9b752a4679a3d8bcdf69ffc49947cca2d6562d9fea1e769",
   "validation": "pass",
   "validation_report": "validation_report.json"
 }

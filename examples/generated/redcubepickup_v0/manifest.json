@@ -7,7 +7,6 @@
   "action_shape": [
     23
   ],
-  "assistive_grasp": true,
   "attempt": 1,
   "base_control": "kinematic_6dof",
   "env_id": "RedCubePickup-v0",
@@ -23,13 +22,14 @@
     "task_spec.yaml",
     "validation_report.json"
   ],
-  "generated_at_utc": "2026-09-25T08:06:29.255463+00:00",
+  "generated_at_utc": "2026-09-25T09:18:31.825503+00:00",
   "hand_version": "v1",
   "manifest_version": 2,
   "mount_visualization": "hidden",
+  "object_dynamics": "free_body_contact_only",
   "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
   "preview": {
-    "frames": 53,
+    "frames": 449,
     "scripted_success": true
   },
   "requires": {
@@ -37,8 +37,9 @@
     "orca_sim": ">=0.2.0"
   },
   "schema_version": 2,
+  "scripted_controller": "non_learning_contact_feasibility",
   "source_commit": "02571cf7fbec1e57de615e61949d504440e2646a",
-  "spec_sha256": "b3f06f000f56d60d7b0f5489c4048c8e1812eb3130964f471cbeae9271f2f7b4",
+  "spec_sha256": "0231cc1e93dfb4bc744fd59f37013cf9297a508bb3400c46ab68fc9bc4555f4e",
   "validation": "pass",
   "validation_report": "validation_report.json"
 }

@@ -9,7 +9,7 @@ task:
     side: right
     base_control: kinematic_6dof
     initial_position: [0.013, 0.093, 0.486]
-    initial_quaternion: [0.0, 1.0, 0.0, 0.0]
+    initial_quaternion: [0.087155743, 0.996194698, 0.0, 0.0]
     workspace: {min: [-0.2, -0.3, 0.3], max: [0.3, 0.3, 0.7]}
   scene:
     table:
@@ -36,5 +36,5 @@ task:
     lift_height: 0.05
     target_radius: 0.03
     max_object_speed: 0.05
-  safety: {max_episode_steps: 500, drop_height: 0.17, assistive_grasp: true}
+  safety: {max_episode_steps: 1000, drop_height: 0.17}
   visualization: {width: 640, height: 480, fps: 30, camera: free}

@@ -5,11 +5,12 @@
     "scripted_nominal_ge_0_90": true,
     "zero_success_eq_0": true
   },
+  "object_motion_model": "MuJoCo free body; no post-reset state writes or attachment",
   "policies": {
     "mild_scripted": {
       "episodes": 10,
-      "mean_return": 168.16964598437818,
-      "mean_steps": 55.8,
+      "mean_return": 624.8750942102903,
+      "mean_steps": 958.0,
       "policy": "scripted",
       "randomization_scale": 0.5,
       "success_rate": 1.0,
@@ -17,8 +18,8 @@
     },
     "random": {
       "episodes": 10,
-      "mean_return": -3.8332184905337146,
-      "mean_steps": 500.0,
+      "mean_return": -9.754607116197116,
+      "mean_steps": 1000.0,
       "policy": "random",
       "randomization_scale": 0.0,
       "success_rate": 0.0,
@@ -26,8 +27,8 @@
     },
     "scripted": {
       "episodes": 10,
-      "mean_return": 168.9881496001106,
-      "mean_steps": 57.0,
+      "mean_return": 398.08346007198315,
+      "mean_steps": 958.0,
       "policy": "scripted",
       "randomization_scale": 0.0,
       "success_rate": 1.0,
@@ -35,8 +36,8 @@
     },
     "zero": {
       "episodes": 10,
-      "mean_return": -0.0001673957761796907,
-      "mean_steps": 500.0,
+      "mean_return": -0.00016739820865196986,
+      "mean_steps": 1000.0,
       "policy": "zero",
       "randomization_scale": 0.0,
       "success_rate": 0.0,
@@ -54,19 +55,19 @@
       23
     ],
     "env_id": "BlueCylinderPlace-v0",
-    "episodes_completed": 20,
+    "episodes_completed": 10,
     "generated_dir": "bluecylinderplace_v0",
     "observation_shape": [
       73
     ],
     "reward_range": [
-      -0.013609725943026845,
-      -0.0026562409124685923
+      -0.042376675926181495,
+      99.99280399391999
     ],
     "runtime": "pass",
     "static": "pass",
     "steps": 10000
   },
   "status": "pass",
-  "validation_kind": "non-learning scripted feasibility; no PPO or trained policy"
+  "validation_kind": "non-learning contact feasibility; free object dynamics; no PPO or trained policy"
 }

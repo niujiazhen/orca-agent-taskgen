@@ -46,9 +46,8 @@ task:
     progress: 10.0
     success: 100.0
   safety:
-    assistive_grasp: true
     drop_height: 0.17
-    max_episode_steps: 500
+    max_episode_steps: 1000
   scene: {}
   source_text: 让灵巧手从张开变成握拳，然后再次张开
   success:

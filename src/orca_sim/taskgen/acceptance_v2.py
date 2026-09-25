@@ -94,7 +94,11 @@ def accept_v2_bundle(
     report = {
         "report_version": 2,
         "status": "pass" if all(criteria.values()) else "fail",
-        "validation_kind": "non-learning scripted feasibility; no PPO or trained policy",
+        "validation_kind": (
+            "non-learning contact feasibility; free object dynamics; "
+            "no PPO or trained policy"
+        ),
+        "object_motion_model": "MuJoCo free body; no post-reset state writes or attachment",
         "runtime": runtime,
         "resets": resets,
         "policies": {"scripted": scripted, "mild_scripted": mild, "zero": zero, "random": random},

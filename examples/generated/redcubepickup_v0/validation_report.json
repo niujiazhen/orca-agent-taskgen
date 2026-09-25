@@ -5,11 +5,12 @@
     "scripted_nominal_ge_0_90": true,
     "zero_success_eq_0": true
   },
+  "object_motion_model": "MuJoCo free body; no post-reset state writes or attachment",
   "policies": {
     "mild_scripted": {
       "episodes": 10,
-      "mean_return": 164.6298951675406,
-      "mean_steps": 34.0,
+      "mean_return": 708.9604065282552,
+      "mean_steps": 429.0,
       "policy": "scripted",
       "randomization_scale": 0.5,
       "success_rate": 1.0,
@@ -17,8 +18,8 @@
     },
     "random": {
       "episodes": 10,
-      "mean_return": -3.8543066929374477,
-      "mean_steps": 500.0,
+      "mean_return": -6.070493226263382,
+      "mean_steps": 1000.0,
       "policy": "random",
       "randomization_scale": 0.0,
       "success_rate": 0.0,
@@ -26,8 +27,8 @@
     },
     "scripted": {
       "episodes": 10,
-      "mean_return": 162.63245843966115,
-      "mean_steps": 33.0,
+      "mean_return": 709.1604421244209,
+      "mean_steps": 429.0,
       "policy": "scripted",
       "randomization_scale": 0.0,
       "success_rate": 1.0,
@@ -35,8 +36,8 @@
     },
     "zero": {
       "episodes": 10,
-      "mean_return": -0.02125557062967104,
-      "mean_steps": 500.0,
+      "mean_return": -0.021255570629671316,
+      "mean_steps": 1000.0,
       "policy": "zero",
       "randomization_scale": 0.0,
       "success_rate": 0.0,
@@ -54,19 +55,19 @@
       23
     ],
     "env_id": "RedCubePickup-v0",
-    "episodes_completed": 20,
+    "episodes_completed": 10,
     "generated_dir": "redcubepickup_v0",
     "observation_shape": [
       73
     ],
     "reward_range": [
-      -0.026854376693725354,
-      -0.0023954079408585642
+      -0.030673150990175032,
+      1.9928958854817522
     ],
     "runtime": "pass",
     "static": "pass",
     "steps": 10000
   },
   "status": "pass",
-  "validation_kind": "non-learning scripted feasibility; no PPO or trained policy"
+  "validation_kind": "non-learning contact feasibility; free object dynamics; no PPO or trained policy"
 }

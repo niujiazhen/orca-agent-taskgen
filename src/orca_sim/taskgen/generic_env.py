@@ -11,7 +11,13 @@ import numpy as np
 from gymnasium import spaces
 
 from orca_sim.envs import BaseOrcaHandEnv
-from orca_sim.taskgen.catalog import GESTURE_SEQUENCES, GRASP_POSES, OPEN
+from orca_sim.taskgen.catalog import (
+    GESTURE_SEQUENCES,
+    GRASP_CENTER_OFFSETS,
+    GRASP_POSES,
+    OPEN,
+    PREGRASP_CLEARANCES,
+)
 from orca_sim.taskgen.contracts import load_task_spec
 
 
@@ -33,15 +39,21 @@ def _quat_multiply(first: np.ndarray, second: np.ndarray) -> np.ndarray:
 class GeneratedOrcaEnv(BaseOrcaHandEnv):
     """Generic v2 environment for gestures, pickup, and pick/place.
 
-    The 6DoF wrist is kinematic and intentionally bounded. Optional assistive
-    grasping is part of the environment dynamics and is reported in the
-    manifest/info; scripted controllers never write simulator state directly.
+    The 6DoF wrist is kinematic and intentionally bounded. Objects remain free
+    MuJoCo bodies: after reset they move only through gravity and contact.
     """
 
     ACTION_SIZE = 23
-    GRASP_CLEARANCE = 0.072
-    GRASP_ATTACH_DISTANCE = 0.085
     TIP_NAMES = ("right_thumb_dp", "right_index_ip", "right_middle_ip")
+    TIP_LOCAL_POINTS = (
+        np.asarray([0.0, 0.0, 0.030], dtype=np.float64),
+        np.asarray([0.0, 0.0, 0.040], dtype=np.float64),
+        np.asarray([0.0, 0.0, 0.040], dtype=np.float64),
+    )
+    CLOSE_STEPS = 180
+    RELEASE_STEPS = 100
+    WRIST_MOTION_LIMIT = 0.10
+    TRANSPORT_MOTION_LIMIT = 0.10
 
     def __init__(
         self,
@@ -77,12 +89,17 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             raise ValueError(f"ORCA v1 right hand must expose 17 actuators, got {self.model.nu}")
         self._ctrl_center = 0.5 * (self._hand_action_low + self._hand_action_high)
         self._ctrl_halfspan = 0.5 * (self._hand_action_high - self._hand_action_low)
-        # The source model is tuned for gentle teleoperation. Generated target-
-        # tracking tasks need enough authority to hold poses against gravity.
-        self.model.actuator_gainprm[:, 0] = 20.0
-        self.model.actuator_biasprm[:, 1] = -20.0
-        self.model.actuator_forcerange[:, 0] = -5.0
-        self.model.actuator_forcerange[:, 1] = 5.0
+        # Gesture tracking needs a crisp response.  Manipulation uses the
+        # compliant source-model gains so fingers can settle around an object
+        # instead of launching it with an unrealistically stiff position servo.
+        if self.family == "gesture":
+            gain, force = 20.0, 5.0
+        else:
+            gain, force = 2.0, 0.5
+        self.model.actuator_gainprm[:, 0] = gain
+        self.model.actuator_biasprm[:, 1] = -gain
+        self.model.actuator_forcerange[:, 0] = -force
+        self.model.actuator_forcerange[:, 1] = force
         self._actuator_qpos_indices, self._actuator_qvel_indices = self._resolve_actuator_indices()
         self.action_space = spaces.Box(-1.0, 1.0, shape=(self.ACTION_SIZE,), dtype=np.float32)
 
@@ -97,6 +114,7 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             self.model.geom_rgba[tower_geoms, 3] = 0.0
         self._tip_body_ids = tuple(self.model.body(name).id for name in self.TIP_NAMES)
         self._tip_geom_ids = tuple(self._collision_geoms_for_body(body_id) for body_id in self._tip_body_ids)
+        self._kinematic_data = mujoco.MjData(self.model)
         self._wrist_position = np.asarray(self.task["hand"]["initial_position"], dtype=np.float64)
         self._wrist_quaternion = np.asarray(self.task["hand"]["initial_quaternion"], dtype=np.float64)
         self._workspace_min = np.asarray(self.task["hand"]["workspace"]["min"], dtype=np.float64)
@@ -126,14 +144,27 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             if self._object_body_id is not None
             else OPEN
         )
+        self._grasp_center_offset = (
+            GRASP_CENTER_OFFSETS[self.task["scene"]["object"]["shape"]]
+            if self._object_body_id is not None
+            else np.zeros(3, dtype=np.float64)
+        )
+        self._pregrasp_clearance = (
+            PREGRASP_CLEARANCES[self.task["scene"]["object"]["shape"]]
+            if self._object_body_id is not None
+            else 0.0
+        )
 
         self._elapsed_steps = 0
         self._hold_counter = 0
         self._success = False
         self._grasped = False
-        self._grasp_offset = np.zeros(3, dtype=np.float64)
         self._gesture_index = 0
         self._script_stage = 0
+        self._script_stage_steps = 0
+        self._lift_wrist_target = np.zeros(3, dtype=np.float64)
+        self._grasp_wrist_target = np.zeros(3, dtype=np.float64)
+        self._pregrasp_wrist_start = np.zeros(3, dtype=np.float64)
         self._initial_object_position = np.zeros(3, dtype=np.float64)
         self._previous_metric = 0.0
 
@@ -184,8 +215,31 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             return np.zeros(6, dtype=np.float64)
         return self.data.qvel[self._object_qvel_adr : self._object_qvel_adr + 6].copy()
 
-    def _grip_center(self) -> np.ndarray:
-        return np.mean([self.data.xpos[body_id] for body_id in self._tip_body_ids], axis=0)
+    def _tip_points(self, data: mujoco.MjData | None = None) -> np.ndarray:
+        """Return calibrated distal fingertip points, not body-frame origins."""
+
+        data = self.data if data is None else data
+        return np.asarray(
+            [
+                data.xpos[body_id]
+                + data.xmat[body_id].reshape(3, 3) @ local_point
+                for body_id, local_point in zip(self._tip_body_ids, self.TIP_LOCAL_POINTS)
+            ]
+        )
+
+    def _grip_center(self, data: mujoco.MjData | None = None) -> np.ndarray:
+        return np.mean(self._tip_points(data), axis=0)
+
+    def _predicted_grip_center(self, hand_pose: np.ndarray) -> np.ndarray:
+        """Evaluate fingertip kinematics for a pose without changing live state."""
+
+        self._kinematic_data.qpos[:] = self.data.qpos
+        self._kinematic_data.qvel[:] = 0.0
+        self._kinematic_data.qpos[self._actuator_qpos_indices] = np.clip(
+            hand_pose, self._hand_action_low, self._hand_action_high
+        )
+        mujoco.mj_forward(self.model, self._kinematic_data)
+        return self._grip_center(self._kinematic_data)
 
     def _contact_flags(self) -> tuple[bool, bool, bool]:
         if self._object_geom_id is None:
@@ -200,30 +254,6 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             for index, geom_ids in enumerate(self._tip_geom_ids):
                 result[index] |= other in geom_ids
         return tuple(bool(value) for value in result)
-
-    def _update_assistive_grasp(self) -> None:
-        if self._object_qpos_adr is None or not self.task["safety"]["assistive_grasp"]:
-            return
-        open_error = self._normalized_hand_error(OPEN)
-        grasp_error = self._normalized_hand_error(self._grasp_pose)
-        distance = float(np.linalg.norm(self._object_pos() - self._grip_center()))
-        if self._grasped and open_error < 0.22:
-            self._grasped = False
-            self.data.qvel[self._object_qvel_adr : self._object_qvel_adr + 6] = 0.0
-            mujoco.mj_forward(self.model, self.data)
-        elif not self._grasped and grasp_error < 0.30 and distance < self.GRASP_ATTACH_DISTANCE:
-            self._grasped = True
-            self._grasp_offset = self._object_pos() - self._grip_center()
-
-        if self._grasped:
-            old_position = self._object_pos()
-            new_position = self._grip_center() + self._grasp_offset
-            self.data.qpos[self._object_qpos_adr : self._object_qpos_adr + 3] = new_position
-            self.data.qvel[self._object_qvel_adr : self._object_qvel_adr + 3] = (
-                new_position - old_position
-            ) / max(float(self.model.opt.timestep) * self.frame_skip, 1e-8)
-            self.data.qvel[self._object_qvel_adr + 3 : self._object_qvel_adr + 6] = 0.0
-            mujoco.mj_forward(self.model, self.data)
 
     def _gesture_target(self) -> np.ndarray:
         return self._gesture_sequence[min(self._gesture_index, len(self._gesture_sequence) - 1)]
@@ -256,7 +286,6 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
                 distance <= float(success["target_radius"])
                 and speed <= float(success["max_object_speed"])
                 and not self._grasped
-                and self._script_stage >= 3
             )
         self._hold_counter = self._hold_counter + 1 if valid else 0
         self._success = self._hold_counter >= self.hold_steps
@@ -307,7 +336,8 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             "gesture_index": self._gesture_index,
             "script_stage": self._script_stage,
             "grasped": self._grasped,
-            "assistive_grasp": bool(self.task["safety"]["assistive_grasp"]),
+            "contact_grasp": self._grasped,
+            "fingertip_contacts": self._contact_flags(),
             "object_position": self._object_pos(),
             "wrist_position": self._wrist_position.copy(),
         }
@@ -348,9 +378,12 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
         self._hold_counter = 0
         self._success = False
         self._grasped = False
-        self._grasp_offset[:] = 0.0
         self._gesture_index = 0
         self._script_stage = 0
+        self._script_stage_steps = 0
+        self._lift_wrist_target[:] = self._wrist_position
+        self._grasp_wrist_target[:] = self._wrist_position
+        self._pregrasp_wrist_start[:] = self._wrist_position
         self._previous_metric = self._metric()
         return self._get_obs(), self._info()
 
@@ -376,7 +409,8 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
         self.data.ctrl[:] = np.clip(hand_target, self._hand_action_low, self._hand_action_high)
         mujoco.mj_step(self.model, self.data, nstep=self.frame_skip)
         self._elapsed_steps += 1
-        self._update_assistive_grasp()
+        contacts = self._contact_flags()
+        self._grasped = bool(sum(contacts) >= 2)
         self._advance_success()
 
         metric = self._metric()
@@ -402,39 +436,86 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
             self._script_stage = min(self._gesture_index, 2)
             return action
 
-        approach_position = self._object_pos().copy()
-        approach_position[2] += self.GRASP_CLEARANCE
-        grip_delta = approach_position - self._grip_center()
-        if not self._grasped and self._script_stage < 2:
-            if float(np.linalg.norm(grip_delta)) > 0.012:
+        step_size = float(self.task["control"]["translation_step"])
+        action[6:] = self._hand_action(OPEN if self._script_stage == 0 else self._grasp_pose)
+
+        if self._script_stage == 0:
+            desired_center = self._object_pos() + self._grasp_center_offset
+            self._grasp_wrist_target = self._wrist_position + (
+                desired_center - self._predicted_grip_center(self._grasp_pose)
+            )
+            pregrasp_target = self._grasp_wrist_target.copy()
+            pregrasp_target[2] += self._pregrasp_clearance
+            delta = pregrasp_target - self._wrist_position
+            if float(np.linalg.norm(delta[:2])) > step_size:
+                # Move laterally at a safe height before descending.  This
+                # prevents an open fingertip from sweeping a round object away.
+                safe_target = pregrasp_target.copy()
+                safe_target[2] += 0.050
+                safe_target[2] = max(safe_target[2], self._wrist_position[2])
                 action[:3] = np.clip(
-                    grip_delta / float(self.task["control"]["translation_step"]), -1.0, 1.0
+                    (safe_target - self._wrist_position) / step_size, -1.0, 1.0
                 )
-                action[6:] = self._hand_action(OPEN)
-                self._script_stage = 0
             else:
-                action[6:] = self._hand_action(self._grasp_pose)
+                action[:3] = np.clip(delta / step_size, -1.0, 1.0)
+            if float(np.linalg.norm(delta)) <= step_size:
                 self._script_stage = 1
+                self._script_stage_steps = 0
+                self._pregrasp_wrist_start = pregrasp_target
             return action
 
-        if self._grasped:
-            self._script_stage = 2
-            if self.family == "pick_up":
-                desired = self._initial_object_position.copy()
-                desired[2] += float(self.task["success"]["lift_height"]) + 0.025
-            else:
-                desired = self._target_position.copy()
-            delta = desired - self._object_pos()
-            if self.family == "pick_place" and float(np.linalg.norm(delta)) < 0.012:
+        if self._script_stage == 1:
+            fraction = min(1.0, (self._script_stage_steps + 1) / self.CLOSE_STEPS)
+            hand_target = (1.0 - fraction) * OPEN + fraction * self._grasp_pose
+            action[6:] = self._hand_action(hand_target)
+            desired_wrist = (
+                (1.0 - fraction) * self._pregrasp_wrist_start
+                + fraction * self._grasp_wrist_target
+            )
+            wrist_delta = desired_wrist - self._wrist_position
+            action[:3] = np.clip(wrist_delta / step_size, -0.15, 0.15)
+            self._script_stage_steps += 1
+            if self._script_stage_steps >= self.CLOSE_STEPS:
+                self._script_stage = 2
+                self._script_stage_steps = 0
+                self._lift_wrist_target = self._wrist_position.copy()
+                self._lift_wrist_target[2] += float(self.task["success"]["lift_height"]) + 0.010
+            return action
+
+        if self._script_stage == 2:
+            delta = self._lift_wrist_target - self._wrist_position
+            action[:3] = np.clip(
+                delta / step_size, -self.WRIST_MOTION_LIMIT, self.WRIST_MOTION_LIMIT
+            )
+            if float(np.linalg.norm(delta)) <= step_size * self.WRIST_MOTION_LIMIT:
+                if self.family == "pick_up":
+                    return action
                 self._script_stage = 3
-                action[6:] = self._hand_action(OPEN)
-            else:
-                action[:3] = np.clip(
-                    delta / float(self.task["control"]["translation_step"]), -1.0, 1.0
-                )
-                action[6:] = self._hand_action(self._grasp_pose)
             return action
 
-        self._script_stage = max(self._script_stage, 3)
-        action[6:] = self._hand_action(OPEN)
+        if self._script_stage == 3:
+            hover_target = self._target_position.copy()
+            hover_target[2] += float(self.task["success"]["lift_height"]) + 0.010
+            delta = hover_target - self._object_pos()
+            action[:3] = np.clip(
+                delta / step_size, -self.TRANSPORT_MOTION_LIMIT, self.TRANSPORT_MOTION_LIMIT
+            )
+            if float(np.linalg.norm(delta[:2])) < 0.008:
+                self._script_stage = 4
+            return action
+
+        if self._script_stage == 4:
+            delta = self._target_position - self._object_pos()
+            action[:3] = np.clip(
+                delta / step_size, -self.WRIST_MOTION_LIMIT, self.WRIST_MOTION_LIMIT
+            )
+            if float(np.linalg.norm(delta)) < 0.008:
+                self._script_stage = 5
+                self._script_stage_steps = 0
+            return action
+
+        release_fraction = min(1.0, (self._script_stage_steps + 1) / self.RELEASE_STEPS)
+        release_target = (1.0 - release_fraction) * self._grasp_pose + release_fraction * OPEN
+        action[6:] = self._hand_action(release_target)
+        self._script_stage_steps += 1
         return action

@@ -118,11 +118,10 @@
         "safety": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["max_episode_steps", "drop_height", "assistive_grasp"],
+          "required": ["max_episode_steps", "drop_height"],
           "properties": {
             "max_episode_steps": {"type": "integer", "minimum": 20, "maximum": 5000},
-            "drop_height": {"type": "number", "minimum": 0, "maximum": 1},
-            "assistive_grasp": {"type": "boolean"}
+            "drop_height": {"type": "number", "minimum": 0, "maximum": 1}
           }
         },
         "visualization": {
