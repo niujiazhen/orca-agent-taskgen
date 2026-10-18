@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -118,7 +119,25 @@ def _render_scene_v1(spec: dict, gesture: dict) -> str:
 
 
 def _relative_include(target: Path, output_dir: Path) -> str:
-    return os.path.relpath(target.resolve(), output_dir.resolve()).replace("\\", "/")
+    try:
+        return os.path.relpath(target.resolve(), output_dir.resolve()).replace("\\", "/")
+    except ValueError:
+        # Windows cannot express a relative path between C: and D:. Copy only
+        # referenced package files, retaining their relative asset layout.
+        package_root = Path(__file__).resolve().parents[1]
+        def copy_reference(source):
+            source = source.resolve()
+            if package_root not in source.parents:
+                raise ContractError("Model dependency escapes installed package")
+            destination = output_dir/"package_assets"/source.relative_to(package_root)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
+            if source.suffix in {".xml", ".mjcf"}:
+                for element in ET.parse(source).iter():
+                    if "file" in element.attrib:
+                        copy_reference(source.parent/element.attrib["file"])
+            return destination
+        return copy_reference(target).relative_to(output_dir).as_posix()
 
 
 def _object_size(obj: dict) -> str:
@@ -274,6 +293,9 @@ def generate_task(
     spec_hash = hashlib.sha256(canonical_yaml.encode("utf-8")).hexdigest()
     task = spec["task"]
     files = ["task_spec.yaml", "scene.xml", "manifest.json"]
+    local_assets = output_dir/"package_assets"
+    if local_assets.is_dir():
+        files.extend(sorted(p.relative_to(output_dir).as_posix() for p in local_assets.rglob("*") if p.is_file()))
     if spec["schema_version"] == 2:
         files.extend(["request.txt", "validation_report.json", "README.md"])
     manifest = {

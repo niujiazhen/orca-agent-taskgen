@@ -2,7 +2,7 @@
 
 ## Automated gates
 
-Local Windows evidence: 97 tests pass; an isolated wheel installation generates,
+Local Windows evidence: 99 tests pass; an isolated wheel installation generates,
 loads, and renders text and photo bundles. The portable Plugin manifest passes
 the published Agent Plugins JSON Schema, and Skill validation/synchronization pass.
 MuJoCo is pinned to 3.13.0: a fresh installation of 3.16.0 failed two existing
@@ -18,6 +18,9 @@ CI runs Windows/Linux and Python 3.10/3.12; wheel smoke exercises installed code
 Linux runners install `libosmesa6` and `libgl1` and set `MUJOCO_GL=osmesa` and
 `PYOPENGL_PLATFORM=osmesa` for CPU rendering without a GPU or display. The old
 EGL-only setup failed at import because the runner had no EGL implementation.
+Windows CI installs Mesa software OpenGL for GPU-less runners. Text/v2 generation
+also handles assets on another Windows drive, and relative Unix includes containing
+`home` are distinguished from absolute development-machine paths.
 
 `python scripts/photo_smoke.py --output build/photo-smoke --full` creates a
 synthetic tabletop reference and a pen/eraser scene, runs 10,000 random control

@@ -223,3 +223,31 @@ def test_manifest_exposes_v2_contract(tmp_path: Path) -> None:
     assert manifest["object_dynamics"] == "free_body_contact_only"
     assert manifest["scripted_controller"] == "non_learning_contact_feasibility"
     assert {"request.txt", "README.md", "validation_report.json"}.issubset(manifest["files"])
+
+
+def test_text_generation_supports_cross_drive_asset_bundling(tmp_path, monkeypatch):
+    import orca_sim.taskgen.generator as generator
+    def different_drive(*args):
+        raise ValueError("path is on a different mount")
+    with monkeypatch.context() as patch:
+        patch.setattr(generator.os.path, "relpath", different_drive)
+        bundle = _generate(tmp_path, "pick_up")
+    assert validate_generated_directory(bundle)["static"] == "pass"
+    assert (bundle/"package_assets/models/v1/right.mjcf").is_file()
+    env = load_environment(bundle)
+    try:
+        obs, _ = env.reset(seed=0)
+        assert obs.shape == (73,)
+    finally:
+        env.close()
+
+
+def test_relative_home_include_is_not_mistaken_for_absolute_path(tmp_path):
+    bundle = _generate(tmp_path, "pick_up")
+    xml = bundle/"scene.xml"
+    original = xml.read_text(encoding="utf-8")
+    xml.write_text(original+'<!-- relative package path: ../../home/runner/model.xml -->', encoding="utf-8")
+    assert validate_generated_directory(bundle)["static"] == "pass"
+    xml.write_text(original+'<!-- absolute path: /home/runner/model.xml -->', encoding="utf-8")
+    with pytest.raises(ContractError, match="absolute"):
+        validate_generated_directory(bundle)

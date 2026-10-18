@@ -18,7 +18,7 @@ from orca_sim.taskgen.registry import register_generated_envs
 
 ABSOLUTE_PATH_PATTERNS = (
     re.compile(r"(?:^|[\"'\s])[A-Za-z]:[\\/]", re.MULTILINE),
-    re.compile(r"/(?:Users|home)/[^/\s]+/"),
+    re.compile(r"(?<![\w./-])/(?:Users|home)/[^/\s]+/"),
 )
 
 

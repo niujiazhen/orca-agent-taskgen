@@ -17,6 +17,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Configure Windows software OpenGL
+        if: runner.os == 'Windows'
+        uses: ssciwr/setup-mesa-dist-win@6657792673a5d162d5f244db991ba45b4b68989f # v2
       - name: Configure Linux offscreen rendering
         if: runner.os == 'Linux'
         shell: bash
