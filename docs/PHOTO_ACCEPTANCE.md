@@ -15,6 +15,9 @@ token authentication, file isolation, duplicate uploads, all six rigid assets,
 layout/shape contracts, calibration, confirmation, five-slot observations,
 seeded reset, rendering and video decoding, and independent validation gates.
 CI runs Windows/Linux and Python 3.10/3.12; wheel smoke exercises installed code.
+Linux runners install `libosmesa6` and `libgl1` and set `MUJOCO_GL=osmesa` and
+`PYOPENGL_PLATFORM=osmesa` for CPU rendering without a GPU or display. The old
+EGL-only setup failed at import because the runner had no EGL implementation.
 
 `python scripts/photo_smoke.py --output build/photo-smoke --full` creates a
 synthetic tabletop reference and a pen/eraser scene, runs 10,000 random control

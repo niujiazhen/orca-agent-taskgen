@@ -7,6 +7,7 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ["3.10", "3.12"]
@@ -19,7 +20,11 @@ jobs:
       - name: Configure Linux offscreen rendering
         if: runner.os == 'Linux'
         shell: bash
-        run: echo "MUJOCO_GL=egl" >> "$GITHUB_ENV"
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libosmesa6 libgl1
+          echo "MUJOCO_GL=osmesa" >> "$GITHUB_ENV"
+          echo "PYOPENGL_PLATFORM=osmesa" >> "$GITHUB_ENV"
       - run: python -m pip install --upgrade pip build
       - run: python -m pip install -e ".[photo,visualization,dev]"
       - run: python scripts/sync_skills.py --check
