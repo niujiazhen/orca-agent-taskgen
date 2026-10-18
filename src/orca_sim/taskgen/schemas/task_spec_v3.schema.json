@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "scene_spec", "task"],
+  "properties": {
+    "schema_version": {"const": 3}, "scene_spec": {"type": "object"},
+    "task": {
+      "type": "object", "additionalProperties": false,
+      "required": ["env_id", "source_text", "family", "object_id", "target_xy", "hold_steps", "lift_height", "target_radius", "max_object_speed", "max_episode_steps"],
+      "properties": {
+        "env_id": {"type": "string", "pattern": "^[A-Z][A-Za-z0-9]*-v[0-9]+$", "maxLength": 80},
+        "source_text": {"type": "string", "minLength": 1, "maxLength": 2000}, "family": {"enum": ["pick_up", "pick_place"]},
+        "object_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,39}$"},
+        "target_xy": {"oneOf": [{"type": "null"}, {"type": "array", "items": {"type": "number", "minimum": -2, "maximum": 2}, "minItems": 2, "maxItems": 2}]},
+        "hold_steps": {"type": "integer", "minimum": 1, "maximum": 200}, "lift_height": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.3},
+        "target_radius": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.2}, "max_object_speed": {"type": "number", "exclusiveMinimum": 0, "maximum": 2},
+        "max_episode_steps": {"type": "integer", "minimum": 20, "maximum": 5000}
+      }
+    }
+  }
+}

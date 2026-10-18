@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<mujoco model="desk_pen">
+  <compiler angle="radian" autolimits="true" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" iterations="100" />
+  <visual />
+  <include file="hand.xml" />
+  <worldbody>
+    <light pos="0 -0.3 1.5" dir="0 0 -1" diffuse=".8 .8 .8" />
+    <geom name="floor" type="plane" size="2 2 .1" rgba=".22 .27 .33 1" contype="3" conaffinity="3" />
+    <geom name="photo_table" type="box" pos="0 0 0.19" size="0.3 0.2 0.01" rgba="0.55 0.48 0.38 1" friction="1.2 0.01 0.001" contype="3" conaffinity="3" solref=".01 1" solimp=".95 .99 .001" />
+    <body name="task_object" pos="-0.02 -0.05 0.205" quat="1 0 0 0">
+      <freejoint name="task_object_freejoint" />
+      <geom name="task_object_geom" rgba="0.15 0.15 0.15 1" mass="0.01" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="capsule" fromto="-0.0655 0 0 0.0655 0 0" size="0.0045" />
+      <geom type="box" contype="0" conaffinity="0" mass="0" group="2" pos="0.035 0 0.00315" size="0.0182 0.00135 0.00135" rgba=".6 .6 .65 1" />
+      <geom type="sphere" pos="-0.06775 0 0" size="0.00225" rgba=".7 .7 .75 1" contype="0" conaffinity="0" mass="0" />
+    </body>
+    <body name="scene_eraser_2" pos="0.07 0.07 0.2055" quat="1 0 0 0">
+      <freejoint name="scene_eraser_2_freejoint" />
+      <geom name="scene_eraser_2_geom" rgba="0.85 0.35 0.35 1" mass="0.02" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="box" size="0.025 0.01 0.005" />
+    </body>
+  </worldbody>
+</mujoco>

@@ -17,6 +17,8 @@ def discover_generated_tasks(root: str | Path = GENERATED_ROOT) -> dict[str, dic
         return discovered
     for manifest_path in sorted(root.glob("*/manifest.json")):
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest.get("kind") == "scene":
+            continue
         env_id = manifest["env_id"]
         if env_id in discovered:
             raise ValueError(f"Duplicate generated environment ID: {env_id}")
@@ -33,7 +35,7 @@ def register_generated_envs(root: str | Path = GENERATED_ROOT) -> tuple[str, ...
     tasks = discover_generated_tasks(root)
     for env_id, record in tasks.items():
         schema_version = int(record["manifest"].get("schema_version", 1))
-        entry_point = (
+        entry_point = "orca_sim.taskgen.photo_env:PhotoTaskEnv" if schema_version == 3 else (
             "orca_sim.taskgen.generic_env:GeneratedOrcaEnv"
             if schema_version == 2
             else "orca_sim.taskgen.env:PinchAndHoldEnv"

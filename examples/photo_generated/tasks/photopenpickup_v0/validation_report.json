@@ -1,0 +1,82 @@
+{
+  "baselines": {
+    "random": {
+      "episodes": 10,
+      "mean_return": -8.340911388399666,
+      "mean_steps": 955.6,
+      "policy": "random",
+      "randomization_scale": 0.0,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "zero": {
+      "episodes": 10,
+      "mean_return": -0.0053113995608675135,
+      "mean_steps": 1000.0,
+      "policy": "zero",
+      "randomization_scale": 0.0,
+      "success_rate": 0.0,
+      "successes": 0
+    }
+  },
+  "report_version": 3,
+  "rl_interface": {
+    "resets": {
+      "count": 100,
+      "seeded_reproducible": true,
+      "status": "pass"
+    },
+    "runtime": {
+      "action_shape": [
+        23
+      ],
+      "env_id": "PhotoPenPickup-v0",
+      "episodes_completed": 10,
+      "generated_dir": "photopenpickup_v0",
+      "observation_shape": [
+        135
+      ],
+      "reward_range": [
+        -0.01586259683227534,
+        -0.0026562409400939942
+      ],
+      "runtime": "pass",
+      "static": "pass",
+      "steps": 10000
+    },
+    "status": "pass"
+  },
+  "scene": {
+    "confirmation": "confirmed",
+    "max_penetration_m": 3.114228856991672e-05,
+    "objects": [
+      {
+        "drift_m": 0.0005311399560867987,
+        "id": "pen_1",
+        "speed_m_s": 6.128565538114974e-11,
+        "supported": true
+      },
+      {
+        "drift_m": 0.0005155900162444569,
+        "id": "eraser_2",
+        "speed_m_s": 9.373960641833287e-11,
+        "supported": true
+      }
+    ],
+    "status": "pass"
+  },
+  "script_is_trained_policy": false,
+  "scripted_feasibility": {
+    "episodes": 10,
+    "mean_return": -4.96277423487271,
+    "mean_steps": 1000.0,
+    "policy": "scripted",
+    "randomization_scale": 0.0,
+    "reason": "Contact controller did not complete the task reliably; object geometry and layout were not modified",
+    "status": "fail",
+    "success_rate": 0.0,
+    "successes": 0
+  },
+  "status": "pass",
+  "validation_kind": "scene and RL-interface checks; independent non-learning script attempt"
+}

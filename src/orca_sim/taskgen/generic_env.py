@@ -65,9 +65,13 @@ class GeneratedOrcaEnv(BaseOrcaHandEnv):
     ) -> None:
         self.spec_path = Path(spec_path).resolve()
         self.task_spec = load_task_spec(self.spec_path, allowed_root=self.spec_path.parent)
-        if self.task_spec["schema_version"] != 2:
-            raise ValueError("GeneratedOrcaEnv requires TaskSpec v2")
-        self.task = self.task_spec["task"]
+        if self.task_spec["schema_version"] not in (2, 3):
+            raise ValueError("GeneratedOrcaEnv requires TaskSpec v2 or v3")
+        if self.task_spec["schema_version"] == 3:
+            from orca_sim.taskgen.photo_contracts import runtime_task_v3
+            self.task = runtime_task_v3(self.task_spec)
+        else:
+            self.task = self.task_spec["task"]
         self.family = self.task["family"]
         self.max_episode_steps = int(self.task["safety"]["max_episode_steps"])
         self.hold_steps = int(self.task["success"]["hold_steps"])

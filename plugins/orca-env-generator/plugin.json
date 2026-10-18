@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "orca-env-generator",
-  "version": "0.2.0",
-  "description": "Generate validated and visualizable ORCA hand MuJoCo RL environments from natural language.",
+  "version": "0.3.0",
+  "description": "Generate ORCA hand MuJoCo scenes and RL environments from task descriptions or reviewed tabletop photos.",
   "author": {
     "name": "niujiazhen",
     "url": "https://github.com/niujiazhen"
@@ -14,8 +14,8 @@
     "com.openai": {
       "interface": {
         "displayName": "ORCA Environment Generator",
-        "shortDescription": "Create ORCA hand MuJoCo RL environments from text",
-        "longDescription": "Turn bounded Chinese or English manipulation requests into validated, visualizable MuJoCo and Gymnasium task bundles.",
+        "shortDescription": "Create MuJoCo scenes and RL environments from text or photos",
+        "longDescription": "Describe a task, upload a tabletop photo, or scan a QR code to take one. Review the scene, then generate an ORCA hand Gymnasium task with separate physics, interface, and script checks.",
         "developerName": "niujiazhen",
         "category": "Developer Tools",
         "capabilities": ["Interactive", "Write"],
@@ -23,6 +23,7 @@
         "defaultPrompt": [
           "让灵巧手拿起桌上的红色方块",
           "把蓝色圆柱放到右侧目标区",
+          "我要用手机拍照生成桌面场景，先让我确认",
           "Make the ORCA hand close into a fist and open again"
         ]
       }

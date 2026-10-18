@@ -1,0 +1,19 @@
+{
+  "files": [
+    "annotated.png",
+    "manifest.json",
+    "scene.xml",
+    "scene_preview.mp4",
+    "scene_preview.png",
+    "scene_report.json",
+    "scene_spec.yaml",
+    "source.png"
+  ],
+  "kind": "scene",
+  "package_version": "0.3.0",
+  "preview_kind": "camera orbit; no task or policy",
+  "scene_id": "desk_pen",
+  "schema_version": 1,
+  "spec_sha256": "4ba26fcec03e5b4a8274a22cf26598fd75b2a8b00d6fb76324c8a9160d3e0061",
+  "validation": "pass"
+}

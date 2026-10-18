@@ -11,6 +11,9 @@ def test_repo_and_plugin_skills_are_synchronized() -> None:
     repo_skill = ROOT / ".agents" / "skills" / "orca-env-generator" / "SKILL.md"
     plugin_skill = ROOT / "plugins" / "orca-env-generator" / "skills" / "orca-env-generator" / "SKILL.md"
     assert repo_skill.read_text(encoding="utf-8") == plugin_skill.read_text(encoding="utf-8")
+    import subprocess
+    import sys
+    subprocess.run([sys.executable, str(ROOT/"scripts/sync_skills.py"), "--check"], check=True)
 
 
 def test_plugin_and_marketplace_identity_match() -> None:
@@ -27,7 +30,9 @@ def test_plugin_and_marketplace_identity_match() -> None:
     )
     entry = marketplace["plugins"][0]
     assert portable["name"] == compatibility["name"] == entry["name"] == "orca-env-generator"
-    assert portable["version"] == compatibility["version"] == "0.2.0"
+    import re
+    version = re.search(r'^version = "([^"]+)"', (ROOT/"pyproject.toml").read_text(), re.MULTILINE).group(1)
+    assert portable["version"] == compatibility["version"] == version
     assert entry["source"]["path"] == "./plugins/orca-env-generator"
     assert entry["policy"] == {"installation": "AVAILABLE", "authentication": "ON_INSTALL"}
 

@@ -1,5 +1,17 @@
 # Implementation Progress
 
+## v0.3 photo workflow
+
+- Added SceneSpec v1, TaskSpec v3, six rigid asset categories, and separate scene
+  and multi-object RL APIs; existing text/v2 and legacy v1 loading remain.
+- Added LAN QR capture, camera/album upload, image normalization including HEIF,
+  explicit scene review, scale calibration, and target selection.
+- Added separate scene/interface/script reports and labelled failure previews.
+- The synthetic pen+eraser fixture passes scene physics, 10,000 random steps,
+  and 100 seeded resets. Its scripted pickup fails (0/10) and is reported as such.
+- Real-photo Codex recognition, Android/iPhone camera capture, interactive
+  viewer smoke, and Linux results require the checks in docs/PHOTO_ACCEPTANCE.md.
+
 ## Completed
 
 - Added strict TaskSpec v2 validation and bounded Chinese/English parsing.

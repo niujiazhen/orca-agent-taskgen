@@ -224,6 +224,12 @@ taskgen_runs/
 !artifacts/pinch_and_hold/scripted_success.mp4
 !artifacts/pinch_and_hold/random_failure.mp4
 !examples/generated/*/preview.mp4
+!examples/photo_generated/**/scene_preview.mp4
+!examples/photo_generated/**/task_preview.mp4
+photo_captures/
+scene_drafts/
+generated_scenes/
+generated_tasks/
 *.pkl
 wandb/
 __pycache__/

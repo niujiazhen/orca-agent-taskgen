@@ -1,0 +1,165 @@
+{
+  "action_fields": [
+    "wrist_translation_delta[3]",
+    "wrist_rotation_delta[3]",
+    "hand_targets[17]"
+  ],
+  "action_shape": [
+    23
+  ],
+  "env_id": "PhotoPenPickup-v0",
+  "family": "pick_up",
+  "files": [
+    "README.md",
+    "assets/right/right_collision_index_ip.stl",
+    "assets/right/right_collision_index_ip_skin.stl",
+    "assets/right/right_collision_index_mp.stl",
+    "assets/right/right_collision_index_pp.stl",
+    "assets/right/right_collision_index_pp_skin.stl",
+    "assets/right/right_collision_middle_ip.stl",
+    "assets/right/right_collision_middle_ip_skin.stl",
+    "assets/right/right_collision_middle_mp.stl",
+    "assets/right/right_collision_middle_pp.stl",
+    "assets/right/right_collision_middle_pp_skin.stl",
+    "assets/right/right_collision_palm.stl",
+    "assets/right/right_collision_palm_skin.stl",
+    "assets/right/right_collision_pinky_ip.stl",
+    "assets/right/right_collision_pinky_ip_skin.stl",
+    "assets/right/right_collision_pinky_mp.stl",
+    "assets/right/right_collision_pinky_pp.stl",
+    "assets/right/right_collision_pinky_pp_skin.stl",
+    "assets/right/right_collision_ring_ip.stl",
+    "assets/right/right_collision_ring_ip_skin.stl",
+    "assets/right/right_collision_ring_mp.stl",
+    "assets/right/right_collision_ring_pp.stl",
+    "assets/right/right_collision_ring_pp_skin.stl",
+    "assets/right/right_collision_thumb_dp.stl",
+    "assets/right/right_collision_thumb_dp_skin.stl",
+    "assets/right/right_collision_thumb_ip.stl",
+    "assets/right/right_collision_thumb_ip_skin.stl",
+    "assets/right/right_collision_thumb_mp.stl",
+    "assets/right/right_collision_thumb_pp.stl",
+    "assets/right/right_collision_tower_hull.stl",
+    "assets/right/right_collision_tower_main.stl",
+    "assets/right/right_collision_tower_text.stl",
+    "assets/right/right_visual_index_ip.stl",
+    "assets/right/right_visual_index_ip_skin.stl",
+    "assets/right/right_visual_index_mp.stl",
+    "assets/right/right_visual_index_pp.stl",
+    "assets/right/right_visual_index_pp_skin.stl",
+    "assets/right/right_visual_middle_ip.stl",
+    "assets/right/right_visual_middle_ip_skin.stl",
+    "assets/right/right_visual_middle_mp.stl",
+    "assets/right/right_visual_middle_pp.stl",
+    "assets/right/right_visual_middle_pp_skin.stl",
+    "assets/right/right_visual_palm.stl",
+    "assets/right/right_visual_palm_skin.stl",
+    "assets/right/right_visual_pinky_ip.stl",
+    "assets/right/right_visual_pinky_ip_skin.stl",
+    "assets/right/right_visual_pinky_mp.stl",
+    "assets/right/right_visual_pinky_pp.stl",
+    "assets/right/right_visual_pinky_pp_skin.stl",
+    "assets/right/right_visual_ring_ip.stl",
+    "assets/right/right_visual_ring_ip_skin.stl",
+    "assets/right/right_visual_ring_mp.stl",
+    "assets/right/right_visual_ring_pp.stl",
+    "assets/right/right_visual_ring_pp_skin.stl",
+    "assets/right/right_visual_thumb_dp.stl",
+    "assets/right/right_visual_thumb_dp_skin.stl",
+    "assets/right/right_visual_thumb_ip.stl",
+    "assets/right/right_visual_thumb_ip_skin.stl",
+    "assets/right/right_visual_thumb_mp.stl",
+    "assets/right/right_visual_thumb_pp.stl",
+    "assets/right/right_visual_tower_hull.stl",
+    "assets/right/right_visual_tower_main.stl",
+    "assets/right/right_visual_tower_text.stl",
+    "hand.xml",
+    "manifest.json",
+    "preview_report.json",
+    "request.txt",
+    "scene.xml",
+    "scene_spec.yaml",
+    "source.png",
+    "task_preview.mp4",
+    "task_preview.png",
+    "task_spec.yaml",
+    "validation_report.json"
+  ],
+  "hand_table_collision": true,
+  "manifest_version": 3,
+  "object_dynamics": "free_body_contact_only",
+  "object_order": [
+    "pen_1",
+    "eraser_2"
+  ],
+  "observation_fields": [
+    {
+      "name": "wrist_pose",
+      "offset": 0,
+      "size": 7
+    },
+    {
+      "name": "joint_positions",
+      "offset": 7,
+      "size": 17
+    },
+    {
+      "name": "joint_velocities",
+      "offset": 24,
+      "size": 17
+    },
+    {
+      "name": "tip_offsets_from_target",
+      "offset": 41,
+      "size": 9
+    },
+    {
+      "name": "target_fingertip_contacts",
+      "offset": 50,
+      "size": 3
+    },
+    {
+      "name": "objects[5]: position3,quaternion4,velocity6,valid,target",
+      "offset": 53,
+      "size": 75
+    },
+    {
+      "name": "target_position",
+      "offset": 128,
+      "size": 3
+    },
+    {
+      "name": "task_phase: approaching,contact,release",
+      "offset": 131,
+      "size": 3
+    },
+    {
+      "name": "episode_progress",
+      "offset": 134,
+      "size": 1
+    }
+  ],
+  "observation_shape": [
+    135
+  ],
+  "preview": {
+    "frames": 1000,
+    "image": "task_preview.png",
+    "kind": "non-learning contact attempt",
+    "reason": "object dropped or episode ended",
+    "scripted_success": false,
+    "video": "task_preview.mp4"
+  },
+  "requires": {
+    "mujoco": ">=3.1",
+    "orca_sim": "==0.3.0"
+  },
+  "scene_id": "desk_pen",
+  "scene_sha256": "4ba26fcec03e5b4a8274a22cf26598fd75b2a8b00d6fb76324c8a9160d3e0061",
+  "schema_version": 3,
+  "scripted_feasibility": "fail",
+  "spec_sha256": "3cfcb62f75edcb28c00332d5f9cd19b76056b47af563c86146fd07243202699d",
+  "target_object_id": "pen_1",
+  "validation": "pass",
+  "warnings": []
+}

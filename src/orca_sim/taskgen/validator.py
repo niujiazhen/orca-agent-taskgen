@@ -34,7 +34,7 @@ def validate_generated_directory(path: str | Path) -> dict:
         raise ContractError("generated directory missing files: ['manifest.json']")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     required = {"task_spec.yaml", "scene.xml", "manifest.json"}
-    if int(manifest.get("schema_version", 1)) == 2:
+    if int(manifest.get("schema_version", 1)) >= 2:
         required |= {"request.txt", "validation_report.json", "README.md"}
     names = {item.name for item in path.iterdir() if item.is_file()}
     missing = required - names
@@ -106,7 +106,9 @@ def validate_env_instance(env: gym.Env, *, steps: int = 200, seed: int = 0) -> d
         rewards = []
         completed = 0
         for index in range(steps):
-            observation, reward, terminated, truncated, _ = env.step(env.action_space.sample())
+            observation, reward, terminated, truncated, info = env.step(env.action_space.sample())
+            if info.get("physics_invalid", False):
+                raise ContractError("Persistent hand/table penetration exceeds 2 mm")
             if observation.shape != expected_shape:
                 raise ContractError("runtime observation shape changed")
             if not np.isfinite(observation).all() or not np.isfinite(reward):

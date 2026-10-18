@@ -254,6 +254,9 @@ def generate_task(
 
     spec_path = Path(spec_path).resolve()
     spec = load_task_spec(spec_path, allowed_root=spec_path.parent)
+    if spec["schema_version"] == 3:
+        from orca_sim.taskgen.photo_task import generate_photo_task
+        return generate_photo_task(spec_path, output=output_root)
     output_dir = (output_root / _slug(spec["task"]["env_id"])).resolve()
     if not _within(output_dir, allowed_output_root):
         raise ContractError(f"generated task path escapes allowed root {allowed_output_root}")

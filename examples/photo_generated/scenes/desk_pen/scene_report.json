@@ -1,0 +1,22 @@
+{
+  "confirmation": "confirmed",
+  "layout": "approximate; user-confirmed",
+  "max_penetration_m": 3.114228856991672e-05,
+  "objects": [
+    {
+      "drift_m": 0.0005311399560867987,
+      "id": "pen_1",
+      "speed_m_s": 6.128565538114974e-11,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005155900162444569,
+      "id": "eraser_2",
+      "speed_m_s": 9.373960641833287e-11,
+      "supported": true
+    }
+  ],
+  "physics": "pass",
+  "status": "pass",
+  "steps": 2000
+}

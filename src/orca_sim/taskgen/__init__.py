@@ -24,6 +24,12 @@ def load_environment(path, *, render_mode=None, **kwargs):
         **kwargs,
     ).unwrapped
 
+
+def load_scene(path):
+    """Load a photo scene for physics inspection and rendering, without RL rewards."""
+    from orca_sim.taskgen.photo_scene import PhotoScene
+    return PhotoScene(path)
+
 __all__ = [
     "ContractError",
     "load_gesture_reference",
@@ -32,6 +38,7 @@ __all__ = [
     "validate_task_spec",
     "UnsupportedTaskError",
     "load_environment",
+    "load_scene",
     "register_task_bundle",
     "task_spec_from_text",
 ]

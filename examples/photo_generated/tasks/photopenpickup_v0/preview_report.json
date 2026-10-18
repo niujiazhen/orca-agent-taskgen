@@ -1,0 +1,8 @@
+{
+  "frames": 1000,
+  "image": "task_preview.png",
+  "kind": "non-learning contact attempt",
+  "reason": "object dropped or episode ended",
+  "scripted_success": false,
+  "video": "task_preview.mp4"
+}

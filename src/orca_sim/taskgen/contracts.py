@@ -94,6 +94,9 @@ def validate_task_spec(data: Any) -> dict[str, Any]:
         return _validate_task_spec_v1(data)
     if version == 2:
         return _validate_task_spec_v2(data)
+    if version == 3:
+        from orca_sim.taskgen.photo_contracts import validate_task_v3
+        return validate_task_v3(data)
     raise ContractError(f"TaskSpec.schema_version: unsupported version {version!r}")
 
 

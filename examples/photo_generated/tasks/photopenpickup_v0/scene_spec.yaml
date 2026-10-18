@@ -1,0 +1,108 @@
+confirmed: true
+notes:
+- Synthetic MuJoCo reference; authored fixture, not real-photo recognition.
+- Known synthetic layout; confirmation is a test fixture flag.
+objects:
+- category: pen
+  dimensions:
+  - 0.14
+  - 0.009
+  - 0.009
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: pen_1
+  image_bbox:
+  - 0.4244028680391863
+  - 0.4772179045254486
+  - 0.5628259599553068
+  - 0.5699633117793885
+  mass: 0.01
+  provenance:
+    category: catalog_default
+    dimensions: catalog_default
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: catalog_default
+    rgba: catalog_default
+    xy: catalog_default
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.15
+  - 0.15
+  - 0.15
+  - 1.0
+  support: table
+  xy:
+  - -0.02
+  - -0.05
+- category: eraser
+  dimensions:
+  - 0.05
+  - 0.02
+  - 0.01
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: eraser_2
+  image_bbox:
+  - 0.5820648043997355
+  - 0.4453359818596445
+  - 0.6514401928200612
+  - 0.5065298536442624
+  mass: 0.02
+  provenance:
+    category: catalog_default
+    dimensions: catalog_default
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: catalog_default
+    rgba: catalog_default
+    xy: catalog_default
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.85
+  - 0.35
+  - 0.35
+  - 1
+  support: table
+  xy:
+  - 0.07
+  - 0.07
+questions: []
+scale_reference: null
+scene_id: desk_pen
+schema_version: 1
+source:
+  image: source.png
+  sha256: 0076ca4b30ab618e0de2f16c898839b4cad0f0010d0a2e3b92185071ab80a9b9
+table:
+  dimensions:
+  - 0.6
+  - 0.4
+  - 0.02
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  provenance:
+    dimensions: catalog_default
+    friction: catalog_default
+    rgba: catalog_default
+    top_z: catalog_default
+  rgba:
+  - 0.55
+  - 0.48
+  - 0.38
+  - 1.0
+  top_z: 0.2

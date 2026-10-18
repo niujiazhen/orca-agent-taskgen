@@ -1,11 +1,20 @@
 ---
 name: orca-env-generator
-description: Generate validated, visualizable ORCA v1 right-hand MuJoCo/Gymnasium RL environments from Chinese or English task descriptions. Use for hand gestures, picking up a box/cylinder/sphere, or placing one of those objects in a target region; reject tool use, insertion, stacking, external meshes, and two-hand requests.
+description: Generate ORCA hand MuJoCo/Gymnasium environments from Chinese or English task descriptions or uploaded tabletop photos. Use for phone photo capture, scene review, gestures, pickup, and placement of supported rigid objects.
 ---
 
 # ORCA Environment Generator
 
 Turn the user's natural-language request into a generated MuJoCo task bundle. The deliverable is an untrained RL environment, not a policy or a PPO result.
+
+For a photo, local image, or request to take a phone photo, read
+[references/photo-workflow.md](references/photo-workflow.md) and use the image
+workflow. Codex interprets the actual image; Python does not call a vision API.
+The photo workflow supports up to five tabletop boxes, cylinders, spheres,
+pens, erasers, or books and operates on one chosen object at a time.
+
+For text-only requests, continue using the v2 workflow below and its existing
+object catalog. Do not invent a source photo for a text request.
 
 ## Supported scope
 
