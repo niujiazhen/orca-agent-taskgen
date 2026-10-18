@@ -9,6 +9,45 @@ one training target. Models approximate the photo's colors, orientation, and
 layout. Stacking, insertion, tool use, external meshes, and two-hand tasks are
 outside this release.
 
+## Phone photo to simulation
+
+Scan a QR code on your phone, take or select a tabletop photo, and upload it
+through a local browser page. Return to Codex to interpret the image, review
+object proxies and estimated dimensions, and generate a stable MuJoCo scene.
+The scene can later become a single-target Gymnasium task after review.
+
+```text
+Phone photo -> LAN upload -> Codex interpretation -> annotated source
+            -> reviewed scene specification -> MuJoCo scene -> orbit video
+```
+
+The upload page receives the image; Codex performs the interpretation and
+scene authoring. Uploading alone does not start generation. Each capture
+session accepts one photo; request a new QR code for the next photo.
+
+**Start here:** [Phone photo tutorial](docs/PHONE_PHOTO_TUTORIAL.md) ·
+[Five-object demo and reproduction steps](examples/photo_generated/scenes/phone_five_objects/README.md)
+
+### Five-object real-photo demo
+
+A phone photograph of a pen, soda can, earbud case, tablet cover, and gum
+container becomes five rigid simulation objects. The case, cover, and gum
+container use user-approved box approximations. Scale is estimated using an
+assumed 14 cm pen; the user approved moving the simulated pen 3 cm toward the
+bottom of the source image to remove an initial overlap.
+
+| 1. Source photograph | 2. Object annotations | 3. Generated scene |
+|---|---|---|
+| ![Original five-object phone photograph](examples/photo_generated/scenes/phone_five_objects/source.png) | ![Five object IDs annotated on the photograph](examples/photo_generated/scenes/phone_five_objects/annotated.png) | ![Generated five-object MuJoCo scene](examples/photo_generated/scenes/phone_five_objects/scene_preview.png) |
+
+**4. [Watch the rotating scene preview (MP4)](examples/photo_generated/scenes/phone_five_objects/scene_preview.mp4)** ·
+[Top view](examples/photo_generated/scenes/phone_five_objects/scene_top.png) ·
+[Physics report](examples/photo_generated/scenes/phone_five_objects/scene_report.json)
+
+All five objects pass the 2,000-step scene stability check. The packaged scene
+awaits final visual confirmation; no hand, RL task, or trained policy is part
+of this demo. The video is a camera orbit around the simulated scene.
+
 ## 1. Install the Codex plugin
 
 Requirements: Codex, Git, and Python 3.10 or newer.
@@ -35,13 +74,13 @@ You do not need to write YAML, MJCF, or reward code.
 
 ```text
 Use $orca-env-generator:
-让灵巧手拿起桌上的红色方块。生成环境，完成检查并创建 preview。
+Pick up the red cube from the table. Generate the environment, run checks, and create a preview.
 ```
 
 Other examples:
 
 ```text
-把蓝色圆柱拿起来，放到桌面右侧的绿色目标区域。
+Pick up the blue cylinder and place it in the green target region on the right.
 Make the ORCA hand close into a fist and open again.
 Pick up the green sphere from the table.
 ```
@@ -49,29 +88,30 @@ Pick up the green sphere from the table.
 For a photo, attach it to Codex or provide its local path:
 
 ```text
-Use $orca-env-generator. 根据这张照片生成桌面场景，先让我确认。
+Use $orca-env-generator. Generate a tabletop scene from this photo and show it for my review.
 ```
 
 For phone capture:
 
 ```text
-Use $orca-env-generator. 我要用手机拍照生成环境，请打开扫码上传。
+Use $orca-env-generator. Start a phone photo upload session and show me the QR code.
 ```
 
 Codex starts a local upload page and shows a QR code. Keep the phone and
 computer on the same Wi-Fi, then take a photo or select one from the album.
 Supported formats: JPEG, PNG, WebP, HEIC/HEIF (20 MB / 40 MP maximum).
-If Codex has stopped waiting, say “继续处理刚上传的照片”.
+After the page reports a successful upload, return to Codex and say:
+"Continue with the uploaded photo and generate the tabletop scene."
 
 Codex shows the photo, numbered object annotations, estimated dimensions, and
 the generated scene. Confirm or correct it, then specify the training task:
 
 ```text
-场景正确。让灵巧手拿起 pen_1，并保持 20 步。
+The scene looks correct. Make the hand pick up pen_1 and hold it for 20 steps.
 ```
 
 Single photos do not determine exact dimensions, mass, or friction. Defaults
-are labelled; a known measurement such as “笔长 14cm” can calibrate the scene.
+are labelled; a known measurement such as "the pen is 14 cm long" can calibrate the scene.
 
 Codex fills safe defaults for omitted size, mass, friction, reward, reset
 randomization, and success thresholds. It asks a question only when an

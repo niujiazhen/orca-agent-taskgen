@@ -28,7 +28,30 @@ steps, checks 100 seeded resets, tests scripted/zero/random actions, and renders
 both preview types. The reference is rendered locally, not a real photograph.
 It tests engineering integration, not Codex image recognition accuracy.
 
-## Human checks still required
+## Real-photo demo evidence
+
+The [five-object phone demo](../examples/photo_generated/scenes/phone_five_objects/README.md)
+records a user-supplied photograph uploaded through the LAN capture page on
+2026-10-18 (America/Los_Angeles). The upload receipt was 3024 x 4032 pixels.
+Codex inspected the actual photograph, identified five main objects, asked
+about box approximations and partial border objects, and generated the scene.
+The user approved the proxies, border omissions, and a 3 cm pen displacement
+after the initial layout failed its nonintersection check.
+
+The final scene passes 2,000 physics steps with all five objects supported,
+less than 0.54 mm position drift per object, and approximately 0.031 mm maximum
+penetration. Source, annotations, scene model/specification, physics report,
+rendered view, and orbit video are published with the user's authorization.
+The final scene retains its pending visual-confirmation status. It is not a
+grasp or RL demonstration, and its scale uses an assumed 14 cm pen.
+
+The phone model and browser were not recorded, so this session does not
+establish the platform-specific camera/HEIC checks below. It did expose two
+operational issues documented in the [tutorial](PHONE_PHOTO_TUTORIAL.md):
+VPN routing can prevent access to the Wi-Fi address, and each capture session
+accepts only one photograph.
+
+## Additional human checks still required
 
 No automated test or synthetic fixture establishes these results. Record the
 actual device, browser, photo provenance, result, and date when performed:
@@ -44,7 +67,7 @@ actual device, browser, photo provenance, result, and date when performed:
 - [ ] Interactive scene and task viewer: open and close on Windows/Linux.
 
 Real-photo fixtures must have permission for publication. Do not commit capture
-session descriptors or private photos. A Codex upload may be forwarded through
+session descriptors or photos without publication permission. A Codex upload may be forwarded through
 the user's normal Codex image workflow; this package has no separate vision API.
 
 ## Interpretation of results

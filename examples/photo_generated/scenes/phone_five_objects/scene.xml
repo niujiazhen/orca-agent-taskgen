@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<mujoco model="phone_five_objects">
+  <compiler angle="radian" autolimits="true" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" iterations="100" />
+  <visual />
+  <worldbody>
+    <light pos="0 -0.3 1.5" dir="0 0 -1" diffuse=".8 .8 .8" />
+    <geom name="floor" type="plane" size="2 2 .1" rgba=".22 .27 .33 1" contype="3" conaffinity="3" />
+    <geom name="photo_table" type="box" pos="0 0 0.19" size="0.3 0.25 0.01" rgba="0.87 0.86 0.82 1" friction="1.2 0.01 0.001" contype="3" conaffinity="3" solref=".01 1" solimp=".95 .99 .001" />
+    <body name="scene_pen_1" pos="-0.087 -0.167 0.205" quat="0.999847695156 0 0 0.0174524064373">
+      <freejoint name="scene_pen_1_freejoint" />
+      <geom name="scene_pen_1_geom" rgba="0.035 0.035 0.035 1" mass="0.01" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="capsule" fromto="-0.0655 0 0 0.0655 0 0" size="0.0045" />
+      <geom type="box" contype="0" conaffinity="0" mass="0" group="2" pos="0.035 0 0.00315" size="0.0182 0.00135 0.00135" rgba=".6 .6 .65 1" />
+      <geom type="sphere" pos="-0.06775 0 0" size="0.00225" rgba=".7 .7 .75 1" contype="0" conaffinity="0" mass="0" />
+    </body>
+    <body name="scene_can_1" pos="0.105 0.07 0.258" quat="1 0 0 0">
+      <freejoint name="scene_can_1_freejoint" />
+      <geom name="scene_can_1_geom" rgba="0.72 0.73 0.72 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="cylinder" size="0.03 0.0575" />
+    </body>
+    <body name="scene_case_1" pos="0.033 -0.14 0.212" quat="0.73727733681 0 0 0.675590207616">
+      <freejoint name="scene_case_1_freejoint" />
+      <geom name="scene_case_1_geom" rgba="0.94 0.93 0.88 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="box" size="0.0275 0.016 0.0115" />
+    </body>
+    <body name="scene_cover_1" pos="-0.045 0.03 0.2065" quat="0.87035569594 0 0 -0.492423560103">
+      <freejoint name="scene_cover_1_freejoint" />
+      <geom name="scene_cover_1_geom" rgba="0.49 0.49 0.41 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="box" size="0.145 0.095 0.006" />
+    </body>
+    <body name="scene_gum_1" pos="0.12 -0.09 0.2455" quat="0.99756405026 0 0 -0.0697564737441">
+      <freejoint name="scene_gum_1_freejoint" />
+      <geom name="scene_gum_1_geom" rgba="0.08 0.35 0.19 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" type="box" size="0.03 0.025 0.045" />
+    </body>
+  </worldbody>
+</mujoco>

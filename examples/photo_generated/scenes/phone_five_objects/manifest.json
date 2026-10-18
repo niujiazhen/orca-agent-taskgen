@@ -1,0 +1,19 @@
+{
+  "files": [
+    "annotated.png",
+    "manifest.json",
+    "scene.xml",
+    "scene_preview.mp4",
+    "scene_preview.png",
+    "scene_report.json",
+    "scene_spec.yaml",
+    "source.png"
+  ],
+  "kind": "scene",
+  "package_version": "0.3.0",
+  "preview_kind": "camera orbit; no task or policy",
+  "scene_id": "phone_five_objects",
+  "schema_version": 1,
+  "spec_sha256": "406aeebab3ea1ecf2e9f86708fd52cd96164e1c6089f68b99d7e046dec901b9f",
+  "validation": "needs_confirmation"
+}

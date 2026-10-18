@@ -1,0 +1,242 @@
+confirmed: false
+notes:
+- User confirmed retaining these five main objects and ignoring partially visible
+  border objects.
+- User approved the tablet cover as a thin rigid box, gum container as a green box,
+  and earbud charging case as a white box.
+- Observed support is one light tabletop. Pen lies at bottom-left, charging case at
+  bottom-center, gum container at lower-right, can at upper-right, and large cover
+  at left-center.
+- Pen length 14 cm and diameter 9 mm are catalog assumptions, not measured user inputs.
+  All other sizes and support positions are rough image estimates relative to that
+  assumed scale.
+- Can estimated diameter 6 cm and height 11.5 cm, upright. Gum container modeled as
+  a 6 x 5 x 9 cm upright box; case 5.5 x 3.2 x 2.3 cm.
+- Cover 29 x 19 x 1.2 cm, resting flat. Flexible material, fold lines, decoration,
+  lids, labels and curved surfaces are not reconstructed.
+- Single-view perspective is not calibrated. Table modeled as a 60 x 50 x 2 cm slab
+  with catalog top_z=20 cm; real table boundaries and height are not recovered.
+- Mass and friction are catalog defaults, not photo-derived measurements.
+- Awaiting review of the generated scene; no hand, action, reward or policy has been
+  added.
+- User authorized moving the simulated pen 3 cm toward the bottom of the source photo
+  (negative world Y) to clear the estimated cover overlap. Source annotation remains
+  at its original photo location.
+objects:
+- category: pen
+  dimensions:
+  - 0.14
+  - 0.009
+  - 0.009
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: pen_1
+  image_bbox:
+  - 0.058
+  - 0.766
+  - 0.455
+  - 0.803
+  mass: 0.01
+  provenance:
+    category: image_estimate
+    dimensions: catalog_default
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: image_estimate
+    rgba: image_estimate
+    xy: user_input
+  quaternion:
+  - 0.9998476951563913
+  - 0.0
+  - 0.0
+  - 0.01745240643728351
+  rgba:
+  - 0.035
+  - 0.035
+  - 0.035
+  - 1
+  support: table
+  xy:
+  - -0.087
+  - -0.167
+- category: cylinder
+  dimensions:
+  - 0.06
+  - 0.06
+  - 0.115
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: can_1
+  image_bbox:
+  - 0.631
+  - 0.221
+  - 0.975
+  - 0.413
+  mass: 0.04
+  provenance:
+    category: image_estimate
+    dimensions: image_estimate
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: image_estimate
+    rgba: image_estimate
+    xy: image_estimate
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.72
+  - 0.73
+  - 0.72
+  - 1
+  support: table
+  xy:
+  - 0.105
+  - 0.07
+- category: box
+  dimensions:
+  - 0.055
+  - 0.032
+  - 0.023
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: case_1
+  image_bbox:
+  - 0.522
+  - 0.724
+  - 0.662
+  - 0.854
+  mass: 0.04
+  provenance:
+    category: user_input
+    dimensions: image_estimate
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: image_estimate
+    rgba: image_estimate
+    xy: image_estimate
+  quaternion:
+  - 0.7372773368101241
+  - 0.0
+  - 0.0
+  - 0.6755902076156602
+  rgba:
+  - 0.94
+  - 0.93
+  - 0.88
+  - 1
+  support: table
+  xy:
+  - 0.033
+  - -0.14
+- category: box
+  dimensions:
+  - 0.29
+  - 0.19
+  - 0.012
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: cover_1
+  image_bbox:
+  - 0.003
+  - 0.123
+  - 0.751
+  - 0.726
+  mass: 0.04
+  provenance:
+    category: user_input
+    dimensions: image_estimate
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: image_estimate
+    rgba: image_estimate
+    xy: image_estimate
+  quaternion:
+  - 0.8703556959398997
+  - 0.0
+  - 0.0
+  - -0.49242356010346716
+  rgba:
+  - 0.49
+  - 0.49
+  - 0.41
+  - 1
+  support: table
+  xy:
+  - -0.045
+  - 0.03
+- category: box
+  dimensions:
+  - 0.06
+  - 0.05
+  - 0.09
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  id: gum_1
+  image_bbox:
+  - 0.714
+  - 0.622
+  - 0.979
+  - 0.769
+  mass: 0.04
+  provenance:
+    category: user_input
+    dimensions: image_estimate
+    friction: catalog_default
+    mass: catalog_default
+    quaternion: image_estimate
+    rgba: image_estimate
+    xy: image_estimate
+  quaternion:
+  - 0.9975640502598242
+  - 0.0
+  - 0.0
+  - -0.0697564737441253
+  rgba:
+  - 0.08
+  - 0.35
+  - 0.19
+  - 1
+  support: table
+  xy:
+  - 0.12
+  - -0.09
+questions: []
+scale_reference: null
+scene_id: phone_five_objects
+schema_version: 1
+source:
+  image: source.png
+  sha256: 33bc3195d7b70d8cfb4a6940f770bfb060d9e886e0008bedabe8fbb9a9d5e259
+table:
+  dimensions:
+  - 0.6
+  - 0.5
+  - 0.02
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  provenance:
+    dimensions: image_estimate
+    friction: catalog_default
+    rgba: image_estimate
+    top_z: catalog_default
+  rgba:
+  - 0.87
+  - 0.86
+  - 0.82
+  - 1.0
+  top_z: 0.2
