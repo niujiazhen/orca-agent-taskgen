@@ -296,7 +296,7 @@ def generate_task(
                 "action_shape": [23],
                 "action_fields": ["wrist_translation_delta[3]", "wrist_rotation_delta[3]", "hand_targets[17]"],
                 "observation_contract": "wrist, hand, fingertips, contacts, object, target, stage",
-                "requires": {"orca_sim": ">=0.2.0", "mujoco": ">=3.1"},
+                "requires": {"orca_sim": ">=0.2.0", "mujoco": "==3.13.0"},
                 "base_control": "kinematic_6dof",
                 "mount_visualization": "visible" if task["family"] == "gesture" else "hidden",
                 "object_dynamics": "free_body_contact_only",

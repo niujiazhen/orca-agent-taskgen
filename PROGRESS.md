@@ -7,6 +7,8 @@
 - Added LAN QR capture, camera/album upload, image normalization including HEIF,
   explicit scene review, scale calibration, and target selection.
 - Added separate scene/interface/script reports and labelled failure previews.
+- Pinned MuJoCo 3.13.0 after fresh-install tests revealed placement-controller
+  regressions with 3.16.0; dependency and manifest requirements now agree.
 - The synthetic pen+eraser fixture passes scene physics, 10,000 random steps,
   and 100 seeded resets. Its scripted pickup fails (0/10) and is reported as such.
 - Real-photo Codex recognition, Android/iPhone camera capture, interactive

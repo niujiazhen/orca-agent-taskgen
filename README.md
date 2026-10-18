@@ -21,6 +21,7 @@ codex plugin add orca-env-generator@orca-agent-taskgen
 Restart Codex and start a new task after installation. The plugin follows the
 standard [Codex marketplace workflow](https://developers.openai.com/plugins/build/plugins).
 No separate OpenAI API key is required by the Python package.
+The package pins the validated MuJoCo version for reproducible contact behavior.
 Codex installs the Python runtime when first needed. To install it yourself:
 
 ```powershell

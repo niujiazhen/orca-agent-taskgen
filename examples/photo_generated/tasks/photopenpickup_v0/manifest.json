@@ -151,7 +151,7 @@
     "video": "task_preview.mp4"
   },
   "requires": {
-    "mujoco": ">=3.1",
+    "mujoco": "==3.13.0",
     "orca_sim": "==0.3.0"
   },
   "scene_id": "desk_pen",

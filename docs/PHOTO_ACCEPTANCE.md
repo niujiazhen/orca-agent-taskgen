@@ -5,6 +5,9 @@
 Local Windows evidence: 97 tests pass; an isolated wheel installation generates,
 loads, and renders text and photo bundles. The portable Plugin manifest passes
 the published Agent Plugins JSON Schema, and Skill validation/synchronization pass.
+MuJoCo is pinned to 3.13.0: a fresh installation of 3.16.0 failed two existing
+v2 placement-controller regressions. Unverified solver versions are not claimed
+to preserve the scripted contact benchmarks.
 
 Run `python -m pip install -e ".[photo,visualization,dev]"`, then `python -m pytest`.
 Tests cover image decoding (including HEIF), EXIF orientation, upload limits,
