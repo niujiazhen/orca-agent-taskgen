@@ -1,0 +1,117 @@
+artifacts:
+- file: model.py
+  sha256: e591b0bc0216c0329e5c5a09901a737cc614678a7cdb8e89eb5362ea17c8a8b6
+- file: object_plan.json
+  sha256: b0f34468c78960f4164d91718181243ea2921a78025262f760cf1bbadbd88a47
+- file: project.blend
+  sha256: f21ac7c5423b557d29b42ebf671b62f78ee2cb46be9a9eb3c976f4004f7f9f75
+- file: blender_preview.png
+  sha256: 175d2d36a5297d693ae08c873309ff6cc8b306580eb8adf23d5855d23d55bf7f
+- file: export_report.json
+  sha256: b047db31b71a00599559cd4efd3aced26979aa9f2369c16ec33fcb7e153af1df
+confirmed: false
+notes:
+- Synthetic reference rendered locally in Blender, not a phone photograph and not
+  evidence of photo recognition.
+- This fixture demonstrates custom rigid-object authoring and the deliberate loss
+  of concavities in one convex collision hull.
+- Dimensions and physics parameters are explicit authoring assumptions. Manual review
+  and final confirmation remain pending.
+- Approximate geometry authored by the agent and exported from the saved Blender project.
+- One convex collision hull per object; mass and friction are explicit assumptions.
+  No RL task is included.
+- Final MuJoCo visual confirmation remains pending.
+objects:
+- category: mesh
+  dimensions:
+  - 0.11000000312924385
+  - 0.07000000029802322
+  - 0.07999999821186066
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.03500000014901161
+      - -0.03500000014901161
+      - -0.03999999910593033
+    - - 0.07500000298023224
+      - 0.03500000014901161
+      - 0.03999999910593033
+    collision:
+      file: assets/cup_1_collision.obj
+      sha256: bacf16b1af612de65911369f00eb8ec347862fcdbd3e6c4d93dd73dcfa2eb0bf
+    collision_method: convex_hull
+    visuals:
+    - file: assets/cup_1_visual_0_0.obj
+      rgba:
+      - 0.25
+      - 0.47999998927116394
+      - 0.7200000286102295
+      - 1.0
+      sha256: 07d3ccccf60b8a7453d9c4924cc954009b84bfb83f6e2c819b7d6ffe2bdcd8f1
+    - file: assets/cup_1_visual_1_0.obj
+      rgba:
+      - 0.25
+      - 0.47999998927116394
+      - 0.7200000286102295
+      - 1.0
+      sha256: 64eb964ac1ac0fe06d18dc1751a89b02a252a8a96f3012890ee4a5c2257c29ef
+  id: cup_1
+  image_bbox:
+  - 0.3
+  - 0.15
+  - 0.78
+  - 0.78
+  mass: 0.04
+  name: Synthetic hollow cup with handle
+  position:
+  - 0.0
+  - 0.0
+  - 0.24050000309944153
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.25
+  - 0.47999998927116394
+  - 0.7200000286102295
+  - 1.0
+  support: table
+questions: []
+scale_reference: null
+scene_id: blender_handle_object
+schema_version: 2
+source:
+  image: source.png
+  sha256: 9ad9fe7d7a0ef66b3516f6849ee0141896ef6668f20a50671d8b9dbdda3fd34f
+table:
+  dimensions:
+  - 0.30000001192092896
+  - 0.25
+  - 0.019999999552965164
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  provenance:
+    dimensions: blender_saved
+    friction: user_input
+    rgba: blender_saved
+    top_z: blender_saved
+  rgba:
+  - 0.8399999737739563
+  - 0.8199999928474426
+  - 0.7799999713897705
+  - 1.0
+  top_z: 0.1999999973922968

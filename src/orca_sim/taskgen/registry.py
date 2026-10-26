@@ -60,5 +60,8 @@ def register_task_bundle(path: str | Path) -> str:
 
     bundle = Path(path).resolve()
     manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("kind") == "scene":
+        from orca_sim.taskgen.contracts import ContractError
+        raise ContractError("This is a scene-display bundle, not an RL task; use load_scene()")
     register_generated_envs(bundle.parent)
     return str(manifest["env_id"])

@@ -1,15 +1,45 @@
 # ORCA Text-to-MuJoCo Environment Agent
 
 This Codex plugin turns text or a tabletop photo into a visualizable MuJoCo
-scene and a Gymnasium RL environment for one ORCA v1 right hand.
+scene. Primitive tasks also support a Gymnasium RL environment for one ORCA
+v1 right hand. Version 0.4 adds editable local Blender modeling for photo scenes.
 
 Text input supports gestures, pickup, and placement of boxes, cylinders, and
-spheres. Photo input also supports pens, erasers, and books: up to five objects,
-one training target. Models approximate the photo's colors, orientation, and
-layout. Stacking, insertion, tool use, external meshes, and two-hand tasks are
-outside this release.
+spheres. Legacy primitive photo tasks also support pens, erasers, and books.
+The new Blender path supports up to five common rigid objects for scene display,
+including shapes outside those categories. Models approximate photo colors,
+orientation and layout. Stacking, insertion, tool use and two-hand tasks remain
+outside the supported RL workflows.
 
-## Phone photo to simulation
+## New: editable Blender modeling (v0.4)
+
+The default agent photo workflow can now create a local Blender project before
+generating MuJoCo. The agent authors geometry and base colors from the image,
+opens Blender for your inspection, and imports your **saved shape, size, color,
+position and rotation edits**. Visual meshes and convex collision hulls are
+exported separately; physics remains in MuJoCo.
+
+```text
+Photo -> agent modeling -> Blender review/edit/save -> mesh export
+      -> MuJoCo scene -> physics check -> scene/collision previews + orbit video
+```
+
+Install Blender **4.5 LTS** separately. No cloud reconstruction service or
+additional vision API is required. New mesh scenes are **scene display only**;
+existing primitive and text RL tasks retain their previous interfaces.
+
+**[Blender setup and user tutorial](docs/BLENDER_WORKFLOW.md)** ·
+[Five-object real-photo demo](examples/blender/five_objects/README.md) ·
+[Hollow cup and collision-hull demo](examples/blender/handle_object/README.md)
+
+| Blender-authored models | MuJoCo scene |
+|---|---|
+| ![Editable five-object Blender models](examples/blender/five_objects/scene/blender_five_objects/blender_preview.png) | ![Blender assets in MuJoCo](examples/blender/five_objects/scene/blender_five_objects/scene_preview.png) |
+
+[Watch the Blender-model scene orbit](examples/blender/five_objects/scene/blender_five_objects/scene_preview.mp4).
+The checked-in demos pass physics checks but retain pending human-review status.
+
+## Original primitive phone photo workflow
 
 Scan a QR code on your phone, take or select a tabletop photo, and upload it
 through a local browser page. Return to Codex to interpret the image, review

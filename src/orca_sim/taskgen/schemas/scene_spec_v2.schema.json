@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scene_id",
+    "source",
+    "table",
+    "objects",
+    "scale_reference",
+    "notes",
+    "questions",
+    "confirmed",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "scene_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,63}$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image",
+        "sha256"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "confirmed": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 50
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 20
+    },
+    "scale_reference": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "object_id",
+            "axis",
+            "length_m"
+          ],
+          "properties": {
+            "object_id": {
+              "$ref": "#/$defs/id"
+            },
+            "axis": {
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            },
+            "length_m": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 10
+            }
+          }
+        }
+      ]
+    },
+    "table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimensions",
+        "top_z",
+        "rgba",
+        "friction",
+        "provenance"
+      ],
+      "properties": {
+        "dimensions": {
+          "$ref": "#/$defs/dimensions"
+        },
+        "top_z": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 1.5
+        },
+        "rgba": {
+          "$ref": "#/$defs/rgba"
+        },
+        "friction": {
+          "$ref": "#/$defs/friction"
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dimensions",
+            "top_z",
+            "rgba",
+            "friction"
+          ],
+          "properties": {
+            "dimensions": {
+              "$ref": "#/$defs/origin"
+            },
+            "top_z": {
+              "$ref": "#/$defs/origin"
+            },
+            "rgba": {
+              "$ref": "#/$defs/origin"
+            },
+            "friction": {
+              "$ref": "#/$defs/origin"
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "category",
+          "dimensions",
+          "position",
+          "quaternion",
+          "rgba",
+          "mass",
+          "friction",
+          "support",
+          "image_bbox",
+          "provenance",
+          "geometry"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "category": {
+            "const": "mesh"
+          },
+          "dimensions": {
+            "$ref": "#/$defs/dimensions"
+          },
+          "quaternion": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "rgba": {
+            "$ref": "#/$defs/rgba"
+          },
+          "mass": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 5
+          },
+          "friction": {
+            "$ref": "#/$defs/friction"
+          },
+          "support": {
+            "const": "table"
+          },
+          "image_bbox": {
+            "$ref": "#/$defs/rgba"
+          },
+          "provenance": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "enum": [
+                "image_estimate",
+                "catalog_default",
+                "user_input",
+                "blender_saved"
+              ]
+            }
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "position": {
+            "$ref": "#/$defs/vec3"
+          },
+          "geometry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "visuals",
+              "collision",
+              "bounds",
+              "collision_method"
+            ],
+            "properties": {
+              "visuals": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 128,
+                "items": {
+                  "$ref": "#/$defs/visual"
+                }
+              },
+              "collision": {
+                "$ref": "#/$defs/asset"
+              },
+              "bounds": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "$ref": "#/$defs/vec3"
+                }
+              },
+              "collision_method": {
+                "const": "convex_hull"
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      },
+      "maxItems": 20
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,39}$"
+    },
+    "origin": {
+      "enum": [
+        "image_estimate",
+        "catalog_default",
+        "user_input",
+        "blender_saved"
+      ]
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0.002,
+        "maximum": 3
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "rgba": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "friction": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 5
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "sha256"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "sha256",
+        "rgba"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "rgba": {
+          "$ref": "#/$defs/rgba"
+        }
+      }
+    }
+  }
+}

@@ -57,6 +57,8 @@ def object_extent(obj: dict) -> np.ndarray:
 
 
 def object_position(spec: dict, obj: dict) -> np.ndarray:
+    if spec["schema_version"] == 2:
+        return np.asarray(obj["position"], dtype=float)
     return np.asarray([*obj["xy"], spec["table"]["top_z"] + object_extent(obj)[2] + .0005])
 
 
@@ -74,6 +76,9 @@ def default_object(object_id: str, category: str, xy=(0.0, 0.0), *, rgba=None) -
 
 
 def validate_scene_spec(data: dict) -> dict:
+    if isinstance(data, dict) and data.get("schema_version") == 2:
+        from orca_sim.taskgen.mesh_scene import validate_mesh_spec
+        return validate_mesh_spec(data)
     _assert_finite(data, "SceneSpec")
     _validate_schema(data, Draft202012Validator(_schema("scene_spec_v1.schema.json")), "SceneSpec")
     _assert_safe_relative_path(data["source"]["image"], "source.image")
@@ -109,11 +114,17 @@ def validate_scene_spec(data: dict) -> dict:
 
 def load_scene_spec(path: str | Path) -> dict:
     path = Path(path).resolve()
-    return validate_scene_spec(_read_yaml(path, allowed_root=path.parent, label="SceneSpec"))
+    spec = validate_scene_spec(_read_yaml(path, allowed_root=path.parent, label="SceneSpec"))
+    if spec["schema_version"] == 2:
+        from orca_sim.taskgen.mesh_scene import verify_mesh_assets
+        verify_mesh_assets(spec, path.parent)
+    return spec
 
 
 def calibrate_scene(spec: dict, object_id: str, axis: int, length_m: float) -> dict:
     spec = validate_scene_spec(spec)
+    if spec["schema_version"] == 2:
+        raise ContractError("Mesh scene calibration: edit dimensions in Blender, save, export and review again")
     if axis not in (0, 1, 2) or not np.isfinite(length_m) or length_m <= 0:
         raise ContractError("Calibration needs an axis 0..2 and a positive finite length")
     obj = next((o for o in spec["objects"] if o["id"] == object_id), None)
@@ -136,6 +147,8 @@ def validate_task_v3(data: dict) -> dict:
     _assert_finite(data, "TaskSpec")
     _validate_schema(data, Draft202012Validator(_schema("task_spec_v3.schema.json")), "TaskSpec")
     spec = validate_scene_spec(data["scene_spec"])
+    if spec["schema_version"] == 2:
+        raise ContractError("Blender mesh scenes currently support scene display only; RL tasks are not supported")
     if not spec["confirmed"] or spec["questions"]:
         raise ContractError("Confirm the scene and resolve questions before creating an RL task")
     ids = [obj["id"] for obj in spec["objects"]]

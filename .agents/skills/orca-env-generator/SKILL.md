@@ -1,6 +1,6 @@
 ---
 name: orca-env-generator
-description: Generate ORCA hand MuJoCo/Gymnasium environments from Chinese or English task descriptions or uploaded tabletop photos. Use for phone photo capture, scene review, gestures, pickup, and placement of supported rigid objects.
+description: Generate ORCA MuJoCo scenes and Gymnasium environments from task descriptions or tabletop photos. Use for phone capture, editable Blender modeling and review, mesh scene display, gestures, pickup, and placement of supported primitive objects.
 ---
 
 # ORCA Environment Generator
@@ -8,10 +8,12 @@ description: Generate ORCA hand MuJoCo/Gymnasium environments from Chinese or En
 Turn the user's natural-language request into a generated MuJoCo task bundle. The deliverable is an untrained RL environment, not a policy or a PPO result.
 
 For a photo, local image, or request to take a phone photo, read
-[references/photo-workflow.md](references/photo-workflow.md) and use the image
-workflow. Codex interprets the actual image; Python does not call a vision API.
-The photo workflow supports up to five tabletop boxes, cylinders, spheres,
-pens, erasers, or books and operates on one chosen object at a time.
+[references/blender-workflow.md](references/blender-workflow.md). The v0.4 default
+adds editable local Blender modeling, mandatory user saved-state handoff, and
+scene-only MuJoCo export for up to five common rigid objects. Read the capture
+instructions in [references/photo-workflow.md](references/photo-workflow.md).
+If the user requests primitive objects or a photo-derived RL task, use that
+legacy workflow instead. Codex interprets the image; Python has no vision API.
 
 For text-only requests, continue using the v2 workflow below and its existing
 object catalog. Do not invent a source photo for a text request.
@@ -23,7 +25,10 @@ object catalog. Do not invent a source photo for a text request.
 - Tasks: `gesture`, `pick_up`, and `pick_place`.
 - Objects: box, cylinder, or sphere.
 
-If the request needs stacking, insertion, tools, screws, an external mesh, two hands, or a robot arm, stop and explain that v2 does not support it. Suggest a supported primitive task; do not silently approximate it.
+For text/RL tasks, stacking, insertion, tool use, screws, arbitrary meshes, two
+hands and robot arms remain unsupported. Blender scene display may model new
+rigid shapes, but does not enable those task families. Suggest a supported
+primitive task when RL is requested; do not silently approximate it.
 
 ## Workflow
 

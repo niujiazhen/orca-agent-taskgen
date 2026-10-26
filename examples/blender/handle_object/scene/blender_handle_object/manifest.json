@@ -1,0 +1,30 @@
+{
+  "collision_model": "one convex hull per rigid object; cavities may be filled",
+  "files": [
+    "annotated.png",
+    "assets/cup_1_collision.obj",
+    "assets/cup_1_visual_0_0.obj",
+    "assets/cup_1_visual_1_0.obj",
+    "blender_preview.png",
+    "collision_preview.png",
+    "export_report.json",
+    "manifest.json",
+    "model.py",
+    "object_plan.json",
+    "project.blend",
+    "scene.xml",
+    "scene_preview.mp4",
+    "scene_preview.png",
+    "scene_report.json",
+    "scene_spec.yaml",
+    "source.png"
+  ],
+  "kind": "scene",
+  "model_sha256": "f7ab48a27172e75ae8ea288e8571c7974a618d4fb248fdd5b55a0addcaf6f78a",
+  "package_version": "0.4.0",
+  "preview_kind": "camera orbit; no task or policy",
+  "scene_id": "blender_handle_object",
+  "schema_version": 2,
+  "spec_sha256": "e5401ec3e29a6fc44d5e264267536ddf1afddc0d6ed3850b3873d67109ac37d5",
+  "validation": "needs_confirmation"
+}

@@ -239,3 +239,9 @@ venv/
 orca/
 *.egg-info/
 .DS_Store
+
+# Blender authoring workspaces and backups
+blender_workspaces/
+*.blend1
+*.blend2
+!examples/blender/**/scene_preview.mp4

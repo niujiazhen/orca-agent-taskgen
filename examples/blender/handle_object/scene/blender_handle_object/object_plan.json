@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scene_id": "blender_handle_object",
+  "source": "source.png",
+  "table": {
+    "dimensions": [
+      0.3,
+      0.25,
+      0.02
+    ],
+    "top_z": 0.2,
+    "rgba": [
+      0.84,
+      0.82,
+      0.78,
+      1
+    ],
+    "friction": [
+      1.2,
+      0.01,
+      0.001
+    ]
+  },
+  "objects": [
+    {
+      "id": "cup_1",
+      "name": "Synthetic hollow cup with handle",
+      "dimensions": [
+        0.11,
+        0.07,
+        0.08
+      ],
+      "position": [
+        0,
+        0,
+        0.2405
+      ],
+      "rgba": [
+        0.25,
+        0.48,
+        0.72,
+        1
+      ],
+      "image_bbox": [
+        0.3,
+        0.15,
+        0.78,
+        0.78
+      ],
+      "details": "Open cup shell plus one loop handle; a single convex collision hull fills the cup opening and handle aperture."
+    }
+  ],
+  "notes": [
+    "Synthetic reference rendered locally in Blender, not a phone photograph and not evidence of photo recognition.",
+    "This fixture demonstrates custom rigid-object authoring and the deliberate loss of concavities in one convex collision hull.",
+    "Dimensions and physics parameters are explicit authoring assumptions. Manual review and final confirmation remain pending."
+  ],
+  "source_sha256": "9ad9fe7d7a0ef66b3516f6849ee0141896ef6668f20a50671d8b9dbdda3fd34f"
+}

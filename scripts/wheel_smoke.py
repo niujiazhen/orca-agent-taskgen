@@ -38,7 +38,9 @@ def main() -> None:
         for retired in ("train.py", "evaluate.py", "ppo_acceptance.py"):
             if f"orca_sim/taskgen/{retired}" in names:
                 raise RuntimeError("Wheel contains a retired training module; rebuild with python -m build in isolation")
-        for required in ("photo_env.py", "photo_upload.py", "schemas/scene_spec_v1.schema.json", "schemas/task_spec_v3.schema.json"):
+        for required in ("photo_env.py", "photo_upload.py", "blender.py", "blender_worker.py", "mesh_scene.py",
+                         "schemas/scene_spec_v1.schema.json", "schemas/scene_spec_v2.schema.json",
+                         "schemas/blender_object_plan.schema.json", "schemas/task_spec_v3.schema.json"):
             if f"orca_sim/taskgen/{required}" not in names:
                 raise RuntimeError(f"Wheel missing photo resource: {required}")
 
@@ -72,6 +74,28 @@ def main() -> None:
         check=True,
         cwd=ROOT,
     )
+    # Mesh bundles must run from an isolated wheel without importing bpy or
+    # invoking Blender. Move the bundle before loading to check relative assets.
+    mesh_smoke = """
+from pathlib import Path
+import shutil, sys, tempfile
+from orca_sim.taskgen import load_scene
+from orca_sim.taskgen.photo_scene import check_scene
+with tempfile.TemporaryDirectory(prefix='orca-wheel-mesh-') as temp:
+    bundle = Path(temp)/'mesh-scene'
+    shutil.copytree(sys.argv[1], bundle)
+    assert check_scene(bundle)['physics'] == 'pass'
+    scene = load_scene(bundle)
+    try:
+        scene.step(500)
+        assert scene.render().shape == (480,640,3)
+        assert scene.render(collision=True).shape == (480,640,3)
+    finally:
+        scene.close()
+print('Installed wheel: relocated Blender mesh bundle loads, steps and renders')
+"""
+    subprocess.run([python, "-c", mesh_smoke,
+                    str(ROOT/"examples/blender/five_objects/scene/blender_five_objects")], check=True, cwd=ROOT)
     subprocess.run(
         [
             python,

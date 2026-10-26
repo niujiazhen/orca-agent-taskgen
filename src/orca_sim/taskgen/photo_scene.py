@@ -95,6 +95,11 @@ def add_object(world: ET.Element, spec: dict, obj: dict, target_id=None) -> None
 
 def compile_scene(spec: dict, *, hand_include: str | None = None, target_id=None, target_xy=None) -> str:
     spec = validate_scene_spec(spec)
+    if spec["schema_version"] == 2:
+        if hand_include or target_id or target_xy:
+            raise ContractError("Blender mesh scenes currently support scene display only")
+        from orca_sim.taskgen.mesh_scene import compile_mesh_scene
+        return compile_mesh_scene(spec)
     root = ET.Element("mujoco", model=spec["scene_id"])
     ET.SubElement(root, "compiler", angle="radian", autolimits="true")
     ET.SubElement(root, "option", timestep="0.002", gravity="0 0 -9.81", integrator="implicitfast", iterations="100")
@@ -126,10 +131,12 @@ def verify_initial_contacts(model, data) -> None:
 
 def generate_scene(spec_path: str | Path, *, output: str | Path) -> Path:
     from orca_sim.taskgen.photo_upload import normalize_image
-    from PIL import Image, ImageDraw
 
     spec_path = Path(spec_path).resolve()
     spec = load_scene_spec(spec_path)
+    if spec["schema_version"] == 2:
+        from orca_sim.taskgen.mesh_scene import generate_mesh_scene
+        return generate_mesh_scene(spec_path, output)
     image_path = (spec_path.parent/spec["source"]["image"]).resolve()
     if spec_path.parent not in image_path.parents:
         raise ContractError("source image escapes spec directory")
@@ -145,20 +152,32 @@ def generate_scene(spec_path: str | Path, *, output: str | Path) -> Path:
     normalized["source"] = {"image": "source.png", "sha256": hashlib.sha256((bundle/"source.png").read_bytes()).hexdigest()}
     (bundle/"scene_spec.yaml").write_text(yaml.safe_dump(normalized, sort_keys=True, allow_unicode=True), encoding="utf-8")
     (bundle/"scene.xml").write_text(xml, encoding="utf-8")
-    with Image.open(bundle/"source.png") as source:
-        annotation = source.convert("RGB")
-    draw = ImageDraw.Draw(annotation)
-    for index, obj in enumerate(spec["objects"], 1):
-        x1, y1, x2, y2 = obj["image_bbox"]
-        box = (x1*annotation.width, y1*annotation.height, x2*annotation.width, y2*annotation.height)
-        draw.rectangle(box, outline="red", width=3)
-        draw.text((box[0]+3, box[1]+3), f"{index}: {obj['id']}", fill="red")
-    annotation.save(bundle/"annotated.png")
+    annotate_scene(bundle, spec)
     write_json(bundle/"manifest.json", {"kind": "scene", "schema_version": 1, "scene_id": spec["scene_id"],
-        "package_version": "0.3.0", "spec_sha256": content_hash(normalized), "validation": "pending",
+        "package_version": "0.4.0", "spec_sha256": content_hash(normalized), "validation": "pending",
         "files": ["scene_spec.yaml", "scene.xml", "source.png", "annotated.png", "manifest.json", "scene_report.json"]})
     write_json(bundle/"scene_report.json", {"physics": "pending", "confirmation": "confirmed" if spec["confirmed"] else "pending"})
     return bundle
+
+
+def annotate_scene(bundle, spec):
+    from PIL import Image, ImageDraw, ImageFont
+    with Image.open(bundle/spec["source"]["image"]) as source:
+        annotation = source.convert("RGB")
+    draw = ImageDraw.Draw(annotation)
+    try:
+        font = ImageFont.load_default(size=max(14, annotation.width//65))
+    except TypeError:  # Pillow 10.0 has no scalable default font.
+        font = ImageFont.load_default()
+    for index, obj in enumerate(spec["objects"], 1):
+        x1, y1, x2, y2 = obj["image_bbox"]
+        box = (x1*annotation.width, y1*annotation.height, x2*annotation.width, y2*annotation.height)
+        draw.rectangle(box, outline="red", width=max(3, annotation.width//500))
+        label = f"{index}: {obj['id']}"
+        xy = (box[0]+4, box[1]+4)
+        draw.rectangle(draw.textbbox(xy, label, font=font), fill="white")
+        draw.text(xy, label, font=font, fill="red")
+    annotation.save(bundle/"annotated.png")
 
 
 class PhotoScene:
@@ -169,6 +188,10 @@ class PhotoScene:
         manifest = json.loads((self.bundle/"manifest.json").read_text(encoding="utf-8"))
         if manifest["spec_sha256"] != content_hash(self.spec):
             raise ContractError("SceneSpec was changed; regenerate the scene before use")
+        if self.spec["schema_version"] == 2:
+            from orca_sim.taskgen.mesh_scene import digest
+            if manifest.get("model_sha256") != digest(self.bundle/"scene.xml"):
+                raise ContractError("MuJoCo model changed since generation; regenerate and review the scene")
         self.model = mujoco.MjModel.from_xml_path(str(self.bundle/"scene.xml"))
         self.data = mujoco.MjData(self.model)
         self._renderer = None
@@ -189,10 +212,14 @@ class PhotoScene:
         camera.elevation, camera.azimuth = -40, azimuth
         return camera
 
-    def render(self, azimuth=120):
+    def render(self, azimuth=120, *, collision=False):
         if self._renderer is None:
             self._renderer = mujoco.Renderer(self.model, height=480, width=640)
-        self._renderer.update_scene(self.data, camera=self.camera(azimuth))
+        option = mujoco.MjvOption()
+        if self.spec["schema_version"] == 2:
+            option.geomgroup[2] = not collision
+            option.geomgroup[3] = collision
+        self._renderer.update_scene(self.data, camera=self.camera(azimuth), scene_option=option)
         return self._renderer.render().copy()
 
     def close(self):
@@ -204,6 +231,8 @@ class PhotoScene:
 def check_scene(bundle: str | Path, *, steps=2000) -> dict:
     scene = PhotoScene(bundle)
     try:
+        if steps < 1:
+            raise ContractError("Physics check steps must be positive")
         physics = inspect_scene_physics(scene.model, scene.data, scene.spec, steps=steps)
         report = {"physics": "pass", "confirmation": "confirmed" if scene.spec["confirmed"] else "pending",
                   "status": "pass" if scene.spec["confirmed"] else "needs_confirmation", "steps": steps,
@@ -256,6 +285,8 @@ def preview_scene(bundle: str | Path) -> dict:
     try:
         scene.step(500)
         imageio.imwrite(bundle/"scene_preview.png", scene.render())
+        if scene.spec["schema_version"] == 2:
+            imageio.imwrite(bundle/"collision_preview.png", scene.render(collision=True))
         with imageio.get_writer(bundle/"scene_preview.mp4", fps=30, macro_block_size=1) as writer:
             for angle in np.linspace(0, 360, 90, endpoint=False):
                 writer.append_data(scene.render(float(angle)))
@@ -263,6 +294,8 @@ def preview_scene(bundle: str | Path) -> dict:
         scene.close()
     manifest = json.loads((bundle/"manifest.json").read_text(encoding="utf-8"))
     manifest["files"] = sorted(set(manifest["files"]) | {"scene_preview.png", "scene_preview.mp4"})
+    if scene.spec["schema_version"] == 2:
+        manifest["files"] = sorted(set(manifest["files"]) | {"collision_preview.png"})
     manifest["preview_kind"] = "camera orbit; no task or policy"
     write_json(bundle/"manifest.json", manifest)
     return {"status": "generated", "image": str(bundle/"scene_preview.png"), "video": str(bundle/"scene_preview.mp4")}

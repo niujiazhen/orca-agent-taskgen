@@ -1,0 +1,16 @@
+{
+  "confirmation": "pending",
+  "layout": "approximate; awaiting user review",
+  "max_penetration_m": 2.2903692515369167e-05,
+  "objects": [
+    {
+      "drift_m": 0.0005156924889111849,
+      "id": "cup_1",
+      "speed_m_s": 3.371044712878872e-07,
+      "supported": true
+    }
+  ],
+  "physics": "pass",
+  "status": "needs_confirmation",
+  "steps": 2000
+}

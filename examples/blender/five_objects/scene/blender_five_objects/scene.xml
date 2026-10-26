@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<mujoco model="blender_five_objects">
+  <compiler angle="radian" autolimits="true" inertiafromgeom="true" inertiagrouprange="3 3" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" iterations="100" />
+  <asset>
+    <mesh name="pen_1_collision" file="assets/pen_1_collision.obj" inertia="convex" />
+    <mesh name="pen_1_visual_0" file="assets/pen_1_visual_0_0.obj" inertia="convex" />
+    <material name="pen_1_visual_0" rgba="0.035000000149 0.035000000149 0.035000000149 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_visual_1" file="assets/pen_1_visual_1_0.obj" inertia="convex" />
+    <material name="pen_1_visual_1" rgba="0.649999976158 0.670000016689 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_visual_2" file="assets/pen_1_visual_2_0.obj" inertia="convex" />
+    <material name="pen_1_visual_2" rgba="0.649999976158 0.670000016689 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_visual_3" file="assets/pen_1_visual_3_0.obj" inertia="convex" />
+    <material name="pen_1_visual_3" rgba="0.035000000149 0.035000000149 0.035000000149 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_visual_4" file="assets/pen_1_visual_4_0.obj" inertia="convex" />
+    <material name="pen_1_visual_4" rgba="0.649999976158 0.670000016689 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="can_1_collision" file="assets/can_1_collision.obj" inertia="convex" />
+    <mesh name="can_1_visual_0" file="assets/can_1_visual_0_0.obj" inertia="convex" />
+    <material name="can_1_visual_0" rgba="0.649999976158 0.670000016689 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="can_1_visual_1" file="assets/can_1_visual_1_0.obj" inertia="convex" />
+    <material name="can_1_visual_1" rgba="0.649999976158 0.670000016689 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="can_1_visual_2" file="assets/can_1_visual_2_0.obj" inertia="convex" />
+    <material name="can_1_visual_2" rgba="0.769999980927 0.77999997139 0.759999990463 1" specular=".25" shininess=".3" />
+    <mesh name="can_1_visual_3" file="assets/can_1_visual_3_0.obj" inertia="convex" />
+    <material name="can_1_visual_3" rgba="0.449999988079 0.460000008345 0.449999988079 1" specular=".25" shininess=".3" />
+    <mesh name="case_1_collision" file="assets/case_1_collision.obj" inertia="convex" />
+    <mesh name="case_1_visual_0" file="assets/case_1_visual_0_0.obj" inertia="convex" />
+    <material name="case_1_visual_0" rgba="0.939999997616 0.930000007153 0.879999995232 1" specular=".25" shininess=".3" />
+    <mesh name="case_1_visual_1" file="assets/case_1_visual_1_0.obj" inertia="convex" />
+    <material name="case_1_visual_1" rgba="0.939999997616 0.930000007153 0.879999995232 1" specular=".25" shininess=".3" />
+    <mesh name="case_1_visual_2" file="assets/case_1_visual_2_0.obj" inertia="convex" />
+    <material name="case_1_visual_2" rgba="0.52999997139 0.52999997139 0.5 1" specular=".25" shininess=".3" />
+    <mesh name="cover_1_collision" file="assets/cover_1_collision.obj" inertia="convex" />
+    <mesh name="cover_1_visual_0" file="assets/cover_1_visual_0_0.obj" inertia="convex" />
+    <material name="cover_1_visual_0" rgba="0.490000009537 0.490000009537 0.409999996424 1" specular=".25" shininess=".3" />
+    <mesh name="cover_1_visual_1" file="assets/cover_1_visual_1_0.obj" inertia="convex" />
+    <material name="cover_1_visual_1" rgba="0.379999995232 0.379999995232 0.319999992847 1" specular=".25" shininess=".3" />
+    <mesh name="cover_1_visual_2" file="assets/cover_1_visual_2_0.obj" inertia="convex" />
+    <material name="cover_1_visual_2" rgba="0.379999995232 0.379999995232 0.319999992847 1" specular=".25" shininess=".3" />
+    <mesh name="gum_1_collision" file="assets/gum_1_collision.obj" inertia="convex" />
+    <mesh name="gum_1_visual_0" file="assets/gum_1_visual_0_0.obj" inertia="convex" />
+    <material name="gum_1_visual_0" rgba="0.0799999982119 0.34999999404 0.189999997616 1" specular=".25" shininess=".3" />
+    <mesh name="gum_1_visual_1" file="assets/gum_1_visual_1_0.obj" inertia="convex" />
+    <material name="gum_1_visual_1" rgba="0.0799999982119 0.20000000298 0.109999999404 1" specular=".25" shininess=".3" />
+    <mesh name="gum_1_visual_2" file="assets/gum_1_visual_2_0.obj" inertia="convex" />
+    <material name="gum_1_visual_2" rgba="0.75 0.819999992847 0.670000016689 1" specular=".25" shininess=".3" />
+  </asset>
+  <worldbody>
+    <light pos="0 -0.3 1.5" dir="0 0 -1" diffuse=".8 .8 .8" />
+    <geom name="floor" type="plane" size="2 2 .1" rgba=".22 .27 .33 1" contype="3" conaffinity="3" />
+    <geom name="photo_table" type="box" pos="0 0 0.189999997616" size="0.300000011921 0.25 0.00999999977648" rgba="0.870000004768 0.860000014305 0.819999992847 1" friction="1.2 0.01 0.001" contype="3" conaffinity="3" solref=".01 1" solimp=".95 .99 .001" />
+    <body name="scene_pen_1" pos="-0.0869999974966 -0.166999995708 0.204999998212" quat="0.999847710133 0 0 0.0174524057657">
+      <freejoint name="scene_pen_1_freejoint" />
+      <geom name="scene_pen_1_geom" type="mesh" mesh="pen_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="pen_1_visual_0" type="mesh" mesh="pen_1_visual_0" material="pen_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="pen_1_visual_1" type="mesh" mesh="pen_1_visual_1" material="pen_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="pen_1_visual_2" type="mesh" mesh="pen_1_visual_2" material="pen_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="pen_1_visual_3" type="mesh" mesh="pen_1_visual_3" material="pen_1_visual_3" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="pen_1_visual_4" type="mesh" mesh="pen_1_visual_4" material="pen_1_visual_4" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_can_1" pos="0.104999996722 0.070000000298 0.25799998641" quat="1 0 0 0">
+      <freejoint name="scene_can_1_freejoint" />
+      <geom name="scene_can_1_geom" type="mesh" mesh="can_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="can_1_visual_0" type="mesh" mesh="can_1_visual_0" material="can_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="can_1_visual_1" type="mesh" mesh="can_1_visual_1" material="can_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="can_1_visual_2" type="mesh" mesh="can_1_visual_2" material="can_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="can_1_visual_3" type="mesh" mesh="can_1_visual_3" material="can_1_visual_3" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_case_1" pos="0.0329999998212 -0.140000000596 0.211999997497" quat="0.737277328968 0 0 0.675590217113">
+      <freejoint name="scene_case_1_freejoint" />
+      <geom name="scene_case_1_geom" type="mesh" mesh="case_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="case_1_visual_0" type="mesh" mesh="case_1_visual_0" material="case_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="case_1_visual_1" type="mesh" mesh="case_1_visual_1" material="case_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="case_1_visual_2" type="mesh" mesh="case_1_visual_2" material="case_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_cover_1" pos="-0.0450000017881 0.0299999993294 0.206499993801" quat="0.870355665684 0 0 -0.4924236238">
+      <freejoint name="scene_cover_1_freejoint" />
+      <geom name="scene_cover_1_geom" type="mesh" mesh="cover_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="cover_1_visual_0" type="mesh" mesh="cover_1_visual_0" material="cover_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="cover_1_visual_1" type="mesh" mesh="cover_1_visual_1" material="cover_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="cover_1_visual_2" type="mesh" mesh="cover_1_visual_2" material="cover_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_gum_1" pos="0.119999997318 -0.0900000035763 0.245499998331" quat="0.997564077377 0 0 -0.0697564855218">
+      <freejoint name="scene_gum_1_freejoint" />
+      <geom name="scene_gum_1_geom" type="mesh" mesh="gum_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="gum_1_visual_0" type="mesh" mesh="gum_1_visual_0" material="gum_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="gum_1_visual_1" type="mesh" mesh="gum_1_visual_1" material="gum_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="gum_1_visual_2" type="mesh" mesh="gum_1_visual_2" material="gum_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+  </worldbody>
+</mujoco>

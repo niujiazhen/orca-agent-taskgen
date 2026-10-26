@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<mujoco model="blender_handle_object">
+  <compiler angle="radian" autolimits="true" inertiafromgeom="true" inertiagrouprange="3 3" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" iterations="100" />
+  <asset>
+    <mesh name="cup_1_collision" file="assets/cup_1_collision.obj" inertia="convex" />
+    <mesh name="cup_1_visual_0" file="assets/cup_1_visual_0_0.obj" inertia="convex" />
+    <material name="cup_1_visual_0" rgba="0.25 0.479999989271 0.72000002861 1" specular=".25" shininess=".3" />
+    <mesh name="cup_1_visual_1" file="assets/cup_1_visual_1_0.obj" inertia="convex" />
+    <material name="cup_1_visual_1" rgba="0.25 0.479999989271 0.72000002861 1" specular=".25" shininess=".3" />
+  </asset>
+  <worldbody>
+    <light pos="0 -0.3 1.5" dir="0 0 -1" diffuse=".8 .8 .8" />
+    <geom name="floor" type="plane" size="2 2 .1" rgba=".22 .27 .33 1" contype="3" conaffinity="3" />
+    <geom name="photo_table" type="box" pos="0 0 0.189999997616" size="0.15000000596 0.125 0.00999999977648" rgba="0.839999973774 0.819999992847 0.77999997139 1" friction="1.2 0.01 0.001" contype="3" conaffinity="3" solref=".01 1" solimp=".95 .99 .001" />
+    <body name="scene_cup_1" pos="0 0 0.240500003099" quat="1 0 0 0">
+      <freejoint name="scene_cup_1_freejoint" />
+      <geom name="scene_cup_1_geom" type="mesh" mesh="cup_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="cup_1_visual_0" type="mesh" mesh="cup_1_visual_0" material="cup_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="cup_1_visual_1" type="mesh" mesh="cup_1_visual_1" material="cup_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+  </worldbody>
+</mujoco>

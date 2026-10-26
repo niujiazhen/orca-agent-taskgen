@@ -1,5 +1,29 @@
 # Photo workflow acceptance (v0.3.0)
 
+## Blender mesh authoring (v0.4.0)
+
+The [Blender workflow](BLENDER_WORKFLOW.md) adds local agent-authored geometry,
+an interactive saved-state handoff, and SceneSpec v2 mesh-only display. The
+[five-object real-photo demo](../examples/blender/five_objects/README.md) and
+[synthetic cup/handle example](../examples/blender/handle_object/README.md)
+both pass their 2,000-step scene physics checks. Their checked-in Blender
+snapshots were generated headlessly; human window review and final visual
+confirmation are explicitly pending.
+
+Tests use Blender 4.5 LTS when installed to build an editable object, modify its
+mesh, material color, world pose and nonuniform scale, save, and compare the
+exported and MuJoCo world vertices with the saved Blender geometry. Export
+rejects missing/duplicate object IDs, unregistered meshes and visual triangle
+budgets above 20,000. A failed export withdraws its consumable specification;
+three failed build attempts preserve logs and block further automatic repair.
+
+Additional tests cover portable loading without Blender, asset/project/model
+hash invalidation, zero-mass noncolliding visual parts, collision-only mass,
+initial floating/overlapping object rejection, and explicit RL-task rejection.
+An isolated wheel smoke check loads, steps and renders the relocated mesh demo.
+See `tests/test_blender_pipeline.py` for executable checks. Headless tests do not
+establish that a human inspected the Blender window or approved the result.
+
 ## Automated gates
 
 Local Windows evidence: 99 tests pass; an isolated wheel installation generates,

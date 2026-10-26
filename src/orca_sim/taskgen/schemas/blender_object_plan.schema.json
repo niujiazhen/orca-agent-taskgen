@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scene_id",
+    "source",
+    "table",
+    "objects"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "scene_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,63}$"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string"
+      }
+    },
+    "table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimensions",
+        "top_z",
+        "rgba",
+        "friction"
+      ],
+      "properties": {
+        "dimensions": {
+          "$ref": "#/$defs/dimensions"
+        },
+        "top_z": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 1.5
+        },
+        "rgba": {
+          "$ref": "#/$defs/rgba"
+        },
+        "friction": {
+          "$ref": "#/$defs/friction"
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "dimensions",
+          "position",
+          "rgba",
+          "image_bbox"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,39}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "dimensions": {
+            "$ref": "#/$defs/dimensions"
+          },
+          "position": {
+            "$ref": "#/$defs/vec3"
+          },
+          "quaternion": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "rgba": {
+            "$ref": "#/$defs/rgba"
+          },
+          "image_bbox": {
+            "$ref": "#/$defs/rgba"
+          },
+          "mass": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 5
+          },
+          "friction": {
+            "$ref": "#/$defs/friction"
+          },
+          "details": {
+            "type": "string",
+            "maxLength": 3000
+          }
+        }
+      }
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0.002,
+        "maximum": 3
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "rgba": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "friction": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      },
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

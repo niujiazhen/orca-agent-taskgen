@@ -1,0 +1,14 @@
+{
+  "status": "exported",
+  "blender_version": "4.5.15 LTS",
+  "saved_project_sha256": "f21ac7c5423b557d29b42ebf671b62f78ee2cb46be9a9eb3c976f4004f7f9f75",
+  "manual_review": "not inferred; exporter only reads saved disk state",
+  "objects": [
+    {
+      "id": "cup_1",
+      "visual_triangles": 1532,
+      "collision_vertices": 169,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    }
+  ]
+}

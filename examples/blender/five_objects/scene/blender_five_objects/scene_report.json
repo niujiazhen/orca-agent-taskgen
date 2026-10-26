@@ -1,0 +1,40 @@
+{
+  "confirmation": "pending",
+  "layout": "approximate; awaiting user review",
+  "max_penetration_m": 0.00012050811183864085,
+  "objects": [
+    {
+      "drift_m": 0.0006474931889467435,
+      "id": "pen_1",
+      "speed_m_s": 0.0018248993329838528,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005156128905744496,
+      "id": "can_1",
+      "speed_m_s": 5.561294520810459e-08,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005155686136704225,
+      "id": "case_1",
+      "speed_m_s": 1.0888343702730155e-10,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005155927414423346,
+      "id": "cover_1",
+      "speed_m_s": 1.126272020692154e-11,
+      "supported": true
+    },
+    {
+      "drift_m": 0.000515599870692167,
+      "id": "gum_1",
+      "speed_m_s": 6.250851811750424e-09,
+      "supported": true
+    }
+  ],
+  "physics": "pass",
+  "status": "needs_confirmation",
+  "steps": 2000
+}

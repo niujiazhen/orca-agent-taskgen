@@ -22,6 +22,21 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    blender_parser = subparsers.add_parser("blender", help="build, review and export local Blender mesh scenes (scene display only)")
+    blender_commands = blender_parser.add_subparsers(dest="blender_command", required=True)
+    build = blender_commands.add_parser("build")
+    build.add_argument("plan", type=Path)
+    build.add_argument("--script", type=Path, required=True)
+    build.add_argument("--output", type=Path, required=True)
+    build.add_argument("--no-open", action="store_true", help="headless testing only; interactive review remains pending")
+    build.add_argument("--blender", type=Path)
+    for name in ("open", "export"):
+        item = blender_commands.add_parser(name)
+        item.add_argument("directory", type=Path)
+        item.add_argument("--blender", type=Path)
+    doctor = blender_commands.add_parser("doctor")
+    doctor.add_argument("--blender", type=Path)
+
     capture = subparsers.add_parser("capture", help="start a local photo upload service; image interpretation stays in Codex")
     capture.add_argument("--lan", action="store_true")
     capture.add_argument("--port", type=int, default=8765)
@@ -126,7 +141,17 @@ def _generate_from_text(args: argparse.Namespace) -> dict:
 
 def main() -> None:
     args = parse_args()
-    if args.command == "capture":
+    if args.command == "blender":
+        from orca_sim.taskgen.blender import build_blender, open_blender, export_blender, find_blender
+        if args.blender_command == "build":
+            result = build_blender(args.plan, script=args.script, output=args.output, executable=args.blender, open_ui=not args.no_open)
+        elif args.blender_command == "open":
+            result = open_blender(args.directory, executable=args.blender)
+        elif args.blender_command == "export":
+            result = export_blender(args.directory, executable=args.blender)
+        else:
+            result = {"status":"available", "executable":str(find_blender(args.blender)), "supported_version":"4.5 LTS"}
+    elif args.command == "capture":
         from orca_sim.taskgen.photo_upload import serve_capture
         serve_capture(output=args.output, lan=args.lan, port=args.port, advertise_host=args.advertise_host, duration=args.duration)
         return

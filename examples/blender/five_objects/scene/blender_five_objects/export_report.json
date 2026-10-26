@@ -1,0 +1,38 @@
+{
+  "status": "exported",
+  "blender_version": "4.5.15 LTS",
+  "saved_project_sha256": "298e5a68d157f6608e27eba207a6a9d537430e20f7007a84a0df968b6cd82791",
+  "manual_review": "not inferred; exporter only reads saved disk state",
+  "objects": [
+    {
+      "id": "pen_1",
+      "visual_triangles": 2588,
+      "collision_vertices": 432,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "can_1",
+      "visual_triangles": 1994,
+      "collision_vertices": 388,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "case_1",
+      "visual_triangles": 900,
+      "collision_vertices": 172,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "cover_1",
+      "visual_triangles": 900,
+      "collision_vertices": 160,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "gum_1",
+      "visual_triangles": 860,
+      "collision_vertices": 177,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    }
+  ]
+}

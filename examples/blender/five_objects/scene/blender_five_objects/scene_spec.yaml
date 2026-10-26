@@ -1,0 +1,440 @@
+artifacts:
+- file: model.py
+  sha256: 5250c7a3ce782b543567258d165af6e54fdaec7dc60296128e8c51000516f763
+- file: object_plan.json
+  sha256: 14a9dac7d84126ec650da93c6566b7ac1b0145c7f3f9c9c8fdb68681acb1a38f
+- file: project.blend
+  sha256: 298e5a68d157f6608e27eba207a6a9d537430e20f7007a84a0df968b6cd82791
+- file: blender_preview.png
+  sha256: 90d2310fc03bae89c6ddc2883547cf36192ebf7bb295690abf42ab88af10c990
+- file: export_report.json
+  sha256: 6715ce48851ca2c795afde8e86091a76544c95bdaef1487f8b57fdefa23e1a59
+confirmed: false
+notes:
+- Real user-supplied phone photograph, published at the user request. Approximate
+  local agent-authored geometry, not image-to-mesh reconstruction.
+- Scale uses an assumed 14 cm pen. Sizes, mass and friction are not measurements.
+- Preserves the previously approved 3 cm pen displacement toward the bottom of the
+  source photo.
+- Boxes are replaced by rounded, multi-part visual models; one convex hull per object
+  remains a collision approximation.
+- No manual Blender review of this new version has been recorded; final confirmation
+  remains pending.
+- Approximate geometry authored by the agent and exported from the saved Blender project.
+- One convex collision hull per object; mass and friction are explicit assumptions.
+  No RL task is included.
+- Final MuJoCo visual confirmation remains pending.
+objects:
+- category: mesh
+  dimensions:
+  - 0.14000000059604645
+  - 0.008999999612569809
+  - 0.009000004269182682
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.06999999284744263
+      - -0.0045000044628977776
+      - -0.004500017035752535
+    - - 0.07000000774860382
+      - 0.004499995149672031
+      - 0.004499987233430147
+    collision:
+      file: assets/pen_1_collision.obj
+      sha256: 9f338097c032c3d815384e3a487f3484e69af60f392e920fe5e323631b482595
+    collision_method: convex_hull
+    visuals:
+    - file: assets/pen_1_visual_0_0.obj
+      rgba:
+      - 0.03500000014901161
+      - 0.03500000014901161
+      - 0.03500000014901161
+      - 1.0
+      sha256: 46f62744b11a9be782a2dd52cc4af6921919143a978948bd1eaf2a3614998ed6
+    - file: assets/pen_1_visual_1_0.obj
+      rgba:
+      - 0.6499999761581421
+      - 0.6700000166893005
+      - 0.6899999976158142
+      - 1.0
+      sha256: d161ad19dfaf442881a3203004bb2f80540fd39d006a59925f22387767a2b2be
+    - file: assets/pen_1_visual_2_0.obj
+      rgba:
+      - 0.6499999761581421
+      - 0.6700000166893005
+      - 0.6899999976158142
+      - 1.0
+      sha256: fe6c109001f60b5db038d22c3d79f185e53889682581b7b1baf6412a9bbe4333
+    - file: assets/pen_1_visual_3_0.obj
+      rgba:
+      - 0.03500000014901161
+      - 0.03500000014901161
+      - 0.03500000014901161
+      - 1.0
+      sha256: 389ae3398ebe4c172e8525a6c3779d63f46a26c8f5c320801a6679039b9c9606
+    - file: assets/pen_1_visual_4_0.obj
+      rgba:
+      - 0.6499999761581421
+      - 0.6700000166893005
+      - 0.6899999976158142
+      - 1.0
+      sha256: 32c25420dcbbc0ff316d8f8bc3d78a879467c46c2d694a776ec460890746332a
+  id: pen_1
+  image_bbox:
+  - 0.058
+  - 0.766
+  - 0.455
+  - 0.803
+  mass: 0.04
+  name: Black pen
+  position:
+  - -0.08699999749660492
+  - -0.16699999570846558
+  - 0.20499999821186066
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 0.9998477101325989
+  - 0.0
+  - 0.0
+  - 0.017452405765652657
+  rgba:
+  - 0.03500000014901161
+  - 0.03500000014901161
+  - 0.03500000014901161
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.05999999865889549
+  - 0.05999999865889549
+  - 0.11500001326203346
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.029999999329447746
+      - -0.029999999329447746
+      - -0.057500001043081284
+    - - 0.029999999329447746
+      - 0.029999999329447746
+      - 0.05750001221895218
+    collision:
+      file: assets/can_1_collision.obj
+      sha256: 0fb9bd5559a343b5fc3e4bca5436c3e28bde117f6d2b0283a32395d16c1f2538
+    collision_method: convex_hull
+    visuals:
+    - file: assets/can_1_visual_0_0.obj
+      rgba:
+      - 0.6499999761581421
+      - 0.6700000166893005
+      - 0.6899999976158142
+      - 1.0
+      sha256: 60abd22d916ef113d64c8308f35e366c75f41e9559f3440b40b6ecccdd22b764
+    - file: assets/can_1_visual_1_0.obj
+      rgba:
+      - 0.6499999761581421
+      - 0.6700000166893005
+      - 0.6899999976158142
+      - 1.0
+      sha256: 37ef83d534841f50a5df69198a47c4c03e66ce5297c60b6913b1e4f32e4d08af
+    - file: assets/can_1_visual_2_0.obj
+      rgba:
+      - 0.7699999809265137
+      - 0.7799999713897705
+      - 0.7599999904632568
+      - 1.0
+      sha256: 7547544670c9bd0f73b8d1b3a4cb3afc13597cdc47e1e715045a07bef5305f2a
+    - file: assets/can_1_visual_3_0.obj
+      rgba:
+      - 0.44999998807907104
+      - 0.46000000834465027
+      - 0.44999998807907104
+      - 1.0
+      sha256: 76c757d44ecdea4c2b5e76ea8cbf597b83ea2e0cfd957fb22fd1e5ec3903f979
+  id: can_1
+  image_bbox:
+  - 0.631
+  - 0.221
+  - 0.975
+  - 0.413
+  mass: 0.04
+  name: Soda can
+  position:
+  - 0.10499999672174454
+  - 0.07000000029802322
+  - 0.257999986410141
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.6499999761581421
+  - 0.6700000166893005
+  - 0.6899999976158142
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.054999999701976776
+  - 0.03200000151991844
+  - 0.023000013083219528
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.02749999426305294
+      - -0.01599999889731407
+      - -0.011500021442770958
+    - - 0.027500005438923836
+      - 0.01600000262260437
+      - 0.01149999164044857
+    collision:
+      file: assets/case_1_collision.obj
+      sha256: ae588b12936d8a2f6be1febb03e3d7c77d0cfc486b143eb7975a578ff5be87d0
+    collision_method: convex_hull
+    visuals:
+    - file: assets/case_1_visual_0_0.obj
+      rgba:
+      - 0.9399999976158142
+      - 0.9300000071525574
+      - 0.8799999952316284
+      - 1.0
+      sha256: ffee5b95076f13d2ed64b02dc9a88a8e4f717aaeaccbbc0a89807c4be5ea5141
+    - file: assets/case_1_visual_1_0.obj
+      rgba:
+      - 0.9399999976158142
+      - 0.9300000071525574
+      - 0.8799999952316284
+      - 1.0
+      sha256: 1d016fa52e09270ea7831cb5fe0b5866149f1327a898f98c45dc9d7dda903019
+    - file: assets/case_1_visual_2_0.obj
+      rgba:
+      - 0.5299999713897705
+      - 0.5299999713897705
+      - 0.5
+      - 1.0
+      sha256: 9538df9bf076ad6f7b0abc4c598d82f34024c486dbca35913497246f50ad9180
+  id: case_1
+  image_bbox:
+  - 0.522
+  - 0.724
+  - 0.662
+  - 0.854
+  mass: 0.04
+  name: Earbud charging case
+  position:
+  - 0.032999999821186066
+  - -0.14000000059604645
+  - 0.21199999749660492
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 0.7372773289680481
+  - 0.0
+  - 0.0
+  - 0.6755902171134949
+  rgba:
+  - 0.9399999976158142
+  - 0.9300000071525574
+  - 0.8799999952316284
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.2900000214576721
+  - 0.1900000274181366
+  - 0.011999997310340405
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.14500001072883606
+      - -0.0950000137090683
+      - -0.005999993532896042
+    - - 0.14500001072883606
+      - 0.0950000137090683
+      - 0.006000003777444363
+    collision:
+      file: assets/cover_1_collision.obj
+      sha256: 86eb95c0a07ba77c78a15e93a9949f8e52db47f2cf89ec51045389c119462e6d
+    collision_method: convex_hull
+    visuals:
+    - file: assets/cover_1_visual_0_0.obj
+      rgba:
+      - 0.49000000953674316
+      - 0.49000000953674316
+      - 0.4099999964237213
+      - 1.0
+      sha256: b2b12b1c93231dedaff4ad39dc45952dcc63f3f5c505ba70d92d6ab2c47f997f
+    - file: assets/cover_1_visual_1_0.obj
+      rgba:
+      - 0.3799999952316284
+      - 0.3799999952316284
+      - 0.3199999928474426
+      - 1.0
+      sha256: f9d6b49c2dee65af924d2c7ba5e864ca242968c1b2a689b2629401b53ec7bb27
+    - file: assets/cover_1_visual_2_0.obj
+      rgba:
+      - 0.3799999952316284
+      - 0.3799999952316284
+      - 0.3199999928474426
+      - 1.0
+      sha256: 1344edeb7593eeab3b69ff9624259f58d5b0e4ec8685a72f14e364be1579c911
+  id: cover_1
+  image_bbox:
+  - 0.003
+  - 0.123
+  - 0.751
+  - 0.726
+  mass: 0.04
+  name: Tablet cover
+  position:
+  - -0.04500000178813934
+  - 0.029999999329447746
+  - 0.20649999380111694
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 0.8703556656837463
+  - 0.0
+  - 0.0
+  - -0.4924236238002777
+  rgba:
+  - 0.49000000953674316
+  - 0.49000000953674316
+  - 0.4099999964237213
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.05999999865889549
+  - 0.05024999938905239
+  - 0.08999999985098839
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.029999997466802597
+      - -0.025249997153878212
+      - -0.04499999061226845
+    - - 0.030000001192092896
+      - 0.02500000223517418
+      - 0.04500000923871994
+    collision:
+      file: assets/gum_1_collision.obj
+      sha256: 8b321321a7f68a1a0ffb8993c408d02c3dc39267161bd6d87b83550274722001
+    collision_method: convex_hull
+    visuals:
+    - file: assets/gum_1_visual_0_0.obj
+      rgba:
+      - 0.07999999821186066
+      - 0.3499999940395355
+      - 0.1899999976158142
+      - 1.0
+      sha256: a2e6794c6fa27ce1274842f21284c08edb0fdc99d69b10793b05e5a506daf703
+    - file: assets/gum_1_visual_1_0.obj
+      rgba:
+      - 0.07999999821186066
+      - 0.20000000298023224
+      - 0.10999999940395355
+      - 1.0
+      sha256: a5f5a3c612bc915cc9b9f83422dde015b04d11f55db039498d7593c0afa8298d
+    - file: assets/gum_1_visual_2_0.obj
+      rgba:
+      - 0.75
+      - 0.8199999928474426
+      - 0.6700000166893005
+      - 1.0
+      sha256: 36d7c7d47a15cd8a2609f933bad3e873bbd0bcce303b1087aef6a6c3ac6d9ace
+  id: gum_1
+  image_bbox:
+  - 0.714
+  - 0.622
+  - 0.979
+  - 0.769
+  mass: 0.04
+  name: Gum container
+  position:
+  - 0.11999999731779099
+  - -0.09000000357627869
+  - 0.24549999833106995
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 0.9975640773773193
+  - 0.0
+  - 0.0
+  - -0.06975648552179337
+  rgba:
+  - 0.07999999821186066
+  - 0.3499999940395355
+  - 0.1899999976158142
+  - 1.0
+  support: table
+questions: []
+scale_reference: null
+scene_id: blender_five_objects
+schema_version: 2
+source:
+  image: source.png
+  sha256: 33bc3195d7b70d8cfb4a6940f770bfb060d9e886e0008bedabe8fbb9a9d5e259
+table:
+  dimensions:
+  - 0.6000000238418579
+  - 0.5
+  - 0.019999999552965164
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  provenance:
+    dimensions: blender_saved
+    friction: user_input
+    rgba: blender_saved
+    top_z: blender_saved
+  rgba:
+  - 0.8700000047683716
+  - 0.8600000143051147
+  - 0.8199999928474426
+  - 1.0
+  top_z: 0.1999999973922968

@@ -36,6 +36,8 @@ def create_photo_task(scene_directory, *, output, family, object_id, target_xy=N
     scene = PhotoScene(scene_directory)
     spec = scene.spec
     scene.close()
+    if spec["schema_version"] == 2:
+        raise ContractError("Blender mesh scenes currently support scene display only; RL tasks are not supported")
     if not spec["confirmed"] or spec["questions"]:
         raise ContractError("Scene must be confirmed before creating a task")
     report = check_scene(scene_directory)
@@ -90,7 +92,7 @@ def _write_task(spec: dict, output, source_dir: Path) -> Path:
         warnings.append("Object may exceed the single hand's grasp span; geometry was preserved. Script success is not guaranteed.")
     write_json(bundle/"manifest.json", {"manifest_version": 3, "schema_version": 3, "env_id": spec["task"]["env_id"],
         "family": spec["task"]["family"], "scene_id": scene["scene_id"], "scene_sha256": content_hash(scene),
-        "spec_sha256": content_hash(spec), "requires": {"orca_sim": "==0.3.0", "mujoco": "==3.13.0"},
+        "spec_sha256": content_hash(spec), "requires": {"orca_sim": "==0.4.0", "mujoco": "==3.13.0"},
         "object_order": [o["id"] for o in scene["objects"]], "target_object_id": spec["task"]["object_id"],
         "action_shape": [23], "action_fields": ["wrist_translation_delta[3]", "wrist_rotation_delta[3]", "hand_targets[17]"],
         "observation_shape": [135], "observation_fields": OBSERVATION_FIELDS, "warnings": warnings,

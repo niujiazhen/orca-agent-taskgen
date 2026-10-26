@@ -1,5 +1,9 @@
 # Phone photo to MuJoCo: user tutorial
 
+For the v0.4 editable Blender modeling and manual review stage, follow the
+[Blender workflow tutorial](BLENDER_WORKFLOW.md). This page describes shared
+phone capture and the original primitive/RL path, which remains available.
+
 Turn a phone photograph into a tabletop simulation with up to five rigid
 objects. The workflow produces a source image, object annotations, a structured
 scene specification, a MuJoCo model, a physics report, and a rotating preview.
