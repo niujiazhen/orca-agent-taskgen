@@ -192,7 +192,8 @@ def generate_mesh_scene(spec_path, output):
     (bundle/"scene_spec.yaml").write_text(yaml.safe_dump(spec, sort_keys=True, allow_unicode=True), encoding="utf-8")
     (bundle/"scene.xml").write_text(xml, encoding="utf-8")
     annotate_scene(bundle, spec)
-    write_json(bundle/"manifest.json", {"kind":"scene", "schema_version":2, "package_version":"0.4.0", "scene_id":spec["scene_id"],
+    write_json(bundle/"manifest.json", {"kind":"scene", "schema_version":2, "package_version":"0.4.1", "scene_id":spec["scene_id"],
+               "object_catalog":"open", "objects":[{"id":o["id"], "name":o["name"], "geometry":"mesh"} for o in spec["objects"]],
                "spec_sha256":content_hash(spec), "model_sha256":digest(bundle/"scene.xml"), "validation":"pending", "collision_model":"one convex hull per rigid object; cavities may be filled",
                "files":sorted(set(names+['scene_spec.yaml','scene.xml','manifest.json','scene_report.json','annotated.png']))})
     write_json(bundle/"scene_report.json", {"physics":"pending", "confirmation":"confirmed" if spec["confirmed"] else "pending"})

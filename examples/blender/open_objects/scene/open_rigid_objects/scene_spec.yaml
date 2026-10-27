@@ -1,0 +1,383 @@
+artifacts:
+- file: model.py
+  sha256: 10cee2cc633f258627c6c565f9ce6a05ef70c7688cd725cf27c35a6860b7bd86
+- file: object_plan.json
+  sha256: 3b1416304a87d5c66608e073dc2ae791ecac5a46eee7e42ecf23bdde6f630417
+- file: project.blend
+  sha256: 7806cb9ca627b1bfeecfbb8b8a0ad527c3688a1af0bdcba23d1fa7e9ea32b07d
+- file: blender_preview.png
+  sha256: fba89c77561484e32bef40e44ae20dcbfd02e8d98576fff6c7f2186a45c3e649
+- file: export_report.json
+  sha256: 99c60484b9e3c7def00340bb20738e9b9b2f702f7635843c7c6001d2543d5ef9
+confirmed: false
+notes:
+- Synthetic Blender-rendered reference, not a real photograph or evidence of image
+  recognition.
+- These labels are examples rather than a registered supported-object list. The agent
+  writes new geometry for other rigid objects.
+- Dimensions, mass and friction are authoring assumptions. Scissors remain one rigid
+  object in their displayed pose.
+- One convex hull per object fills holes and concavities. Manual Blender review and
+  final scene confirmation are pending.
+- Approximate geometry authored by the agent and exported from the saved Blender project.
+- One convex collision hull per object; mass and friction are explicit assumptions.
+  No RL task is included.
+- Final MuJoCo visual confirmation remains pending.
+objects:
+- category: mesh
+  dimensions:
+  - 0.10900000110268593
+  - 0.07000000029802322
+  - 0.07999999821186066
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.03500000014901161
+      - -0.03500000014901161
+      - -0.03999999910593033
+    - - 0.07400000095367432
+      - 0.03500000014901161
+      - 0.03999999910593033
+    collision:
+      file: assets/cup_1_collision.obj
+      sha256: c354358ee82cc91e07c55ec85ec9cdf7a8755f65889bd3750e618b68837f0d7d
+    collision_method: convex_hull
+    visuals:
+    - file: assets/cup_1_visual_0.obj
+      rgba:
+      - 0.1599999964237213
+      - 0.46000000834465027
+      - 0.7400000095367432
+      - 1.0
+      sha256: eb9d51baed06a8d4b9c4519cef8cdce21c34013b88c14ffe11279fc1bf78835f
+  id: cup_1
+  image_bbox:
+  - 0.359170218706131
+  - 0.23258190393447875
+  - 0.4586662447452545
+  - 0.36999995470047
+  mass: 0.04
+  name: Cup with loop handle
+  position:
+  - -0.25
+  - 0.12999999523162842
+  - 0.24050000309944153
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.1599999964237213
+  - 0.46000000834465027
+  - 0.7400000095367432
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.15200000256299973
+  - 0.09200000762939453
+  - 0.00800000037997961
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.06700000166893005
+      - -0.046000003814697266
+      - -0.004000000189989805
+    - - 0.08500000089406967
+      - 0.046000003814697266
+      - 0.004000000189989805
+    collision:
+      file: assets/scissors_1_collision.obj
+      sha256: e6ee1f210c507c131d713a0e5f75b9bd0efb4bab3d8cfc7b9736fee39d331c17
+    collision_method: convex_hull
+    visuals:
+    - file: assets/scissors_1_visual_0.obj
+      rgba:
+      - 0.6800000071525574
+      - 0.7099999785423279
+      - 0.7400000095367432
+      - 1.0
+      sha256: 39c059690cbde9a897b7a4534c40aab3c73e1f634c1e8ce92868fc561d46ca20
+    - file: assets/scissors_1_visual_1.obj
+      rgba:
+      - 0.11999999731779099
+      - 0.4300000071525574
+      - 0.23999999463558197
+      - 1.0
+      sha256: 4b244e05a1f0b8251ff561387fc5191825132961d7b57f0c62256cae70a48ca7
+    - file: assets/scissors_1_visual_2.obj
+      rgba:
+      - 0.3499999940395355
+      - 0.3700000047683716
+      - 0.38999998569488525
+      - 1.0
+      sha256: 5a57a1474352ea4ece8238d991368c7af0b255848af3aa5289d773abbbceef0f
+  id: scissors_1
+  image_bbox:
+  - 0.46800225019454955
+  - 0.35918890476226806
+  - 0.6175001358985901
+  - 0.4723154401779175
+  mass: 0.04
+  name: Scissors in a fixed rigid pose
+  position:
+  - -0.03999999910593033
+  - 0.12999999523162842
+  - 0.2045000046491623
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.6800000071525574
+  - 0.7099999785423279
+  - 0.7400000095367432
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.0560000017285347
+  - 0.14499999582767487
+  - 0.022000007331371307
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.02800000086426735
+      - -0.07249999791383743
+      - -0.011000001803040504
+    - - 0.02800000086426735
+      - 0.07249999791383743
+      - 0.011000005528330803
+    collision:
+      file: assets/remote_1_collision.obj
+      sha256: d6282f1b38030afabe337e7a2c63fb4aea5275d22a60b56519696408e6e8f57a
+    collision_method: convex_hull
+    visuals:
+    - file: assets/remote_1_visual_0.obj
+      rgba:
+      - 0.07000000029802322
+      - 0.07500000298023224
+      - 0.08500000089406967
+      - 1.0
+      sha256: 70285e01612481e88404f90bb53632773464aeceafd916a598149368d40cedd7
+    - file: assets/remote_1_visual_1.obj
+      rgba:
+      - 0.75
+      - 0.07999999821186066
+      - 0.05999999865889549
+      - 1.0
+      sha256: eace0a6d59a370fe6a1865f6de855fc03237629f215446c8e596e20a18161da6
+    - file: assets/remote_1_visual_2.obj
+      rgba:
+      - 0.6200000047683716
+      - 0.6399999856948853
+      - 0.6800000071525574
+      - 1.0
+      sha256: 5831ffb6579911608b03cc6a8b843997784b09015201802c82bc1e60dcd8a568
+  id: remote_1
+  image_bbox:
+  - 0.6411319279670715
+  - 0.46627675533294677
+  - 0.7655350065231323
+  - 0.5885209238529205
+  mass: 0.04
+  name: Remote control
+  position:
+  - 0.23000000417232513
+  - 0.10000000149011612
+  - 0.21150000393390656
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.07000000029802322
+  - 0.07500000298023224
+  - 0.08500000089406967
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.09430000185966492
+  - 0.0657045766711235
+  - 0.09400001540780067
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.04318658635020256
+      - -0.03285228833556175
+      - -0.04500000178813934
+    - - 0.05111341550946236
+      - 0.03285228833556175
+      - 0.04900001361966133
+    collision:
+      file: assets/container_1_collision.obj
+      sha256: 99b24a59d369c20a6e6874f605ced937e2cedc84714c34ee68407500073a8d39
+    collision_method: convex_hull
+    visuals:
+    - file: assets/container_1_visual_0.obj
+      rgba:
+      - 0.8600000143051147
+      - 0.41999998688697815
+      - 0.11999999731779099
+      - 1.0
+      sha256: ec343b366dcec3b2787e48b3aff1ca77b360b4995ff754341b0bb63574569ba5
+    - file: assets/container_1_visual_1.obj
+      rgba:
+      - 0.1899999976158142
+      - 0.2199999988079071
+      - 0.23000000417232513
+      - 1.0
+      sha256: 3abe42eb831efe25169eb4b9876cbe2ae10447828f7219c9dafb9a12e836d6b2
+  id: container_1
+  image_bbox:
+  - 0.2794534170627594
+  - 0.3969729447364807
+  - 0.3703588938713074
+  - 0.526876608133316
+  mass: 0.04
+  name: Asymmetric narrow-neck container
+  position:
+  - -0.17000000178813934
+  - -0.12999999523162842
+  - 0.24549999833106995
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.8600000143051147
+  - 0.41999998688697815
+  - 0.11999999731779099
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.06400000303983688
+  - 0.055425625294446945
+  - 0.017999999225139618
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.03200000151991844
+      - -0.027712812647223473
+      - -0.008999999612569809
+    - - 0.03200000151991844
+      - 0.027712812647223473
+      - 0.008999999612569809
+    collision:
+      file: assets/nut_1_collision.obj
+      sha256: 202386c6c58f671f7331a904becdefc41fe9e3788a704ab0182cf0751e5cf2e8
+    collision_method: convex_hull
+    visuals:
+    - file: assets/nut_1_visual_0.obj
+      rgba:
+      - 0.6000000238418579
+      - 0.6299999952316284
+      - 0.6700000166893005
+      - 1.0
+      sha256: 3e06a524aa046c88bc72d474673014a6c1ee794576f4aa4682fc07d68f2bda02
+  id: nut_1
+  image_bbox:
+  - 0.49381040573120116
+  - 0.5727068090438843
+  - 0.5628565645217896
+  - 0.6495781934261322
+  mass: 0.04
+  name: Hexagonal nut
+  position:
+  - 0.14000000059604645
+  - -0.12999999523162842
+  - 0.2094999998807907
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.6000000238418579
+  - 0.6299999952316284
+  - 0.6700000166893005
+  - 1.0
+  support: table
+questions: []
+scale_reference: null
+scene_id: open_rigid_objects
+schema_version: 2
+source:
+  image: source.png
+  sha256: c375c9b886733e1da6ca78446ed9b174514244e689a87066e7832b147a165b14
+table:
+  dimensions:
+  - 0.800000011920929
+  - 0.6000000238418579
+  - 0.019999999552965164
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  provenance:
+    dimensions: blender_saved
+    friction: user_input
+    rgba: blender_saved
+    top_z: blender_saved
+  rgba:
+  - 0.8600000143051147
+  - 0.8399999737739563
+  - 0.7799999713897705
+  - 1.0
+  top_z: 0.1999999973922968

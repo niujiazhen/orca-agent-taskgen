@@ -40,7 +40,32 @@ including shapes outside those categories. Models approximate photo colors,
 orientation and layout. Stacking, insertion, tool use and two-hand tasks remain
 outside the supported RL workflows.
 
-## New: editable Blender modeling (v0.4)
+## New object types through Blender (v0.4.1)
+
+Object names in the Blender workflow are open-ended. A keyboard, shaker cup,
+mouse, speaker, scissors, remote, or irregular container does not need a
+preinstalled object model. The agent authors its geometry from the photo in
+Blender, and MuJoCo receives the exported meshes. The six legacy primitive
+categories apply only to the separate primitive/RL workflow.
+
+| Desktop objects | Other custom rigid shapes |
+|---|---|
+| ![Keyboard, shaker cup, mouse, speaker and pen in MuJoCo](examples/blender/desktop_objects/scene/desktop_rigid_objects/scene_preview.png) | ![Cup, scissors, remote, irregular container and nut in MuJoCo](examples/blender/open_objects/scene/open_rigid_objects/scene_preview.png) |
+
+[Desktop object geometry demo](examples/blender/desktop_objects/README.md) ·
+[Open-ended shape demo](examples/blender/open_objects/README.md)
+
+Both references above are synthetic and demonstrate authoring/export, not
+reconstruction from real photos. The original real-photo demo is preserved
+below. Both new scenes pass physics validation; human review is pending.
+
+If an older installed plugin still says only six classes are supported, refresh
+its marketplace and installed package as described in the
+[agent quickstart](docs/CODEX_QUICKSTART.md#older-plugin-or-checkout). Reopen a
+chat to load the updated skill. Runtime `blender doctor` now reports
+`photo_backend: blender_mesh`, `object_catalog: open`, and the package version.
+
+## Editable Blender modeling
 
 The default agent photo workflow can now create a local Blender project before
 generating MuJoCo. The agent authors geometry and base colors from the image,

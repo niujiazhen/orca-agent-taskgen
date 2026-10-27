@@ -35,6 +35,10 @@ wake an idle chat: explain that the user should say "Continue" after uploading.
 
 - Default photo mode: up to five common rigid objects, editable Blender models,
   approximate geometry/base colors, one convex collision hull per object.
+- Object names are open-ended. Model recognizable keyboard keys, shaker lids,
+  mouse shells, speaker drivers, scissor blades/loops and remote keys instead
+  of rejecting these types or silently substituting entire boxes. "Simulation
+  environment" alone is a mesh-scene request, not an instruction to use legacy RL.
 - Mesh SceneSpec v2 is scene display only. Never claim RL/grasp readiness.
 - Legacy primitive photo RL and text tasks remain available on explicit request.
 - Never mark user review complete from a physics pass, headless build, or window

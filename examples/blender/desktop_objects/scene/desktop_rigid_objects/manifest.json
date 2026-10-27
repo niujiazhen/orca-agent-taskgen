@@ -1,0 +1,77 @@
+{
+  "collision_model": "one convex hull per rigid object; cavities may be filled",
+  "files": [
+    "annotated.png",
+    "assets/keyboard_1_collision.obj",
+    "assets/keyboard_1_visual_0.obj",
+    "assets/keyboard_1_visual_1.obj",
+    "assets/keyboard_1_visual_2.obj",
+    "assets/mouse_1_collision.obj",
+    "assets/mouse_1_visual_0.obj",
+    "assets/mouse_1_visual_1.obj",
+    "assets/mouse_1_visual_2.obj",
+    "assets/pen_1_collision.obj",
+    "assets/pen_1_visual_0.obj",
+    "assets/pen_1_visual_1.obj",
+    "assets/pen_1_visual_2.obj",
+    "assets/shaker_1_collision.obj",
+    "assets/shaker_1_visual_0.obj",
+    "assets/shaker_1_visual_1.obj",
+    "assets/shaker_1_visual_2.obj",
+    "assets/speaker_1_collision.obj",
+    "assets/speaker_1_visual_0.obj",
+    "assets/speaker_1_visual_1.obj",
+    "assets/speaker_1_visual_2.obj",
+    "assets/speaker_1_visual_3.obj",
+    "assets/speaker_1_visual_4.obj",
+    "blender_preview.png",
+    "collision_preview.png",
+    "export_report.json",
+    "manifest.json",
+    "model.py",
+    "object_plan.json",
+    "project.blend",
+    "scene.xml",
+    "scene_preview.mp4",
+    "scene_preview.png",
+    "scene_report.json",
+    "scene_spec.yaml",
+    "source.png"
+  ],
+  "kind": "scene",
+  "model_sha256": "f32d2315952cf61cadc1a63b72e588d65a2a1dcca0b9239463fbb261e0da23c9",
+  "object_catalog": "open",
+  "objects": [
+    {
+      "geometry": "mesh",
+      "id": "keyboard_1",
+      "name": "Keyboard with 104 individual keycaps"
+    },
+    {
+      "geometry": "mesh",
+      "id": "shaker_1",
+      "name": "Black shaker cup"
+    },
+    {
+      "geometry": "mesh",
+      "id": "mouse_1",
+      "name": "Computer mouse"
+    },
+    {
+      "geometry": "mesh",
+      "id": "speaker_1",
+      "name": "Desktop speaker"
+    },
+    {
+      "geometry": "mesh",
+      "id": "pen_1",
+      "name": "Black pen"
+    }
+  ],
+  "package_version": "0.4.1",
+  "preview_kind": "camera orbit; no task or policy",
+  "scene_id": "desktop_rigid_objects",
+  "schema_version": 2,
+  "spec_sha256": "04363b70cf4270488748dd54f721117d247b29b59966be6c163fbdc682183b3d",
+  "validation": "needs_confirmation"
+}

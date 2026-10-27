@@ -11,6 +11,31 @@ The default branch contains the Blender workflow. A feature-branch checkout
 or a separate marketplace-plugin installation is not needed for this route.
 Explicit user instructions about the task and platform always take priority.
 
+## Older plugin or checkout
+
+The Blender route accepts open-ended rigid object names. A six-category refusal
+indicates the legacy primitive route or an old installed skill, not a mesh
+import limitation. Read the current checkout's skill and Blender reference;
+require `orca_sim >=0.4.1`. `blender doctor` reports the actual package version,
+`photo_backend: blender_mesh`, and `object_catalog: open`.
+
+If the matching checkout is old, fetch the remote and fast-forward a clean
+default branch; preserve uncommitted work or a user's custom branch. Do not
+reinstall an obsolete checkout repeatedly. The v0.3 plugin cache is separate
+from the Python environment and is not updated by `pip install` alone.
+
+When the user is using the installed plugin, refresh the configured marketplace
+and installed plugin using the supported Codex commands:
+
+```text
+codex plugin marketplace upgrade orca-agent-taskgen
+codex plugin add orca-env-generator@orca-agent-taskgen
+```
+
+Use a new chat/session to load updated skills. Do not edit installed cache files
+by hand or restart the user's current app automatically. In the active task,
+follow the latest repository instructions and use the verified project runtime.
+
 ## 1. Establish a local workspace
 
 - Inspect the current folder and available tools. Reuse a checkout only when
@@ -109,6 +134,9 @@ Inspect the uploaded image. Follow the
 [Blender authoring workflow](../.agents/skills/orca-env-generator/references/blender-workflow.md)
 to create the object plan and modeling script yourself. Keep uncertainties
 explicit and ask about shapes or omissions only where they affect the scene.
+New labels are not a reason to fall back to `scene draft --objects` or
+`generate-text`. Author the distinctive visible parts in Blender and verify
+every retained name/ID in the exported object audit and MuJoCo manifest.
 
 `blender build` opens the generated project. The user only needs to inspect it,
 optionally edit, and save. Wait for their saved-state handoff, then export and

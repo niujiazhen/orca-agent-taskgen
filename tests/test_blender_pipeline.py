@@ -202,3 +202,61 @@ def test_three_failed_model_attempts_stop_and_preserve_logs(tmp_path,monkeypatch
 def test_missing_blender_has_actionable_error(tmp_path):
     with pytest.raises(ContractError,match='ORCA_BLENDER_PATH'):
         find_blender(tmp_path/'no-blender.exe')
+
+
+@pytest.mark.parametrize('example,scene_id',[
+    ('open_objects','open_rigid_objects'),
+    ('desktop_objects','desktop_rigid_objects'),
+])
+def test_new_object_types_are_portable_mujoco_meshes(tmp_path,example,scene_id):
+    import mujoco
+    source=Path(__file__).resolve().parents[1]/'examples/blender'/example/'scene'/scene_id
+    bundle=tmp_path/scene_id;shutil.copytree(source,bundle)
+    spec=load_scene_spec(bundle/'scene_spec.yaml')
+    manifest=json.loads((bundle/'manifest.json').read_text())
+    report=json.loads((bundle/'export_report.json').read_text())
+    assert manifest['object_catalog']=='open'
+    assert [(o['id'],o['name']) for o in manifest['objects']]==[(o['id'],o['name']) for o in spec['objects']]
+    assert {o['id'] for o in report['objects']}=={o['id'] for o in spec['objects']}
+    assert all(o['geometry_source']=='saved_blender_mesh' and o['visual_parts'] for o in report['objects'])
+    scene=load_scene(bundle)
+    try:
+        for obj in spec['objects']:
+            body=scene.model.body(f"scene_{obj['id']}").id
+            geoms=np.flatnonzero(scene.model.geom_bodyid==body)
+            assert np.all(scene.model.geom_type[geoms]==mujoco.mjtGeom.mjGEOM_MESH)
+            assert len(geoms)==len(obj['geometry']['visuals'])+1
+        scene.step(500)
+        assert scene.render().shape==(480,640,3)
+    finally:scene.close()
+    assert check_scene(bundle)['physics']=='pass'
+    if example=='desktop_objects':
+        keyboard=next(o for o in report['objects'] if o['id']=='keyboard_1')
+        assert len(keyboard['visual_parts'])==105  # Housing + 104 independently modeled keys.
+        exported=next(o for o in spec['objects'] if o['id']=='keyboard_1')
+        assert len(exported['geometry']['visuals'])==3  # Material batching, not 105 MuJoCo meshes.
+
+
+def test_open_catalog_accepts_an_unregistered_semantic_name(tmp_path):
+    from orca_sim.taskgen.blender import load_object_plan
+    source=Path(__file__).resolve().parents[1]/'examples/blender/open_objects'
+    plan=yaml.safe_load((source/'object_plan.yaml').read_text(encoding='utf-8'))
+    shutil.copy2(source/'source.png',tmp_path/'source.png')
+    plan['objects'][0]['name']='A previously unseen custom-shaped rigid object'
+    path=tmp_path/'plan.yaml';path.write_text(yaml.safe_dump(plan))
+    assert load_object_plan(path)['objects'][0]['name']==plan['objects'][0]['name']
+
+
+def test_blender_authors_non_catalog_shapes_without_runtime_template_registration(tmp_path):
+    try:blender=find_blender()
+    except ContractError:pytest.skip('Blender 4.5 LTS is not available')
+    source=Path(__file__).resolve().parents[1]/'examples/blender/open_objects'
+    workspace=tmp_path/'new-shapes'
+    build_blender(source/'object_plan.yaml',script=source/'model.py',output=workspace,executable=blender,open_ui=False)
+    result=export_blender(workspace,executable=blender)
+    spec=load_scene_spec(Path(result['spec']))
+    assert {o['name'] for o in spec['objects']}=={
+        'Cup with loop handle','Scissors in a fixed rigid pose','Remote control',
+        'Asymmetric narrow-neck container','Hexagonal nut'}
+    bundle=generate_scene(Path(result['spec']),output=tmp_path/'generated')
+    assert check_scene(bundle)['physics']=='pass'

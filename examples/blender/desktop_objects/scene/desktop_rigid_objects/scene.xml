@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<mujoco model="desktop_rigid_objects">
+  <compiler angle="radian" autolimits="true" inertiafromgeom="true" inertiagrouprange="3 3" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" iterations="100" />
+  <asset>
+    <mesh name="keyboard_1_collision" file="assets/keyboard_1_collision.obj" inertia="convex" />
+    <mesh name="keyboard_1_visual_0" file="assets/keyboard_1_visual_0.obj" inertia="convex" />
+    <material name="keyboard_1_visual_0" rgba="0.070000000298 0.0750000029802 0.0850000008941 1" specular=".25" shininess=".3" />
+    <mesh name="keyboard_1_visual_1" file="assets/keyboard_1_visual_1.obj" inertia="convex" />
+    <material name="keyboard_1_visual_1" rgba="0.550000011921 0.569999992847 0.600000023842 1" specular=".25" shininess=".3" />
+    <mesh name="keyboard_1_visual_2" file="assets/keyboard_1_visual_2.obj" inertia="convex" />
+    <material name="keyboard_1_visual_2" rgba="0.639999985695 0.660000026226 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="shaker_1_collision" file="assets/shaker_1_collision.obj" inertia="convex" />
+    <mesh name="shaker_1_visual_0" file="assets/shaker_1_visual_0.obj" inertia="convex" />
+    <material name="shaker_1_visual_0" rgba="0.035000000149 0.0399999991059 0.0450000017881 1" specular=".25" shininess=".3" />
+    <mesh name="shaker_1_visual_1" file="assets/shaker_1_visual_1.obj" inertia="convex" />
+    <material name="shaker_1_visual_1" rgba="0.070000000298 0.0750000029802 0.0799999982119 1" specular=".25" shininess=".3" />
+    <mesh name="shaker_1_visual_2" file="assets/shaker_1_visual_2.obj" inertia="convex" />
+    <material name="shaker_1_visual_2" rgba="0.0450000017881 0.0500000007451 0.054999999702 1" specular=".25" shininess=".3" />
+    <mesh name="mouse_1_collision" file="assets/mouse_1_collision.obj" inertia="convex" />
+    <mesh name="mouse_1_visual_0" file="assets/mouse_1_visual_0.obj" inertia="convex" />
+    <material name="mouse_1_visual_0" rgba="0.170000001788 0.189999997616 0.219999998808 1" specular=".25" shininess=".3" />
+    <mesh name="mouse_1_visual_1" file="assets/mouse_1_visual_1.obj" inertia="convex" />
+    <material name="mouse_1_visual_1" rgba="0.209999993443 0.230000004172 0.259999990463 1" specular=".25" shininess=".3" />
+    <mesh name="mouse_1_visual_2" file="assets/mouse_1_visual_2.obj" inertia="convex" />
+    <material name="mouse_1_visual_2" rgba="0.0500000007451 0.054999999702 0.0599999986589 1" specular=".25" shininess=".3" />
+    <mesh name="speaker_1_collision" file="assets/speaker_1_collision.obj" inertia="convex" />
+    <mesh name="speaker_1_visual_0" file="assets/speaker_1_visual_0.obj" inertia="convex" />
+    <material name="speaker_1_visual_0" rgba="0.0750000029802 0.0799999982119 0.0900000035763 1" specular=".25" shininess=".3" />
+    <mesh name="speaker_1_visual_1" file="assets/speaker_1_visual_1.obj" inertia="convex" />
+    <material name="speaker_1_visual_1" rgba="0.20000000298 0.209999993443 0.230000004172 1" specular=".25" shininess=".3" />
+    <mesh name="speaker_1_visual_2" file="assets/speaker_1_visual_2.obj" inertia="convex" />
+    <material name="speaker_1_visual_2" rgba="0.109999999404 0.119999997318 0.129999995232 1" specular=".25" shininess=".3" />
+    <mesh name="speaker_1_visual_3" file="assets/speaker_1_visual_3.obj" inertia="convex" />
+    <material name="speaker_1_visual_3" rgba="0.280000001192 0.289999991655 0.310000002384 1" specular=".25" shininess=".3" />
+    <mesh name="speaker_1_visual_4" file="assets/speaker_1_visual_4.obj" inertia="convex" />
+    <material name="speaker_1_visual_4" rgba="0.119999997318 0.129999995232 0.140000000596 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_collision" file="assets/pen_1_collision.obj" inertia="convex" />
+    <mesh name="pen_1_visual_0" file="assets/pen_1_visual_0.obj" inertia="convex" />
+    <material name="pen_1_visual_0" rgba="0.0250000003725 0.0250000003725 0.0250000003725 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_visual_1" file="assets/pen_1_visual_1.obj" inertia="convex" />
+    <material name="pen_1_visual_1" rgba="0.649999976158 0.670000016689 0.689999997616 1" specular=".25" shininess=".3" />
+    <mesh name="pen_1_visual_2" file="assets/pen_1_visual_2.obj" inertia="convex" />
+    <material name="pen_1_visual_2" rgba="0.40000000596 0.419999986887 0.439999997616 1" specular=".25" shininess=".3" />
+  </asset>
+  <worldbody>
+    <light pos="0 -0.3 1.5" dir="0 0 -1" diffuse=".8 .8 .8" />
+    <geom name="floor" type="plane" size="2 2 .1" rgba=".22 .27 .33 1" contype="3" conaffinity="3" />
+    <geom name="photo_table" type="box" pos="0 0 0.189999997616" size="0.449999988079 0.34999999404 0.00999999977648" rgba="0.860000014305 0.839999973774 0.790000021458 1" friction="1.2 0.01 0.001" contype="3" conaffinity="3" solref=".01 1" solimp=".95 .99 .001" />
+    <body name="scene_keyboard_1" pos="-0.15000000596 -0.159999996424 0.209499999881" quat="1 0 0 0">
+      <freejoint name="scene_keyboard_1_freejoint" />
+      <geom name="scene_keyboard_1_geom" type="mesh" mesh="keyboard_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="keyboard_1_visual_0" type="mesh" mesh="keyboard_1_visual_0" material="keyboard_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="keyboard_1_visual_1" type="mesh" mesh="keyboard_1_visual_1" material="keyboard_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="keyboard_1_visual_2" type="mesh" mesh="keyboard_1_visual_2" material="keyboard_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_shaker_1" pos="-0.289999991655 0.15000000596 0.290499985218" quat="1 0 0 0">
+      <freejoint name="scene_shaker_1_freejoint" />
+      <geom name="scene_shaker_1_geom" type="mesh" mesh="shaker_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="shaker_1_visual_0" type="mesh" mesh="shaker_1_visual_0" material="shaker_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="shaker_1_visual_1" type="mesh" mesh="shaker_1_visual_1" material="shaker_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="shaker_1_visual_2" type="mesh" mesh="shaker_1_visual_2" material="shaker_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_mouse_1" pos="0.20000000298 -0.159999996424 0.215499997139" quat="1 0 0 0">
+      <freejoint name="scene_mouse_1_freejoint" />
+      <geom name="scene_mouse_1_geom" type="mesh" mesh="mouse_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="mouse_1_visual_0" type="mesh" mesh="mouse_1_visual_0" material="mouse_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="mouse_1_visual_1" type="mesh" mesh="mouse_1_visual_1" material="mouse_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="mouse_1_visual_2" type="mesh" mesh="mouse_1_visual_2" material="mouse_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_speaker_1" pos="0.289999991655 0.15000000596 0.270500004292" quat="1 0 0 0">
+      <freejoint name="scene_speaker_1_freejoint" />
+      <geom name="scene_speaker_1_geom" type="mesh" mesh="speaker_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="speaker_1_visual_0" type="mesh" mesh="speaker_1_visual_0" material="speaker_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="speaker_1_visual_1" type="mesh" mesh="speaker_1_visual_1" material="speaker_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="speaker_1_visual_2" type="mesh" mesh="speaker_1_visual_2" material="speaker_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="speaker_1_visual_3" type="mesh" mesh="speaker_1_visual_3" material="speaker_1_visual_3" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="speaker_1_visual_4" type="mesh" mesh="speaker_1_visual_4" material="speaker_1_visual_4" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+    <body name="scene_pen_1" pos="-0.0299999993294 0.15000000596 0.204999998212" quat="1 0 0 0">
+      <freejoint name="scene_pen_1_freejoint" />
+      <geom name="scene_pen_1_geom" type="mesh" mesh="pen_1_collision" group="3" rgba=".1 .8 .4 1" mass="0.04" friction="1.2 0.01 0.001" contype="3" conaffinity="3" condim="4" solref=".01 1" solimp=".95 .99 .001" />
+      <geom name="pen_1_visual_0" type="mesh" mesh="pen_1_visual_0" material="pen_1_visual_0" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="pen_1_visual_1" type="mesh" mesh="pen_1_visual_1" material="pen_1_visual_1" group="2" mass="0" contype="0" conaffinity="0" />
+      <geom name="pen_1_visual_2" type="mesh" mesh="pen_1_visual_2" material="pen_1_visual_2" group="2" mass="0" contype="0" conaffinity="0" />
+    </body>
+  </worldbody>
+</mujoco>

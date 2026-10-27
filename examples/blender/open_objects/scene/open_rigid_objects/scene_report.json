@@ -1,0 +1,40 @@
+{
+  "confirmation": "pending",
+  "layout": "approximate; awaiting user review",
+  "max_penetration_m": 2.560816966701296e-05,
+  "objects": [
+    {
+      "drift_m": 0.000515341664122778,
+      "id": "cup_1",
+      "speed_m_s": 2.4726602417976977e-07,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005157828036246303,
+      "id": "scissors_1",
+      "speed_m_s": 2.0519982021492786e-06,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005155947343426328,
+      "id": "remote_1",
+      "speed_m_s": 1.5086774500413874e-09,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005156274071318311,
+      "id": "container_1",
+      "speed_m_s": 1.9100156970597298e-07,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005170493278278728,
+      "id": "nut_1",
+      "speed_m_s": 2.2929202308849178e-05,
+      "supported": true
+    }
+  ],
+  "physics": "pass",
+  "status": "needs_confirmation",
+  "steps": 2000
+}

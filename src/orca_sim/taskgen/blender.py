@@ -116,7 +116,11 @@ def build_blender(plan_path, *, script, output, executable=None, open_ui=True):
         report_path.write_text(json.dumps({"status":"failed", "attempts":attempts+1}), encoding="utf-8")
         shutil.copy2(workspace/"build.log", workspace/f"build_attempt_{attempts+1}.log")
         raise
-    report_path.write_text(json.dumps({"status":"built", "attempts":attempts+1, "review":"pending"}), encoding="utf-8")
+    from orca_sim.taskgen.mesh_scene import digest
+    report_path.write_text(json.dumps({"status":"built", "attempts":attempts+1, "review":"pending",
+                           "backend":"blender_mesh", "object_catalog":"open",
+                           "objects":[{"id":o["id"], "name":o["name"]} for o in plan["objects"]],
+                           "model_script_sha256":digest(workspace/"model.py")}), encoding="utf-8")
     if open_ui:
         open_blender(workspace, executable=blender)
     return {"status":"needs_blender_review", "directory":str(workspace), "project":str(workspace/"project.blend"),

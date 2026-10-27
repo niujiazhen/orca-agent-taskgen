@@ -81,6 +81,21 @@ class BuildContext:
             mesh_object.data.materials.append(material(mesh_object.name, rgba))
         return mesh_object
 
+    def add_mesh(self, object_id, name, vertices, faces, rgba=None):
+        """Create an agent-defined mesh; no object-class/template lookup occurs."""
+        require(object_id in self.objects, f'Unregistered object ID: {object_id}')
+        require(vertices and faces, f'{name}: vertices and faces are required')
+        require(all(len(v) == 3 and all(math.isfinite(x) for x in v) for v in vertices),
+                f'{name}: vertices must be finite XYZ coordinates')
+        require(all(len(f) >= 3 and all(isinstance(i,int) and 0 <= i < len(vertices) for i in f) for f in faces),
+                f'{name}: faces must contain valid vertex indices')
+        mesh = bpy.data.meshes.new(name+' mesh')
+        mesh.from_pydata(vertices, [], faces)
+        mesh.update()
+        obj = bpy.data.objects.new(name,mesh)
+        bpy.context.scene.collection.objects.link(obj)
+        return self.add_part(object_id,obj,rgba)
+
 
 def setup_display(plan, workspace):
     scene = bpy.context.scene
@@ -240,6 +255,7 @@ def export_project(workspace):
         rigid = Matrix.LocRotScale(position,quaternion,Vector((1,1,1)))
         inverse = rigid.inverted()
         all_vertices, visuals, triangle_count = [], [], 0
+        visual_groups = defaultdict(lambda: {'vertices':[], 'faces':[]})
         for part_index,obj in enumerate(parts[oid]):
             evaluated, mesh = mesh_data(obj,depsgraph)
             try:
@@ -260,15 +276,20 @@ def export_project(workspace):
                         face.reverse()  # Keep mirrored edits, with outward winding.
                     by_color[tuple(rgba)].append(face)
                 triangle_count += sum(len(faces) for faces in by_color.values())
-                for color_index,(rgba,faces) in enumerate(by_color.items()):
-                    path = assets/f'{oid}_visual_{part_index}_{color_index}.obj'
+                for rgba,faces in by_color.items():
+                    group = visual_groups[rgba]
                     used = sorted({i for f in faces for i in f})
-                    remap = {old:new for new,old in enumerate(used)}
-                    write_obj(path,[vertices[i] for i in used],[[remap[i] for i in face] for face in faces])
-                    visuals.append(record(path,output)|{'rgba':list(rgba)})
+                    offset = len(group['vertices'])
+                    remap = {old:offset+new for new,old in enumerate(used)}
+                    group['vertices'].extend(vertices[i] for i in used)
+                    group['faces'].extend([remap[i] for i in face] for face in faces)
             finally:
                 evaluated.to_mesh_clear()
         require(triangle_count <= 20_000, f'{oid}: {triangle_count} triangles exceeds 20,000; simplify in Blender and save')
+        for color_index,(rgba,group) in enumerate(visual_groups.items()):
+            path = assets/f'{oid}_visual_{color_index}.obj'
+            write_obj(path,group['vertices'],group['faces'])
+            visuals.append(record(path,output)|{'rgba':list(rgba)})
         require(len(visuals) <= 128, f'{oid}: too many visual/material parts (maximum 128)')
         hull_vertices,hull_faces = collision_hull(all_vertices)
         collision = assets/f'{oid}_collision.obj'
@@ -281,7 +302,9 @@ def export_project(workspace):
             'provenance':{'geometry':'blender_saved','position':'blender_saved','dimensions':'blender_saved','rgba':'blender_saved',
                           'mass':'user_input' if 'mass' in item else 'catalog_default','friction':'user_input' if 'friction' in item else 'catalog_default'},
             'geometry':{'visuals':visuals,'collision':record(collision,output),'bounds':[lo,hi],'collision_method':'convex_hull'}})
-        stats.append({'id':oid,'visual_triangles':triangle_count,'collision_vertices':len(hull_vertices),
+        stats.append({'id':oid,'name':item['name'],'geometry_source':'saved_blender_mesh',
+                      'visual_parts':[p.name for p in parts[oid]],
+                      'visual_triangles':triangle_count,'collision_vertices':len(hull_vertices),
                       'collision_warning':'One convex hull per rigid body: holes and concavities may be filled.'})
     for name in ('source.png','model.py','object_plan.json','project.blend'):
         shutil.copy2(workspace/name,output/name)

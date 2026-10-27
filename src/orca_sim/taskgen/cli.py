@@ -150,7 +150,10 @@ def main() -> None:
         elif args.blender_command == "export":
             result = export_blender(args.directory, executable=args.blender)
         else:
-            result = {"status":"available", "executable":str(find_blender(args.blender)), "supported_version":"4.5 LTS"}
+            from importlib.metadata import version
+            result = {"status":"available", "executable":str(find_blender(args.blender)), "supported_version":"4.5 LTS",
+                      "package_version":version("orca_sim"), "photo_backend":"blender_mesh", "object_catalog":"open",
+                      "scope":"common rigid objects; no predefined class list; scene display only"}
     elif args.command == "capture":
         from orca_sim.taskgen.photo_upload import serve_capture
         serve_capture(output=args.output, lan=args.lan, port=args.port, advertise_host=args.advertise_host, duration=args.duration)

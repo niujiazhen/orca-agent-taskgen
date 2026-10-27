@@ -1,0 +1,434 @@
+artifacts:
+- file: model.py
+  sha256: 2acecc55de171ad4c0ef11d79d75a0dd2633ae9faf586fc9e5e016aecbd505d5
+- file: object_plan.json
+  sha256: 45c341abd9ae9399dff5462b9283f4916cc2b1e14867faa84dca278eb5273ac6
+- file: project.blend
+  sha256: 510950bc14fb532fe0d274c462f06c1a77e1635e0d753772d1521033161f9a47
+- file: blender_preview.png
+  sha256: 7866ca2815f7648afd0b5106faeb4b170398eb62cd6ed7c479da27f02349d821
+- file: export_report.json
+  sha256: ce8a6c602119accd816bbfff4c7ef79e0e8ba6d295ce0e99e242d940be489c42
+confirmed: false
+notes:
+- Synthetic reference rendered from a Blender script, not a reconstruction or recognition
+  result from an uploaded photograph.
+- 'This fixture models the object types named in user feedback: keyboard, black shaker,
+  mouse, speaker and pen.'
+- Additional supplied types (scissors, remote, can) are demonstrated in the open_objects
+  and five_objects fixtures.
+- Dimensions, color and physical properties are assumptions; no new photo or measurements
+  were supplied.
+- Shapes remain rigid, including the shaker lid, buttons, wheel and speaker cones.
+  Manual review and final confirmation are pending.
+- Approximate geometry authored by the agent and exported from the saved Blender project.
+- One convex collision hull per object; mass and friction are explicit assumptions.
+  No RL task is included.
+- Final MuJoCo visual confirmation remains pending.
+objects:
+- category: mesh
+  dimensions:
+  - 0.4000000059604645
+  - 0.14000000059604645
+  - 0.01800000388175249
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.20000000298023224
+      - -0.07000000029802322
+      - -0.009000004269182682
+    - - 0.20000000298023224
+      - 0.07000000029802322
+      - 0.008999999612569809
+    collision:
+      file: assets/keyboard_1_collision.obj
+      sha256: f193c3c18e53d0db9e411d43a3d68d00eafffc89d81483a991ac69f3204fa8bb
+    collision_method: convex_hull
+    visuals:
+    - file: assets/keyboard_1_visual_0.obj
+      rgba:
+      - 0.07000000029802322
+      - 0.07500000298023224
+      - 0.08500000089406967
+      - 1.0
+      sha256: c7f58fa75cdcdda0db0482b5fa8795499f646e7187e5eb59a00285f69a31191f
+    - file: assets/keyboard_1_visual_1.obj
+      rgba:
+      - 0.550000011920929
+      - 0.5699999928474426
+      - 0.6000000238418579
+      - 1.0
+      sha256: 2c02b81f49efb73f81a3976e9f8e17b64e6813a6d66384d1dbb324d480b457b8
+    - file: assets/keyboard_1_visual_2.obj
+      rgba:
+      - 0.6399999856948853
+      - 0.6600000262260437
+      - 0.6899999976158142
+      - 1.0
+      sha256: 2b1f024213a3b9e2ad1d241651a97d6a24a683189b42c22a4af0c669bbf8afb1
+  id: keyboard_1
+  image_bbox:
+  - 0.18188924133777618
+  - 0.4034926199913025
+  - 0.4981110489368439
+  - 0.6274157857894898
+  mass: 0.04
+  name: Keyboard with 104 individual keycaps
+  position:
+  - -0.15000000596046448
+  - -0.1599999964237213
+  - 0.2094999998807907
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.07000000029802322
+  - 0.07500000298023224
+  - 0.08500000089406967
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.10999999940395355
+  - 0.09000000357627869
+  - 0.18400001525878906
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.06499999761581421
+      - -0.04500000178813934
+      - -0.09000000357627869
+    - - 0.04500000178813934
+      - 0.04500000178813934
+      - 0.09400001168251038
+    collision:
+      file: assets/shaker_1_collision.obj
+      sha256: 511d63921b8d6feb1269249a31c179bd79a2cb66beba9e33749d4820b49e7efa
+    collision_method: convex_hull
+    visuals:
+    - file: assets/shaker_1_visual_0.obj
+      rgba:
+      - 0.03500000014901161
+      - 0.03999999910593033
+      - 0.04500000178813934
+      - 1.0
+      sha256: 23f2f3c967aab3d274ee7083c3699ff9a92d2dfe5bd1dd03c688df93392299ea
+    - file: assets/shaker_1_visual_1.obj
+      rgba:
+      - 0.07000000029802322
+      - 0.07500000298023224
+      - 0.07999999821186066
+      - 1.0
+      sha256: eee123d81dda942389fdc3ef38feec5f883bfad0a689ae6a957d233c6aa87570
+    - file: assets/shaker_1_visual_2.obj
+      rgba:
+      - 0.04500000178813934
+      - 0.05000000074505806
+      - 0.054999999701976776
+      - 1.0
+      sha256: 8c93cebb0b1f14df9f15b5e35052b20932b85de05f6d6d41c002c7bdc919eb0f
+  id: shaker_1
+  image_bbox:
+  - 0.3457041883468628
+  - 0.16004483938217162
+  - 0.4381444549560547
+  - 0.36006868839263917
+  mass: 0.04
+  name: Black shaker cup
+  position:
+  - -0.28999999165534973
+  - 0.15000000596046448
+  - 0.2904999852180481
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.03500000014901161
+  - 0.03999999910593033
+  - 0.04500000178813934
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.06400000303983688
+  - 0.10000000149011612
+  - 0.039999994449317455
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.03200000151991844
+      - -0.05000000074505806
+      - -0.014999999664723873
+    - - 0.03200000151991844
+      - 0.05000000074505806
+      - 0.024999994784593582
+    collision:
+      file: assets/mouse_1_collision.obj
+      sha256: 636257677dac80aa7d0fb358ea681b1df4fbd986d16afc92e2c15282dcb47ae0
+    collision_method: convex_hull
+    visuals:
+    - file: assets/mouse_1_visual_0.obj
+      rgba:
+      - 0.17000000178813934
+      - 0.1899999976158142
+      - 0.2199999988079071
+      - 1.0
+      sha256: 756b0cca989b603bf426735642bb767316e4153424e8b1dc2b3f226e6de1e98f
+    - file: assets/mouse_1_visual_1.obj
+      rgba:
+      - 0.20999999344348907
+      - 0.23000000417232513
+      - 0.25999999046325684
+      - 1.0
+      sha256: ec52d240d5c665b7790a975e4816607919cf857e20fb090668b54d07e5ef337f
+    - file: assets/mouse_1_visual_2.obj
+      rgba:
+      - 0.05000000074505806
+      - 0.054999999701976776
+      - 0.05999999865889549
+      - 1.0
+      sha256: 656dbcd6b9ccaa38412cfe2b803ff9544a3a0020e05b45584a335146e605f527
+  id: mouse_1
+  image_bbox:
+  - 0.5082832479476929
+  - 0.5820725464820862
+  - 0.5865318274497986
+  - 0.6740653014183045
+  mass: 0.04
+  name: Computer mouse
+  position:
+  - 0.20000000298023224
+  - -0.1599999964237213
+  - 0.21549999713897705
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.17000000178813934
+  - 0.1899999976158142
+  - 0.2199999988079071
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.07199999690055847
+  - 0.07099999859929085
+  - 0.14000000059604645
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.035999998450279236
+      - -0.03849999979138374
+      - -0.07000000029802322
+    - - 0.035999998450279236
+      - 0.032499998807907104
+      - 0.07000000029802322
+    collision:
+      file: assets/speaker_1_collision.obj
+      sha256: 2ad184cb406e7d641452570bcf0ec0103921a327a322c2b631f9eca7e6fb98c8
+    collision_method: convex_hull
+    visuals:
+    - file: assets/speaker_1_visual_0.obj
+      rgba:
+      - 0.07500000298023224
+      - 0.07999999821186066
+      - 0.09000000357627869
+      - 1.0
+      sha256: 0be891d64a0abe9687a3e9160613a7c76ec3dab46b47a3215e8416e670265114
+    - file: assets/speaker_1_visual_1.obj
+      rgba:
+      - 0.20000000298023224
+      - 0.20999999344348907
+      - 0.23000000417232513
+      - 1.0
+      sha256: 894faf65028635fa7663f0ceb5ee093c66a05bb2623d249ad62fba4e6e344a34
+    - file: assets/speaker_1_visual_2.obj
+      rgba:
+      - 0.10999999940395355
+      - 0.11999999731779099
+      - 0.12999999523162842
+      - 1.0
+      sha256: 3f3676c018c0cd8130c985bcf44d68b2b8649ecf404b21dbc1b40d77fd712012
+    - file: assets/speaker_1_visual_3.obj
+      rgba:
+      - 0.2800000011920929
+      - 0.28999999165534973
+      - 0.3100000023841858
+      - 1.0
+      sha256: 52f4162fe7f5ccd447d2b32edc4a056940aeeba4fc61ab44221336105894097b
+    - file: assets/speaker_1_visual_4.obj
+      rgba:
+      - 0.11999999731779099
+      - 0.12999999523162842
+      - 0.14000000059604645
+      - 1.0
+      sha256: eed09676a9c9d6e01b6ec61b8f1f5810261b13a0494d6dba9126051fa72c6825
+  id: speaker_1
+  image_bbox:
+  - 0.6939558291435242
+  - 0.3826522731781006
+  - 0.7830814218521118
+  - 0.5644315278530121
+  mass: 0.04
+  name: Desktop speaker
+  position:
+  - 0.28999999165534973
+  - 0.15000000596046448
+  - 0.2705000042915344
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.07500000298023224
+  - 0.07999999821186066
+  - 0.09000000357627869
+  - 1.0
+  support: table
+- category: mesh
+  dimensions:
+  - 0.14000000059604645
+  - 0.008999999612569809
+  - 0.009000005200505257
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  geometry:
+    bounds:
+    - - -0.06800000369548798
+      - -0.0044999998062849045
+      - -0.004500002600252628
+    - - 0.07199999690055847
+      - 0.0044999998062849045
+      - 0.004500002600252628
+    collision:
+      file: assets/pen_1_collision.obj
+      sha256: 8bc9feca78161b4cd2034b7344249a7a3573efd35fe3a02145218f6c43145a13
+    collision_method: convex_hull
+    visuals:
+    - file: assets/pen_1_visual_0.obj
+      rgba:
+      - 0.02500000037252903
+      - 0.02500000037252903
+      - 0.02500000037252903
+      - 1.0
+      sha256: daab9119c43a6b8e3f4cc0b030161ff361cc7416ec161b148b34bc51c440e694
+    - file: assets/pen_1_visual_1.obj
+      rgba:
+      - 0.6499999761581421
+      - 0.6700000166893005
+      - 0.6899999976158142
+      - 1.0
+      sha256: 430aa20800775d626b69c328889c3cb501d1941ed566b72d43c4a59e33f0fc91
+    - file: assets/pen_1_visual_2.obj
+      rgba:
+      - 0.4000000059604645
+      - 0.41999998688697815
+      - 0.4399999976158142
+      - 1.0
+      sha256: c702efcecd8871bb083a268aa47b95b85891e6c4686da6bfb4545f694e7347c3
+  id: pen_1
+  image_bbox:
+  - 0.49663715600967406
+  - 0.38060813188552856
+  - 0.6028001403808594
+  - 0.45485604763031007
+  mass: 0.04
+  name: Black pen
+  position:
+  - -0.029999999329447746
+  - 0.15000000596046448
+  - 0.20499999821186066
+  provenance:
+    dimensions: blender_saved
+    friction: catalog_default
+    geometry: blender_saved
+    mass: catalog_default
+    position: blender_saved
+    rgba: blender_saved
+  quaternion:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  rgba:
+  - 0.02500000037252903
+  - 0.02500000037252903
+  - 0.02500000037252903
+  - 1.0
+  support: table
+questions: []
+scale_reference: null
+scene_id: desktop_rigid_objects
+schema_version: 2
+source:
+  image: source.png
+  sha256: e5cb67c39febdcd2dac3c997d5f936bab3c9117a9c20e4c7ed60600d64ae7589
+table:
+  dimensions:
+  - 0.8999999761581421
+  - 0.699999988079071
+  - 0.019999999552965164
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+  provenance:
+    dimensions: blender_saved
+    friction: user_input
+    rgba: blender_saved
+    top_z: blender_saved
+  rgba:
+  - 0.8600000143051147
+  - 0.8399999737739563
+  - 0.7900000214576721
+  - 1.0
+  top_z: 0.1999999973922968

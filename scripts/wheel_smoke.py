@@ -94,8 +94,9 @@ with tempfile.TemporaryDirectory(prefix='orca-wheel-mesh-') as temp:
         scene.close()
 print('Installed wheel: relocated Blender mesh bundle loads, steps and renders')
 """
-    subprocess.run([python, "-c", mesh_smoke,
-                    str(ROOT/"examples/blender/five_objects/scene/blender_five_objects")], check=True, cwd=ROOT)
+    for relative in ("five_objects/scene/blender_five_objects", "open_objects/scene/open_rigid_objects",
+                     "desktop_objects/scene/desktop_rigid_objects"):
+        subprocess.run([python, "-c", mesh_smoke, str(ROOT/"examples/blender"/relative)], check=True, cwd=ROOT)
     subprocess.run(
         [
             python,

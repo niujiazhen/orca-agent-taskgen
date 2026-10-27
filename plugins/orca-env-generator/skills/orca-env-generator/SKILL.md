@@ -1,24 +1,30 @@
 ---
 name: orca-env-generator
-description: Generate ORCA MuJoCo scenes and Gymnasium environments from task descriptions or tabletop photos. Use for phone capture, editable Blender modeling and review, mesh scene display, gestures, pickup, and placement of supported primitive objects.
+description: Turn tabletop photos into MuJoCo scenes by authoring new object geometry in Blender, including cups, scissors, remotes and irregular containers outside any predefined catalog. Also supports legacy primitive ORCA hand RL tasks on explicit request.
 ---
 
 # ORCA Environment Generator
 
-Turn the user's natural-language request into a generated MuJoCo task bundle. The deliverable is an untrained RL environment, not a policy or a PPO result.
+Default photo requests produce a Blender-authored MuJoCo scene. Objects are
+identified by free names and stable IDs, not by a fixed object-class list.
+The agent writes a new Blender modeling script for the actual visible geometry.
+Do not route a new object name through the legacy box/cylinder/sphere parser.
 
 For a photo, local image, or request to take a phone photo, read
-[references/blender-workflow.md](references/blender-workflow.md). The v0.4 default
+[references/blender-workflow.md](references/blender-workflow.md). The v0.4.1 default
 adds editable local Blender modeling, mandatory user saved-state handoff, and
 scene-only MuJoCo export for up to five common rigid objects. Read the capture
 instructions in [references/photo-workflow.md](references/photo-workflow.md).
-If the user requests primitive objects or a photo-derived RL task, use that
-legacy workflow instead. Codex interprets the image; Python has no vision API.
+Use the legacy workflow only when the user explicitly requests primitive
+approximation or an RL task. A reference to "simulation environment" alone
+means the mesh scene and is not a request to fall back to the primitive catalog.
+Codex interprets the image; Python has no vision API. Use the current checkout
+instructions if an installed v0.3 plugin still claims only six classes.
 
 For text-only requests, continue using the v2 workflow below and its existing
 object catalog. Do not invent a source photo for a text request.
 
-## Supported scope
+## Legacy text/RL scope only
 
 - One ORCA v1 right hand with a bounded kinematic 6DoF wrist.
 - Gestures: open/half-close/fist, thumb-index pinch/release, three-finger grasp/release.
@@ -30,7 +36,7 @@ hands and robot arms remain unsupported. Blender scene display may model new
 rigid shapes, but does not enable those task families. Suggest a supported
 primitive task when RL is requested; do not silently approximate it.
 
-## Workflow
+## Legacy text/RL workflow only
 
 1. Summarize the parsed task in one sentence. Use safe defaults for omitted color, size, mass, friction, reset jitter, reward weights, and success thresholds.
 2. Ask only when an ambiguity changes the task family, object shape, or target relation.
@@ -51,4 +57,6 @@ env = load_environment("<task-directory>", render_mode="human")
 observation, info = env.reset(seed=0)
 ```
 
-For custom dimensions or positions beyond the bounded parser's defaults, edit a TaskSpec v2 candidate, validate it with `orca-task validate`, then generate it with `orca-task generate`. Do not add new task families or arbitrary Python code to a generated bundle.
+For legacy task dimensions, edit a TaskSpec v2 candidate and validate/generate
+it. Do not add new RL task families. This restriction does not prohibit the
+agent-authored Blender `model.py` used by the photo scene workflow.

@@ -1,0 +1,40 @@
+{
+  "confirmation": "pending",
+  "layout": "approximate; awaiting user review",
+  "max_penetration_m": 1.6707532044996087e-05,
+  "objects": [
+    {
+      "drift_m": 0.0005155881588494272,
+      "id": "keyboard_1",
+      "speed_m_s": 4.2633610209119024e-10,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005155356105693986,
+      "id": "shaker_1",
+      "speed_m_s": 4.487923952162519e-08,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005156075908611312,
+      "id": "mouse_1",
+      "speed_m_s": 4.5917926925541034e-08,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0005156006100841276,
+      "id": "speaker_1",
+      "speed_m_s": 5.1799046088871075e-08,
+      "supported": true
+    },
+    {
+      "drift_m": 0.0006539553821569047,
+      "id": "pen_1",
+      "speed_m_s": 1.1868580474442958e-09,
+      "supported": true
+    }
+  ],
+  "physics": "pass",
+  "status": "needs_confirmation",
+  "steps": 2000
+}

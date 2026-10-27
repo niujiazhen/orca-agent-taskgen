@@ -1,0 +1,87 @@
+{
+  "status": "exported",
+  "blender_version": "4.5.15 LTS",
+  "saved_project_sha256": "7806cb9ca627b1bfeecfbb8b8a0ad527c3688a1af0bdcba23d1fa7e9ea32b07d",
+  "manual_review": "not inferred; exporter only reads saved disk state",
+  "objects": [
+    {
+      "id": "cup_1",
+      "name": "Cup with loop handle",
+      "geometry_source": "saved_blender_mesh",
+      "visual_parts": [
+        "Open cup walls and base",
+        "Loop handle"
+      ],
+      "visual_triangles": 1116,
+      "collision_vertices": 135,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "scissors_1",
+      "name": "Scissors in a fixed rigid pose",
+      "geometry_source": "saved_blender_mesh",
+      "visual_parts": [
+        "Upper tapered blade",
+        "Lower tapered blade",
+        "Finger loop -1",
+        "Grip bridge -1",
+        "Finger loop 1",
+        "Grip bridge 1",
+        "Central pivot"
+      ],
+      "visual_triangles": 2156,
+      "collision_vertices": 216,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "remote_1",
+      "name": "Remote control",
+      "geometry_source": "saved_blender_mesh",
+      "visual_parts": [
+        "Rounded remote housing",
+        "Red power button",
+        "Key row 1 column 1",
+        "Key row 1 column 2",
+        "Key row 1 column 3",
+        "Key row 2 column 1",
+        "Key row 2 column 2",
+        "Key row 2 column 3",
+        "Key row 3 column 1",
+        "Key row 3 column 2",
+        "Key row 3 column 3",
+        "Key row 4 column 1",
+        "Key row 4 column 2",
+        "Key row 4 column 3",
+        "Key row 5 column 1",
+        "Key row 5 column 2",
+        "Key row 5 column 3"
+      ],
+      "visual_triangles": 2684,
+      "collision_vertices": 107,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "container_1",
+      "name": "Asymmetric narrow-neck container",
+      "geometry_source": "saved_blender_mesh",
+      "visual_parts": [
+        "Asymmetric bottle shoulders and body",
+        "Bottle cap"
+      ],
+      "visual_triangles": 552,
+      "collision_vertices": 160,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    },
+    {
+      "id": "nut_1",
+      "name": "Hexagonal nut",
+      "geometry_source": "saved_blender_mesh",
+      "visual_parts": [
+        "Hexagonal outer body and central aperture"
+      ],
+      "visual_triangles": 48,
+      "collision_vertices": 12,
+      "collision_warning": "One convex hull per rigid body: holes and concavities may be filled."
+    }
+  ]
+}

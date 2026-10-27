@@ -1,5 +1,27 @@
 # Photo workflow acceptance (v0.3.0)
 
+## Open-ended Blender object types (v0.4.1)
+
+The [desktop objects fixture](../examples/blender/desktop_objects/README.md)
+models keyboard, black shaker cup, mouse, speaker and pen geometry; the
+[open objects fixture](../examples/blender/open_objects/README.md) models cup,
+scissors, remote, asymmetric container and hex nut geometry. Both use synthetic
+Blender reference images and retain pending human review. They verify shape
+authoring and mesh import, not reconstruction from a newly supplied photo.
+Each scene passes its 2,000-step physics gate.
+
+Tests verify that every retained object has a named manifest entry, an audited
+set of Blender parts, a collision hull, and visual MuJoCo mesh geoms. A live
+Blender test authors the custom shapes without registering object classes. The
+keyboard's 105 editable parts are exported as three color-batched visual meshes.
+The wheel smoke check exercises both relocated fixtures without calling Blender.
+
+The runtime doctor identifies the package version and open Blender mesh route.
+The agent entry documents explicitly distinguish that route from the older
+six-category primitive workflow and explain how to refresh an old installed
+plugin cache. The scene count limit remains five; this change expands object
+types rather than the number of objects or the supported RL task families.
+
 ## Blender mesh authoring (v0.4.0)
 
 The [Blender workflow](BLENDER_WORKFLOW.md) adds local agent-authored geometry,

@@ -1,4 +1,4 @@
-# Photo to Blender to MuJoCo (v0.4)
+# Photo to Blender to MuJoCo (v0.4.1)
 
 For agent-led setup, share the repository URL with local Codex and follow the
 [agent quickstart](CODEX_QUICKSTART.md). Codex performs the installation and
@@ -24,6 +24,14 @@ The agent interprets the photograph and writes the modeling operations.
 Neither Blender nor the Python CLI recognizes images independently. Unseen
 surfaces and scale remain estimates unless the user supplies measurements.
 There is no cloud service, image-to-3D model, or additional vision API.
+
+Object names are open-ended: keyboard, black shaker, mouse, speaker, scissors,
+remote and irregular containers can be authored without adding runtime classes.
+The agent preserves distinctive visible geometry rather than defaulting to a
+whole-object box. These shapes can be rigid even if the real product has buttons,
+lids or pivots; articulating those mechanisms is not part of scene display.
+See the [desktop objects](../examples/blender/desktop_objects/README.md) and
+[open objects](../examples/blender/open_objects/README.md) geometry checks.
 
 ## Install and check Blender
 
@@ -140,6 +148,10 @@ def build(ctx):
 that root's local coordinate frame, and register them with
 `ctx.add_part(id, mesh_object, rgba)`. Multiple parts belong to one physical
 body. Use `ctx.plan` for modeling dimensions or other authoring hints.
+For custom surfaces, `ctx.add_mesh(id, name, vertices, faces, rgba)` creates a
+mesh directly from finite object-local XYZ vertices and face indices. This is
+not a type registry. The export report records each object's name and source
+part names, and the MuJoCo manifest lists the actual exported object names/IDs.
 Scripts run as local Python in Blender; use agent-authored or reviewed scripts.
 
 ## Build, review, export, and simulate
@@ -186,7 +198,7 @@ finally:
 Evaluated geometry includes mesh edits and modifiers. Scale, parent transforms,
 and mirrored edits are baked into object-local mesh vertices; the saved rigid
 root position and orientation are preserved in MuJoCo. Basic material colors
-are exported by part/material and declared explicitly in MJCF. No scale or
+are batched by base color across parts and declared explicitly in MJCF. No scale or
 axis conversion is applied twice.
 
 The exporter accepts opaque base colors, including a constant Principled BSDF

@@ -1,0 +1,70 @@
+{
+  "collision_model": "one convex hull per rigid object; cavities may be filled",
+  "files": [
+    "annotated.png",
+    "assets/container_1_collision.obj",
+    "assets/container_1_visual_0.obj",
+    "assets/container_1_visual_1.obj",
+    "assets/cup_1_collision.obj",
+    "assets/cup_1_visual_0.obj",
+    "assets/nut_1_collision.obj",
+    "assets/nut_1_visual_0.obj",
+    "assets/remote_1_collision.obj",
+    "assets/remote_1_visual_0.obj",
+    "assets/remote_1_visual_1.obj",
+    "assets/remote_1_visual_2.obj",
+    "assets/scissors_1_collision.obj",
+    "assets/scissors_1_visual_0.obj",
+    "assets/scissors_1_visual_1.obj",
+    "assets/scissors_1_visual_2.obj",
+    "blender_preview.png",
+    "collision_preview.png",
+    "export_report.json",
+    "manifest.json",
+    "model.py",
+    "object_plan.json",
+    "project.blend",
+    "scene.xml",
+    "scene_preview.mp4",
+    "scene_preview.png",
+    "scene_report.json",
+    "scene_spec.yaml",
+    "source.png"
+  ],
+  "kind": "scene",
+  "model_sha256": "8ca748d7b1c38ee955bd2da51316ddcf7b54c25e3207af0f643007ed38a2af2e",
+  "object_catalog": "open",
+  "objects": [
+    {
+      "geometry": "mesh",
+      "id": "cup_1",
+      "name": "Cup with loop handle"
+    },
+    {
+      "geometry": "mesh",
+      "id": "scissors_1",
+      "name": "Scissors in a fixed rigid pose"
+    },
+    {
+      "geometry": "mesh",
+      "id": "remote_1",
+      "name": "Remote control"
+    },
+    {
+      "geometry": "mesh",
+      "id": "container_1",
+      "name": "Asymmetric narrow-neck container"
+    },
+    {
+      "geometry": "mesh",
+      "id": "nut_1",
+      "name": "Hexagonal nut"
+    }
+  ],
+  "package_version": "0.4.1",
+  "preview_kind": "camera orbit; no task or policy",
+  "scene_id": "open_rigid_objects",
+  "schema_version": 2,
+  "spec_sha256": "7ce4b50df6727245e9d92c45158cbaf26eec50aece884c2e5085505377b686f8",
+  "validation": "needs_confirmation"
+}

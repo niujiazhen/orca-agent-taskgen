@@ -1,0 +1,135 @@
+schema_version: 1
+scene_id: desktop_rigid_objects
+source: source.png
+table:
+  dimensions:
+  - 0.9
+  - 0.7
+  - 0.02
+  top_z: 0.2
+  rgba:
+  - 0.86
+  - 0.84
+  - 0.79
+  - 1
+  friction:
+  - 1.2
+  - 0.01
+  - 0.001
+objects:
+- id: keyboard_1
+  name: Keyboard with 104 individual keycaps
+  dimensions:
+  - 0.4
+  - 0.14
+  - 0.018
+  position:
+  - -0.15
+  - -0.16
+  - 0.2095
+  rgba:
+  - 0.07
+  - 0.075
+  - 0.085
+  - 1
+  image_bbox:
+  - 0.18188924133777618
+  - 0.4034926199913025
+  - 0.4981110489368439
+  - 0.6274157857894898
+  details: Housing and 104 separate keycaps; no key legends or switches.
+- id: shaker_1
+  name: Black shaker cup
+  dimensions:
+  - 0.12
+  - 0.09
+  - 0.184
+  position:
+  - -0.29
+  - 0.15
+  - 0.2905
+  rgba:
+  - 0.035
+  - 0.04
+  - 0.045
+  - 1
+  image_bbox:
+  - 0.3457041883468628
+  - 0.16004483938217162
+  - 0.4381444549560547
+  - 0.36006868839263917
+  details: Tapered cup body, screw lid, drinking spout and carry loop, one rigid pose.
+- id: mouse_1
+  name: Computer mouse
+  dimensions:
+  - 0.064
+  - 0.1
+  - 0.04
+  position:
+  - 0.2
+  - -0.16
+  - 0.2155
+  rgba:
+  - 0.17
+  - 0.19
+  - 0.22
+  - 1
+  image_bbox:
+  - 0.5082832479476929
+  - 0.5820725464820862
+  - 0.5865318274497986
+  - 0.6740653014183045
+  details: Curved mesh shell, two top buttons and scroll wheel.
+- id: speaker_1
+  name: Desktop speaker
+  dimensions:
+  - 0.072
+  - 0.072
+  - 0.14
+  position:
+  - 0.29
+  - 0.15
+  - 0.2705
+  rgba:
+  - 0.075
+  - 0.08
+  - 0.09
+  - 1
+  image_bbox:
+  - 0.6939558291435242
+  - 0.3826522731781006
+  - 0.7830814218521118
+  - 0.5644315278530121
+  details: Rounded enclosure with separate woofer and tweeter rings/cones.
+- id: pen_1
+  name: Black pen
+  dimensions:
+  - 0.14
+  - 0.009
+  - 0.009
+  position:
+  - -0.03
+  - 0.15
+  - 0.205
+  rgba:
+  - 0.025
+  - 0.025
+  - 0.025
+  - 1
+  image_bbox:
+  - 0.49663715600967406
+  - 0.38060813188552856
+  - 0.6028001403808594
+  - 0.45485604763031007
+  details: Barrel, metal tip, rear ring and clip.
+notes:
+- Synthetic reference rendered from a Blender script, not a reconstruction or recognition
+  result from an uploaded photograph.
+- 'This fixture models the object types named in user feedback: keyboard, black shaker,
+  mouse, speaker and pen.'
+- Additional supplied types (scissors, remote, can) are demonstrated in the open_objects
+  and five_objects fixtures.
+- Dimensions, color and physical properties are assumptions; no new photo or measurements
+  were supplied.
+- Shapes remain rigid, including the shaker lid, buttons, wheel and speaker cones.
+  Manual review and final confirmation are pending.
