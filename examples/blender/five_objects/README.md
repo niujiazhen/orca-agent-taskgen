@@ -58,14 +58,14 @@ does not establish reconstruction accuracy or record human approval.
 The video is a camera orbit after settling the scene, not a grasping attempt
 or an RL result. New Blender mesh scenes are display-only in this release.
 
-## Reproduce and edit
+## Reproduce (background by default)
 
 Install Blender 4.5 LTS and the package as described in the
 [Blender workflow tutorial](../../../docs/BLENDER_WORKFLOW.md). From the repository root:
 
 ```powershell
 orca-task blender build examples/blender/five_objects/object_plan.yaml --script examples/blender/five_objects/model.py --output blender_workspaces/my_five_objects
-# Review in the automatically opened Blender window, make edits, then save.
+# Blender saves project.blend in the background; continue directly to export.
 orca-task blender export blender_workspaces/my_five_objects
 orca-task scene generate blender_workspaces/my_five_objects/export/scene_spec.yaml --output generated_scenes
 orca-task scene check generated_scenes/blender_five_objects

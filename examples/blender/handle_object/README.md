@@ -32,7 +32,7 @@ With Blender 4.5 LTS and the package installed, run at the repository root:
 
 ```powershell
 orca-task blender build examples/blender/handle_object/object_plan.yaml --script examples/blender/handle_object/model.py --output blender_workspaces/my_cup
-# Review/edit in Blender and save before export.
+# Blender saves project.blend in the background; continue directly to export.
 orca-task blender export blender_workspaces/my_cup
 orca-task scene generate blender_workspaces/my_cup/export/scene_spec.yaml --output generated_scenes
 orca-task scene check generated_scenes/blender_handle_object

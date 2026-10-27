@@ -1,6 +1,6 @@
 # Phone photo to MuJoCo: user tutorial
 
-For the v0.4 editable Blender modeling and manual review stage, follow the
+For the background Blender modeling and saved intermediate, follow the
 [Blender workflow tutorial](BLENDER_WORKFLOW.md). This page describes shared
 phone capture and the original primitive/RL path, which remains available.
 

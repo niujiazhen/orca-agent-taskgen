@@ -37,7 +37,7 @@ preserve every recess. The default mass is 0.04 kg per rigid body.
 
 ```powershell
 orca-task blender build examples/blender/desktop_objects/object_plan.yaml --script examples/blender/desktop_objects/model.py --output blender_workspaces/my_desktop_objects
-# Inspect/edit the opened project and save before export.
+# Blender saves project.blend in the background; continue directly to export.
 orca-task blender export blender_workspaces/my_desktop_objects
 orca-task scene generate blender_workspaces/my_desktop_objects/export/scene_spec.yaml --output generated_scenes
 orca-task scene check generated_scenes/desktop_rigid_objects

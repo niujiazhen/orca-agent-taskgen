@@ -15,16 +15,18 @@ An explicit request for code review, explanation, or development takes priority.
    yourself: a local `.venv`, `.[photo,visualization]`, and Blender 4.5 LTS.
    Use the repository's environment for every subsequent command. Prefer
    user-local dependency installation. Respect platform/tool approval rules;
-   report the exact blocker if local installation or GUI access is unavailable.
+   report the exact blocker if local installation or background rendering is unavailable.
 4. Run `orca-task blender doctor` using that environment, then start a fresh
    LAN photo-capture session and show the real QR image and full URL. Choose
    the physical Wi-Fi/LAN address, not a VPN adapter. Retain the server handle.
 5. After upload, inspect the actual image and follow
    [the Blender workflow](.agents/skills/orca-env-generator/references/blender-workflow.md).
-   Open the generated project; wait for the user's explicit saved-state handoff
-   before exporting their final scene. The agent writes the object plan/script.
-6. Export, generate, check and preview; show source, annotation, Blender view,
-   MuJoCo view, collision view and orbit video with exact output paths.
+   Generate `project.blend` and a Blender preview in the background. Do not open
+   Blender or pause for a local editing handoff by default. The agent writes
+   the object plan/script and continues directly to export and scene generation.
+6. Export, generate, check and preview; deliver the `.blend` intermediate,
+   source, annotation, Blender preview, MuJoCo view, collision view and orbit
+   video with exact output paths. Open Blender only if the user explicitly asks.
 
 Do not ask beginners to write YAML, Python, or shell commands. Ask only for a
 photo, ambiguous object choices/measurements, required platform access, and

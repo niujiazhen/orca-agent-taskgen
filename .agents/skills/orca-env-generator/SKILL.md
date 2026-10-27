@@ -11,8 +11,8 @@ The agent writes a new Blender modeling script for the actual visible geometry.
 Do not route a new object name through the legacy box/cylinder/sphere parser.
 
 For a photo, local image, or request to take a phone photo, read
-[references/blender-workflow.md](references/blender-workflow.md). The v0.4.1 default
-adds editable local Blender modeling, mandatory user saved-state handoff, and
+[references/blender-workflow.md](references/blender-workflow.md). The v0.4.2 default
+adds background Blender modeling, a saved `.blend` intermediate, and
 scene-only MuJoCo export for up to five common rigid objects. Read the capture
 instructions in [references/photo-workflow.md](references/photo-workflow.md).
 Use the legacy workflow only when the user explicitly requests primitive

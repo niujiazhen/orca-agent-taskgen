@@ -1,6 +1,6 @@
 {
   "name": "orca-env-generator",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Model new rigid object types in Blender and export their meshes into MuJoCo; legacy primitive ORCA RL tasks remain available.",
   "author": {
     "name": "niujiazhen",

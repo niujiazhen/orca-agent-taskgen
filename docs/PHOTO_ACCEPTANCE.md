@@ -1,5 +1,24 @@
 # Photo workflow acceptance (v0.3.0)
 
+## Background Blender intermediate (v0.4.2)
+
+The default CLI and Python build API run Blender in the background, save
+`project.blend` plus the preview, script and object plan, and return
+`ready_for_export` with `ui_opened: false`. Agent instructions continue into
+MuJoCo export/generation without a manual-editing pause. `--open` and the
+separate `blender open` command are opt-in; `--no-open` remains compatible.
+
+The live Blender integration test verifies that the default path creates the
+`.blend` intermediate and preview without invoking the UI launcher, then exports
+and loads a MuJoCo scene. Its opt-in UI behavior is checked with a mocked
+launcher, so the automated suite does not open local Blender windows. CLI tests
+cover default, explicit background and explicit UI flags. The `.blend` snapshot
+is copied into the final portable bundle and bound by its asset hash.
+
+The earlier sections below describe the historical review-first release.
+Human approval remains a separate status; background generation does not mark
+models as visually confirmed or claim that a user inspected them.
+
 ## Open-ended Blender object types (v0.4.1)
 
 The [desktop objects fixture](../examples/blender/desktop_objects/README.md)

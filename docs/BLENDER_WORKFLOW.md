@@ -1,8 +1,9 @@
-# Photo to Blender to MuJoCo (v0.4.1)
+# Photo to Blender to MuJoCo (v0.4.2)
 
 For agent-led setup, share the repository URL with local Codex and follow the
 [agent quickstart](CODEX_QUICKSTART.md). Codex performs the installation and
-command execution; the user supplies the photo and the Blender review.
+command execution; the user supplies the photo and receives the saved Blender
+intermediate together with the final simulation outputs.
 The manual commands below are an alternative and a reproducible reference.
 
 This local authoring workflow inserts an editable Blender project between
@@ -14,8 +15,7 @@ photo categories. The first release produces **scene-only** bundles.
 Phone upload / attached photo
   -> Agent interpretation and object plan
   -> Agent-authored Blender Python script
-  -> Blender project opens for manual inspection
-  -> Edit, save, and return to the agent
+  -> Blender saves project.blend and a preview in the background
   -> Export visual meshes, convex collision hulls, and saved transforms
   -> MuJoCo generation, physics check, scene image, collision image, orbit video
 ```
@@ -64,7 +64,7 @@ Start the existing phone upload workflow, or attach a photo, then say:
 
 ```text
 Use $orca-env-generator. Build a tabletop scene from this photo through Blender.
-Open the Blender project so I can review the models before generating MuJoCo.
+Save an editable .blend intermediate without opening Blender, then generate and check MuJoCo.
 ```
 
 The agent identifies up to five main rigid objects, discusses unclear shapes
@@ -72,23 +72,26 @@ and scale, and prepares a plan and modeling script. It can model rounded
 surfaces and visible parts rather than substituting an entire object with a
 box. Geometric uncertainty remains explicit.
 
-The build command opens the resulting project automatically. In Blender:
+The build command runs Blender in the background and saves `project.blend`
+plus `blender_preview.png`, `model.py`, `object_plan.json` and a build report.
+It returns `ready_for_export` and `ui_opened: false`. The agent continues directly
+through export, MuJoCo generation, physics checking and previews. No local
+window or manual-save handoff is required for the default workflow.
 
-1. Check the source photo reference and the modeled objects.
-2. Edit meshes, basic colors, dimensions, positions, and rotations as needed.
-3. Keep the registered object roots and IDs. Add mesh parts beneath the
-   appropriate root; do not add, delete, or merge object IDs.
-4. Keep the tabletop centered and horizontal, and the scene unit scale at 1 m.
-5. Save `project.blend` with Ctrl+S, then return to the agent and say:
+The generated scene bundle also includes a portable copy of `project.blend`,
+so the Blender intermediate remains available alongside the final MuJoCo model.
+Background generation does not record human approval; any final visual review
+status stays separate from artifact generation and physics validation.
 
-```text
-I have saved my Blender edits. Continue exporting and generate the MuJoCo scene.
-```
+### Optional manual editing
 
-Only the saved file on disk is read. Closing the window is optional; unsaved
-edits are not exported. Editing and saving a scene after export requires a
-new export and fresh review. The agent does not infer approval from a
-successful export or from a window closing.
+If you explicitly request editing, use `orca-task blender open <workspace>`
+or build with `--open`. Inspect the models, preserve the registered roots/IDs,
+keep the table centered and horizontal with unit scale at 1 m, make changes,
+and save `project.blend`. The exporter reads only the saved disk state.
+Return to the agent after saving to export those edits. Changes after an export
+require a new export and fresh review. The agent never opens this window on its
+own during the default background workflow.
 
 ## Object plan and modeling script
 
@@ -154,13 +157,13 @@ not a type registry. The export report records each object's name and source
 part names, and the MuJoCo manifest lists the actual exported object names/IDs.
 Scripts run as local Python in Blender; use agent-authored or reviewed scripts.
 
-## Build, review, export, and simulate
+## Build the intermediate, export, and simulate
 
 Run these commands at the repository root with the venv active:
 
 ```powershell
 orca-task blender build examples/blender/five_objects/object_plan.yaml --script examples/blender/five_objects/model.py --output blender_workspaces/my_five_objects
-# Blender opens automatically. Review, edit and save before continuing.
+# project.blend and the Blender preview are saved without opening a window.
 orca-task blender export blender_workspaces/my_five_objects
 orca-task scene generate blender_workspaces/my_five_objects/export/scene_spec.yaml --output generated_scenes
 orca-task scene check generated_scenes/blender_five_objects
@@ -168,10 +171,11 @@ orca-task scene preview generated_scenes/blender_five_objects
 orca-task scene view generated_scenes/blender_five_objects
 ```
 
-Use `orca-task blender open <workspace>` to reopen a project. `build --no-open`
-is available for automated tests and reproducible reference generation; it
-does not record manual review. A successful build refuses to overwrite an
-existing project; edit that project or choose a fresh workspace.
+Background mode is the default for both the CLI and Python API.
+`build --no-open` remains a compatible explicit spelling. `build --open` and
+`orca-task blender open <workspace>` launch the UI only when deliberately
+requested. A successful build refuses to overwrite an existing project; use
+a fresh workspace or explicitly edit/export the existing one.
 
 The workspace preserves `model.py`, `object_plan.json`, `source.png`,
 `project.blend`, the Blender preview, attempt logs, and export reports.
@@ -243,6 +247,7 @@ Opening a scene successfully does not imply an RL interface or grasp success.
 - [Original primitive photo workflow](PHONE_PHOTO_TUTORIAL.md)
 
 Run `python -m pytest -q` for compatibility, asset integrity, and transform tests.
-Real Blender integration tests run when 4.5 LTS is detected and otherwise skip
-explicitly; portable mesh-bundle tests do not require Blender. Window review
-remains a human check and is not claimed by headless tests.
+Real Blender integration tests run in the background when 4.5 LTS is detected
+and otherwise skip explicitly; portable mesh-bundle tests do not require Blender.
+Tests verify that default builds save the intermediate without launching the UI,
+while an explicit UI request remains available. Human approval is never inferred.

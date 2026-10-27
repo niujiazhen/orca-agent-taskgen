@@ -123,7 +123,12 @@ def test_blender_roundtrip_edits_and_export_failure_invalidate_snapshot(tmp_path
     opened=[]
     monkeypatch.setattr('orca_sim.taskgen.blender.open_blender',lambda *a,**kw: opened.append(a[0]))
     result=build_blender(plan_path,script=script,output=workspace,executable=blender)
-    assert opened == [workspace] and result['status']=='needs_blender_review'
+    assert opened == [] and result['status']=='ready_for_export' and result['ui_opened'] is False
+    assert {'project.blend','blender_preview.png','model.py','object_plan.json'} <= set(result['intermediate_files'])
+    assert (workspace/'project.blend').is_file() and (workspace/'blender_preview.png').is_file()
+    opt_in = tmp_path/'optional-ui'
+    manual = build_blender(plan_path,script=script,output=opt_in,executable=blender,open_ui=True)
+    assert opened == [opt_in] and manual['status']=='needs_blender_review' and manual['ui_opened'] is True
     export_blender(workspace,executable=blender)
     original = (workspace/'project.blend').read_bytes()
     edit_saved_project(blender,workspace,
@@ -144,6 +149,7 @@ def test_blender_roundtrip_edits_and_export_failure_invalidate_snapshot(tmp_path
     expected=np.array(json.loads((workspace/'expected_vertices.json').read_text()))
     assert np.max(np.min(np.linalg.norm(world[:,None,:]-expected[None,:,:],axis=-1),axis=1)) < 1e-7
     bundle=generate_scene(path,output=tmp_path/'generated')
+    assert (bundle/'project.blend').read_bytes()==(workspace/'project.blend').read_bytes()
     assert check_scene(bundle)['physics']=='pass'
     scene=load_scene(bundle)
     try:
@@ -260,3 +266,11 @@ def test_blender_authors_non_catalog_shapes_without_runtime_template_registratio
         'Asymmetric narrow-neck container','Hexagonal nut'}
     bundle=generate_scene(Path(result['spec']),output=tmp_path/'generated')
     assert check_scene(bundle)['physics']=='pass'
+
+
+@pytest.mark.parametrize('flags,expected', [([],False),(['--no-open'],False),(['--open'],True)])
+def test_cli_blender_build_is_headless_unless_explicitly_requested(monkeypatch,flags,expected):
+    import sys
+    from orca_sim.taskgen.cli import parse_args
+    monkeypatch.setattr(sys,'argv',['orca-task','blender','build','plan.yaml','--script','model.py','--output','workspace',*flags])
+    assert parse_args().open_ui is expected

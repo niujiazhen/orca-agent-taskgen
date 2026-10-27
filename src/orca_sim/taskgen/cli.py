@@ -28,7 +28,10 @@ def parse_args() -> argparse.Namespace:
     build.add_argument("plan", type=Path)
     build.add_argument("--script", type=Path, required=True)
     build.add_argument("--output", type=Path, required=True)
-    build.add_argument("--no-open", action="store_true", help="headless testing only; interactive review remains pending")
+    launch = build.add_mutually_exclusive_group()
+    launch.add_argument("--open", dest="open_ui", action="store_true", help="explicitly open the saved project for optional manual editing")
+    launch.add_argument("--no-open", dest="open_ui", action="store_false", help="keep Blender in the background (the default; compatibility flag)")
+    build.set_defaults(open_ui=False)
     build.add_argument("--blender", type=Path)
     for name in ("open", "export"):
         item = blender_commands.add_parser(name)
@@ -144,7 +147,7 @@ def main() -> None:
     if args.command == "blender":
         from orca_sim.taskgen.blender import build_blender, open_blender, export_blender, find_blender
         if args.blender_command == "build":
-            result = build_blender(args.plan, script=args.script, output=args.output, executable=args.blender, open_ui=not args.no_open)
+            result = build_blender(args.plan, script=args.script, output=args.output, executable=args.blender, open_ui=args.open_ui)
         elif args.blender_command == "open":
             result = open_blender(args.directory, executable=args.blender)
         elif args.blender_command == "export":
@@ -153,7 +156,8 @@ def main() -> None:
             from importlib.metadata import version
             result = {"status":"available", "executable":str(find_blender(args.blender)), "supported_version":"4.5 LTS",
                       "package_version":version("orca_sim"), "photo_backend":"blender_mesh", "object_catalog":"open",
-                      "scope":"common rigid objects; no predefined class list; scene display only"}
+                      "scope":"common rigid objects; no predefined class list; scene display only",
+                      "default_open_ui":False, "blender_intermediate":"project.blend"}
     elif args.command == "capture":
         from orca_sim.taskgen.photo_upload import serve_capture
         serve_capture(output=args.output, lan=args.lan, port=args.port, advertise_host=args.advertise_host, duration=args.duration)

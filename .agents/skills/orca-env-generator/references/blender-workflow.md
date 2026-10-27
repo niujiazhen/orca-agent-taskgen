@@ -1,4 +1,4 @@
-# Photo -> editable Blender project -> mesh-only MuJoCo scene (v0.4.1)
+# Photo -> editable Blender project -> mesh-only MuJoCo scene (v0.4.2)
 
 Use this workflow by default for new tabletop photos, unless the user requests
 the legacy primitive/RL workflow. Interpret the actual image yourself. Blender
@@ -20,7 +20,7 @@ does not recognize images, and no external image-to-3D service is called.
    image-perfect reconstruction are not promised.
 3. Run `orca-task blender doctor`; install Blender 4.5 LTS when necessary.
    Configure `ORCA_BLENDER_PATH` or `--blender` if not discovered. Install the
-   package with `.[photo,visualization]`; require orca_sim >=0.4.1.
+   package with `.[photo,visualization]`; require orca_sim >=0.4.2.
    The doctor result must identify `photo_backend: blender_mesh` and
    `object_catalog: open`; a primitive `generate-text` command is not this route.
 4. Write an object plan and an agent-authored `model.py` in the workspace. The
@@ -41,18 +41,24 @@ does not recognize images, and no external image-to-3D service is called.
    supports arbitrary agent-authored geometry with no type dispatcher. Modeling
    examples are reference patterns, not the full list of allowed objects.
 
-## Build and pause for Blender review
+## Build a Blender intermediate in the background
 
 ```text
 orca-task blender build <object-plan.yaml> --script <model.py> --output <workspace>
 ```
 
-Build opens Blender automatically. Show the Blender preview and project path.
-Ask the user to inspect/edit geometry, size, position, rotation and base colors,
-save `project.blend`, then return and say "Continue with my saved Blender edits."
-Do not proceed with the user's final scene export before this saved-state
-handoff. Headless `--no-open` is only for tests/demo snapshots and never records
-human approval. `orca-task blender open <workspace>` reopens the UI.
+Build runs Blender in the background by default and saves `project.blend`,
+`blender_preview.png`, `model.py` and `object_plan.json`. Deliver the `.blend`
+file as the editable intermediate. Continue directly to export/generate/check/
+preview without opening a desktop window or waiting for a manual-save handoff.
+Do not pass `--open`, call `blender open`, or open a `.blend` through the OS
+unless the user explicitly requests local inspection/editing. The legacy
+`--no-open` flag remains compatible; background mode is now the default.
+
+If the user explicitly chooses manual editing, use `blender open <workspace>`
+or build with `--open`, then wait for them to save before exporting those edits.
+Headless generation never records human approval; final visual confirmation
+remains a separate status and does not block generating previews.
 
 Keep object roots and IDs. New parts must belong under their matching root;
 deleting/duplicating IDs or adding unregistered geometry blocks export. The
@@ -66,7 +72,7 @@ workspace names. A completed build must not overwrite user edits.
 
 ## Export, generate and validate
 
-After the user's saved-state handoff:
+After the background build succeeds (or after saving optional manual edits):
 
 ```text
 orca-task blender export <workspace>
@@ -84,9 +90,11 @@ Do not silently decimate, move, resize or snap objects to make checks pass.
 Report script/export and physics failures truthfully. Unstable/unsupported or
 initially overlapping objects require user-directed correction and re-export.
 Mesh/provenance hashes bind the exact saved asset snapshot to confirmation.
-After an asset change, regenerate and obtain a new review.
+After an asset change, regenerate previews and invalidate any old confirmation.
+Keep human approval pending until explicitly provided; it is not a prerequisite
+for background export, scene generation, checking or preview creation.
 
-Show the source photo, object annotation, saved-state Blender preview, MuJoCo
+Show the `.blend` intermediate, source photo, annotation, Blender preview, MuJoCo
 scene, collision preview and orbit MP4. Explain that convex hulls can fill cup
 openings, handle holes and other concavities. Show uncertainty and the physics
 gate separately from user visual approval. Use the existing scene confirmation

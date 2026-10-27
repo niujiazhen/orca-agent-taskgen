@@ -154,7 +154,7 @@ def generate_scene(spec_path: str | Path, *, output: str | Path) -> Path:
     (bundle/"scene.xml").write_text(xml, encoding="utf-8")
     annotate_scene(bundle, spec)
     write_json(bundle/"manifest.json", {"kind": "scene", "schema_version": 1, "scene_id": spec["scene_id"],
-        "package_version": "0.4.1", "spec_sha256": content_hash(normalized), "validation": "pending",
+        "package_version": "0.4.2", "spec_sha256": content_hash(normalized), "validation": "pending",
         "files": ["scene_spec.yaml", "scene.xml", "source.png", "annotated.png", "manifest.json", "scene_report.json"]})
     write_json(bundle/"scene_report.json", {"physics": "pending", "confirmation": "confirmed" if spec["confirmed"] else "pending"})
     return bundle

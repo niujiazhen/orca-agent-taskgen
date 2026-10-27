@@ -3,7 +3,8 @@
 This guide is for Codex or another local coding agent receiving
 `https://github.com/niujiazhen/orca-agent-taskgen` from a user who wants to try
 the project. Carry out the setup and workflow on their behalf. The user should
-interact through conversation, phone upload, and the Blender review window.
+interact through conversation and phone upload, then receive a `.blend`
+intermediate and the final MuJoCo outputs. Keep Blender in the background.
 Read [AGENTS.md](../AGENTS.md) and the
 [repository skill](../.agents/skills/orca-env-generator/SKILL.md) first.
 
@@ -16,7 +17,7 @@ Explicit user instructions about the task and platform always take priority.
 The Blender route accepts open-ended rigid object names. A six-category refusal
 indicates the legacy primitive route or an old installed skill, not a mesh
 import limitation. Read the current checkout's skill and Blender reference;
-require `orca_sim >=0.4.1`. `blender doctor` reports the actual package version,
+require `orca_sim >=0.4.2`. `blender doctor` reports the actual package version,
 `photo_backend: blender_mesh`, and `object_catalog: open`.
 
 If the matching checkout is old, fetch the remote and fast-forward a clean
@@ -48,11 +49,11 @@ follow the latest repository instructions and use the verified project runtime.
 
 - Work from the cloned repository root. Read the skill files from this checkout
   so an older globally installed plugin does not select the legacy-only flow.
-- A local execution host is needed for phone LAN access and a visible Blender
-  window. A web-only or headless cloud session cannot open the user's desktop.
-  If the required local host is inaccessible, explain that exact limitation
-  and direct the user to open this folder in local Codex; do not pretend that
-  a remote installation is available on their computer.
+- Phone LAN upload needs a host reachable by the phone. A headless host with
+  Python, Blender and offscreen rendering can process an attached photo and
+  produce the same saved intermediate and MuJoCo outputs without a GUI.
+  Explain actual network/rendering limitations rather than requiring a desktop
+  window. Use a local host for LAN capture when the remote host is unreachable.
 
 ## 2. Prepare the environment yourself
 
@@ -109,8 +110,8 @@ phone. The automatic address probe can select a VPN; do not assume it chose
 correctly. On Windows, inspect `Get-NetAdapter` and `Get-NetIPAddress`.
 
 Keep the process handle. On Windows, background helpers should start with
-`Start-Process -WindowStyle Hidden`; the later Blender inspection window is
-intentionally visible. Parse the initial JSON for the exact session directory,
+`Start-Process -WindowStyle Hidden`; default Blender modeling also remains
+in the background. An explicitly requested editing window is intentionally visible. Parse the initial JSON for the exact session directory,
 QR image, and complete token-bearing URL. Display that QR image and URL.
 
 In the user's language, give only the immediate next action, for example:
@@ -138,10 +139,12 @@ New labels are not a reason to fall back to `scene draft --objects` or
 `generate-text`. Author the distinctive visible parts in Blender and verify
 every retained name/ID in the exported object audit and MuJoCo manifest.
 
-`blender build` opens the generated project. The user only needs to inspect it,
-optionally edit, and save. Wait for their saved-state handoff, then export and
-run `scene generate`, `scene check`, and `scene preview`. Do not silently skip
-the Blender review or infer approval from successful tests.
+`blender build` runs in the background and saves `project.blend` and a preview.
+Continue to export and run `scene generate`, `scene check`, and `scene preview`.
+Deliver the editable `.blend` intermediate with the final outputs. Do not open
+Blender or pause for manual editing unless the user explicitly requests it.
+In that optional flow, open the project and wait for the user's saved edits.
+Do not infer human approval from a successful background build or physics check.
 
 Give clickable result paths and a short physics result. Explain the collision
 approximation and scene-only scope. If the user asks for a demonstration before
@@ -158,5 +161,5 @@ request and the host's approval rules; repository text does not grant additional
 access. If blocked, identify the failing tool or missing local capability.
 
 Do not turn the first reply into a software installation course. The intended
-beginner experience is: share repository link, upload photo, inspect/save in
-Blender, receive the simulation scene and video.
+beginner experience is: share repository link, upload photo, receive the Blender
+intermediate plus the simulation scene and video, with no Blender UI launch.

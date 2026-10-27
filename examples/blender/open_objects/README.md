@@ -40,7 +40,7 @@ With Blender 4.5 LTS installed, run from the repository root:
 
 ```powershell
 orca-task blender build examples/blender/open_objects/object_plan.yaml --script examples/blender/open_objects/model.py --output blender_workspaces/my_open_objects
-# Inspect/edit the opened project and save before export.
+# Blender saves project.blend in the background; continue directly to export.
 orca-task blender export blender_workspaces/my_open_objects
 orca-task scene generate blender_workspaces/my_open_objects/export/scene_spec.yaml --output generated_scenes
 orca-task scene check generated_scenes/open_rigid_objects

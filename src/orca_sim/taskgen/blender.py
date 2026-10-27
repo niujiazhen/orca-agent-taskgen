@@ -32,7 +32,8 @@ def find_blender(executable=None):
         if not path.is_file():
             continue
         try:
-            result = subprocess.run([str(path), "--version"], capture_output=True, text=True, timeout=15)
+            result = subprocess.run([str(path), "--version"], capture_output=True, text=True, timeout=15,
+                                    **({"creationflags":subprocess.CREATE_NO_WINDOW} if sys.platform == "win32" else {}))
         except (OSError, subprocess.TimeoutExpired):
             continue
         if result.returncode == 0 and re.search(r"Blender 4\.5\.\d+", result.stdout):
@@ -78,7 +79,8 @@ def _run(executable, mode, workspace):
                "--python", str(WORKER), "--", mode, str(workspace)]
     try:
         with log.open("w", encoding="utf-8") as output:
-            result = subprocess.run(command, cwd=workspace, stdout=output, stderr=subprocess.STDOUT, timeout=180)
+            result = subprocess.run(command, cwd=workspace, stdout=output, stderr=subprocess.STDOUT, timeout=180,
+                                    **({"creationflags":subprocess.CREATE_NO_WINDOW} if sys.platform == "win32" else {}))
         if result.returncode:
             detail = log.read_text(encoding="utf-8", errors="replace")[-5000:]
             raise ContractError(f"Blender {mode} failed; preserved {log}:\n{detail}")
@@ -86,7 +88,7 @@ def _run(executable, mode, workspace):
         raise ContractError(f"Blender {mode} exceeded 180 seconds; see {log}") from exc
 
 
-def build_blender(plan_path, *, script, output, executable=None, open_ui=True):
+def build_blender(plan_path, *, script, output, executable=None, open_ui=False):
     from orca_sim.taskgen.photo_upload import normalize_image
     plan_path, script = Path(plan_path).resolve(), Path(script).resolve()
     plan = load_object_plan(plan_path)
@@ -119,12 +121,15 @@ def build_blender(plan_path, *, script, output, executable=None, open_ui=True):
     from orca_sim.taskgen.mesh_scene import digest
     report_path.write_text(json.dumps({"status":"built", "attempts":attempts+1, "review":"pending",
                            "backend":"blender_mesh", "object_catalog":"open",
+                           "ui_opened":open_ui,
                            "objects":[{"id":o["id"], "name":o["name"]} for o in plan["objects"]],
                            "model_script_sha256":digest(workspace/"model.py")}), encoding="utf-8")
     if open_ui:
         open_blender(workspace, executable=blender)
-    return {"status":"needs_blender_review", "directory":str(workspace), "project":str(workspace/"project.blend"),
-            "preview":str(workspace/"blender_preview.png"), "next":"Review/edit in Blender, save, then run blender export"}
+    return {"status":"needs_blender_review" if open_ui else "ready_for_export", "directory":str(workspace),
+            "project":str(workspace/"project.blend"), "preview":str(workspace/"blender_preview.png"), "ui_opened":open_ui,
+            "intermediate_files":["project.blend","blender_preview.png","model.py","object_plan.json","build_report.json"],
+            "next":"Review/edit in Blender, save, then run blender export" if open_ui else "Run blender export, scene generate, scene check and scene preview"}
 
 
 def open_blender(workspace, *, executable=None):

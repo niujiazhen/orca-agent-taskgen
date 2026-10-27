@@ -1,7 +1,7 @@
 # Photo → reviewed scene → RL task (v0.3)
 
-This is the legacy primitive/RL workflow. For the default v0.4 Blender authoring
-and manual model review, use `blender-workflow.md`. Phone capture below is shared
+This is the legacy primitive/RL workflow. For the default background Blender authoring
+and saved intermediate, use `blender-workflow.md`. Phone capture below is shared
 by both workflows. Blender SceneSpec v2 bundles are scene-display-only and must
 not be passed to the RL task commands in this document.
 

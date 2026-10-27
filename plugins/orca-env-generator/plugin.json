@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "orca-env-generator",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Model new rigid object types in Blender and export their meshes into MuJoCo; legacy primitive ORCA RL tasks remain available.",
   "author": {
     "name": "niujiazhen",
@@ -21,7 +21,7 @@
       "interface": {
         "displayName": "ORCA Environment Generator",
         "shortDescription": "Create MuJoCo scenes and RL environments from text or photos",
-        "longDescription": "Describe a task or upload a tabletop photo. Model common rigid objects in local Blender, review and save edits, then export a mesh-only MuJoCo scene. Existing primitive hand tasks retain separate physics, interface and script checks.",
+        "longDescription": "Model new rigid objects from tabletop photos with Blender running in the background. Deliver an editable .blend intermediate, then export a mesh-only MuJoCo scene with previews and physics checks. Open Blender only on request.",
         "developerName": "niujiazhen",
         "category": "Developer Tools",
         "capabilities": [
@@ -30,9 +30,9 @@
         ],
         "websiteURL": "https://github.com/niujiazhen/orca-agent-taskgen",
         "defaultPrompt": [
-          "Use Blender to model the objects in my photo and open the project for review.",
+          "Generate a Blender intermediate and a MuJoCo scene from my photo without opening Blender.",
           "Start a phone photo upload session and show the QR code.",
-          "Continue with my saved Blender edits and generate a MuJoCo scene.",
+          "Export my saved Blender intermediate and generate the MuJoCo scene.",
           "Make the ORCA hand close into a fist and open again."
         ]
       }

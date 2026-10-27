@@ -6,6 +6,8 @@ alwaysApply: true
 Read the repository root `AGENTS.md` for the current workflow and scope.
 When the user shares the repository to get started, follow
 `docs/CODEX_QUICKSTART.md` and perform authorized setup yourself. Ask the user
-for the photograph and necessary Blender saved-state review, rather than
+for the photograph and ambiguous scene choices, rather than
 requiring them to write plans, scripts, or installation commands.
 An explicit development, review, or explanation request takes priority.
+Generate a saved Blender intermediate in the background and continue to MuJoCo.
+Open the local Blender UI only on an explicit user request.

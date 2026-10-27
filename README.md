@@ -9,8 +9,9 @@ https://github.com/niujiazhen/orca-agent-taskgen
 Use a local Codex chat with computer/file access. This repository contains the
 agent instructions for checking dependencies, preparing the project, starting
 phone upload, modeling in Blender, and generating the MuJoCo scene. The agent
-does the setup and command execution; you provide the photo and inspect/save
-the Blender models when prompted.
+does the setup and command execution; you provide the photo and receive a saved
+Blender intermediate plus the MuJoCo scene and previews. Blender runs in the
+background. A local Blender window opens only if you explicitly request it.
 
 **For Codex and other coding agents:** read [AGENTS.md](AGENTS.md), then follow
 [the agent quickstart](docs/CODEX_QUICKSTART.md) and
@@ -23,7 +24,7 @@ The expected experience is:
 
 ```text
 Share link -> agent prepares tools -> scan QR and upload photo
-           -> inspect/save Blender models -> receive MuJoCo scene and video
+           -> save Blender intermediate in background -> MuJoCo scene and video
 ```
 
 The default branch includes this workflow. Manual installation instructions
@@ -41,6 +42,10 @@ orientation and layout. Stacking, insertion, tool use and two-hand tasks remain
 outside the supported RL workflows.
 
 ## New object types through Blender (v0.4.1)
+
+**v0.4.2:** Blender runs in the background by default. The output includes
+`project.blend`, its preview, modeling script and object plan. The agent
+continues directly into MuJoCo generation and checks; local editing is optional.
 
 Object names in the Blender workflow are open-ended. A keyboard, shaker cup,
 mouse, speaker, scissors, remote, or irregular container does not need a
@@ -69,12 +74,13 @@ chat to load the updated skill. Runtime `blender doctor` now reports
 
 The default agent photo workflow can now create a local Blender project before
 generating MuJoCo. The agent authors geometry and base colors from the image,
-opens Blender for your inspection, and imports your **saved shape, size, color,
-position and rotation edits**. Visual meshes and convex collision hulls are
+saves an editable `.blend` intermediate without opening a window, and exports
+the saved geometry. Optional manual edits to shape, size, color, position and
+rotation can also be exported. Visual meshes and convex collision hulls are
 exported separately; physics remains in MuJoCo.
 
 ```text
-Photo -> agent modeling -> Blender review/edit/save -> mesh export
+Photo -> agent modeling -> saved Blender intermediate -> mesh export
       -> MuJoCo scene -> physics check -> scene/collision previews + orbit video
 ```
 
