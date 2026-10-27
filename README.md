@@ -1,5 +1,34 @@
 # ORCA Text-to-MuJoCo Environment Agent
 
+## Start by sharing this link with Codex
+
+```text
+https://github.com/niujiazhen/orca-agent-taskgen
+```
+
+Use a local Codex chat with computer/file access. This repository contains the
+agent instructions for checking dependencies, preparing the project, starting
+phone upload, modeling in Blender, and generating the MuJoCo scene. The agent
+does the setup and command execution; you provide the photo and inspect/save
+the Blender models when prompted.
+
+**For Codex and other coding agents:** read [AGENTS.md](AGENTS.md), then follow
+[the agent quickstart](docs/CODEX_QUICKSTART.md) and
+[the repository skill](.agents/skills/orca-env-generator/SKILL.md). For a user
+getting started from this link, carry out authorized setup and present a phone
+upload QR code. Follow any explicit review/explanation request instead.
+Read the skill from the current checkout to use the v0.4 Blender workflow.
+
+The expected experience is:
+
+```text
+Share link -> agent prepares tools -> scan QR and upload photo
+           -> inspect/save Blender models -> receive MuJoCo scene and video
+```
+
+The default branch includes this workflow. Manual installation instructions
+below are also available for users who prefer terminal setup.
+
 This Codex plugin turns text or a tabletop photo into a visualizable MuJoCo
 scene. Primitive tasks also support a Gymnasium RL environment for one ORCA
 v1 right hand. Version 0.4 adds editable local Blender modeling for photo scenes.

@@ -1,5 +1,10 @@
 # Photo to Blender to MuJoCo (v0.4)
 
+For agent-led setup, share the repository URL with local Codex and follow the
+[agent quickstart](CODEX_QUICKSTART.md). Codex performs the installation and
+command execution; the user supplies the photo and the Blender review.
+The manual commands below are an alternative and a reproducible reference.
+
 This local authoring workflow inserts an editable Blender project between
 photo interpretation and MuJoCo scene generation. It supports agent-authored
 models of common rigid objects, including shapes outside the six primitive
